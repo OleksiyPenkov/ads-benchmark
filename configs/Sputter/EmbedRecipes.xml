@@ -1,0 +1,38 @@
+<recipes>
+  <recipe id="SYSTEM_PUMP_OUT">
+    <l>valve M1 close</l>
+    <l>valve M2 close</l>
+    <l>valve A1 close</l>
+    <l>pump SP1 on</l>
+    <l>if pm > 10mT</l>
+    <l>pump TP off</l>
+    <l>valve GVM close</l>
+    <l>valve FL close</l>
+    <l>valve PP open</l>
+    <l>swait pm 100mT 900</l>
+    <l>valve PP close</l>
+    <l>endif</l>
+    <l>valve FL open</l>
+    <l>pump TP on</l>
+    <l>valve GVM open</l>
+    <l>swait pm 1uT 1800</l>
+  </recipe>
+  <recipe id="SYSTEM_AIR_RELEASE" notIn="processing" onStepFailure="continue">
+    <l>power PSU1 off</l>
+    <l>power PSU2 off</l>
+    <l>valve Sh1 close</l>
+    <l>valve Sh2 close</l>
+    <l>MFC Ar1 0</l>
+    <l>MFC N21 0</l>
+    <l>valve V1 close</l>
+    <l>valve V2 close</l>
+    <l>valve M1 close</l>
+    <l>valve M2 close</l>
+    <l>valve GVM close</l>
+    <l>valve A1 open</l>
+  </recipe>
+  <recipe id="FAILURE_HOLD" onStepFailure="continue">
+    <l>valve Sh1 close</l>
+    <l>valve Sh2 close</l>
+  </recipe>
+</recipes>

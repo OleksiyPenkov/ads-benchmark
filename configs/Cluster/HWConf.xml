@@ -1,0 +1,226 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Cluster - Radial cluster sputter tool (TM + LL + C1-C4).
+
+           +====+
+           | LL |
+           +=+==+  SV_LL
+             |
+    +====+   |   +====+
+    | C4 | +=+===+| C1 |
+    +====+ | TM  |+====+
+    SV_C4  |(arm)|  SV_C1
+    +====+ +=+===++====+
+    | C3 |   |    | C2 |
+    +====+        +====+
+    SV_C3          SV_C2
+
+  Five S7-200 PLCs (APS.Hardware.S7), one per module:
+    tm  - transfer module + loadlock vacuum, all slit valves
+          (SV_LL, SV_C1, SV_C2, SV_C3, SV_C4)
+    c1..c4 - process chambers C1..C4
+
+  LAN devices (APS.Hardware.Demo) on loopback: six power supplies on ports
+  5025-5030 and the transfer robot on port 5031.
+-->
+<hardware xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <libraries>
+    <library lib="S7">APS.Hardware.S7.dll</library>
+    <library lib="Demo">APS.Hardware.Demo.dll</library>
+  </libraries>
+  <plcs lib="S7">
+    <plc type="APS.Hardware.S7.S7200PLC" address="127.0.0.1">tm</plc>
+    <plc type="APS.Hardware.S7.S7200PLC" address="127.0.0.2">c1</plc>
+    <plc type="APS.Hardware.S7.S7200PLC" address="127.0.0.3">c2</plc>
+    <plc type="APS.Hardware.S7.S7200PLC" address="127.0.0.4">c3</plc>
+    <plc type="APS.Hardware.S7.S7200PLC" address="127.0.0.5">c4</plc>
+  </plcs>
+  <!-- ============================================================ -->
+  <!-- TM PLC: transfer module + loadlock                            -->
+  <!-- ============================================================ -->
+  <valves lib="S7" hwtype="APS.Hardware.S7.S7200Valve" host="tm">
+    <valve address="2" index="6" descr="TM foreline">TM_FL</valve>
+    <valve address="2" index="5" descr="LL foreline">LL_FL</valve>
+    <valve address="2" index="1" vent="true" chamber="LL" conductance="3.0" descr="LL vent">LL_A1</valve>
+    <valve address="2" index="2" connects="TM,LL" descr="Slit LL-TM">SV_LL</valve>
+    <valve address="2" index="3" connects="TM,C1" descr="Slit TM-C1">SV_C1</valve>
+    <!-- Roughing-line valves: direct SP→chamber bypass of TP -->
+    <valve address="3" index="1" descr="LL roughing line">LL_RL</valve>
+    <valve address="3" index="2" descr="TM roughing line">TM_RL</valve>
+    <valve address="3" index="3" connects="TM,C2" descr="Slit TM-C2">SV_C2</valve>
+    <valve address="3" index="4" connects="TM,C3" descr="Slit TM-C3">SV_C3</valve>
+    <valve address="3" index="5" connects="TM,C4" descr="Slit TM-C4">SV_C4</valve>
+  </valves>
+  <valves lib="S7" hwtype="APS.Hardware.S7.S7200InputValve" host="tm">
+    <valve address="2" index="7" descr="Gate TM (TP-TM)">TM_GV</valve>
+    <valve address="2" index="4" descr="Gate LL (TP-LL)">LL_GV</valve>
+  </valves>
+  <sensors lib="S7" hwtype="APS.Hardware.S7.S7200Sensor" host="tm">
+    <sensor address="100" chamber="TM" descr="TM pressure">TM_pm</sensor>
+    <sensor address="104" chamber="LL" descr="LL pressure">LL_pm</sensor>
+  </sensors>
+  <pumps lib="S7" hwtype="APS.Hardware.S7.S7200TurboPump" host="tm">
+    <pump address="17" writeaddr="0" writeindex="4" chamber="TM" gate="TM_GV" foreline="TM_FL" descr="TM turbo">TM_TP</pump>
+    <pump address="33" writeaddr="0" writeindex="5" chamber="LL" gate="LL_GV" foreline="LL_FL" descr="LL turbo">LL_TP</pump>
+  </pumps>
+  <pumps lib="S7" hwtype="APS.Hardware.S7.S7200Pump" host="tm">
+    <pump address="0" index="6" chamber="TM" gate="TM_RL" descr="TM backing">TM_SP</pump>
+    <pump address="0" index="7" chamber="LL" gate="LL_RL" descr="LL backing">LL_SP</pump>
+  </pumps>
+  <!-- ============================================================ -->
+  <!-- C1 PLC: process chamber 1                                     -->
+  <!-- ============================================================ -->
+  <valves lib="S7" hwtype="APS.Hardware.S7.S7200GasValve" host="c1">
+    <valve address="12" index="1" chamber="C1" descr="Ar inlet">C1_V</valve>
+  </valves>
+  <valves lib="S7" hwtype="APS.Hardware.S7.S7200Valve" host="c1">
+    <valve address="2" index="6" descr="C1 foreline">C1_FL</valve>
+    <!-- Roughing-line + vent -->
+    <valve address="3" index="1" descr="C1 roughing line">C1_RL</valve>
+    <valve address="3" index="2" vent="true" chamber="C1" conductance="3.0" descr="C1 vent">C1_A1</valve>
+    <valve address="3" index="3" chamber="C1" descr="C1 Cu magnetron shutter">C1_Sh</valve>
+    <valve address="3" index="4" chamber="C1" descr="C1 Ti magnetron shutter">C1_Sh_B</valve>
+  </valves>
+  <valves lib="S7" hwtype="APS.Hardware.S7.S7200InputValve" host="c1">
+    <valve address="2" index="7" descr="Gate C1 (TP-chamber)">C1_GV</valve>
+  </valves>
+  <mfcs lib="S7" hwtype="APS.Hardware.S7.S7200MFC" host="c1">
+    <mfc address="160" descr="Ar MFC" chamber="C1" valve="C1_V">C1_Ar</mfc>
+  </mfcs>
+  <sensors lib="S7" hwtype="APS.Hardware.S7.S7200Sensor" host="c1">
+    <sensor address="100" chamber="C1" descr="C1 pressure">C1_pm</sensor>
+    <sensor address="124" chamber="C1" property="Temperature" descr="C1 temperature">C1_tmp</sensor>
+  </sensors>
+  <pumps lib="S7" hwtype="APS.Hardware.S7.S7200TurboPump" host="c1">
+    <pump address="17" writeaddr="0" writeindex="4" chamber="C1" gate="C1_GV" foreline="C1_FL" descr="C1 turbo">C1_TP</pump>
+  </pumps>
+  <pumps lib="S7" hwtype="APS.Hardware.S7.S7200Pump" host="c1">
+    <pump address="0" index="5" chamber="C1" gate="C1_RL" descr="C1 backing">C1_SP</pump>
+  </pumps>
+  <stages lib="S7" hwtype="APS.Hardware.S7.S7200Stage" host="c1">
+    <stage address="308" MB="16" index="5" presets="Load:0;Process:25" homePos="0" descr="Substrate lift">C1_VS</stage>
+  </stages>
+  <controllers lib="S7" hwtype="APS.Hardware.S7.S7200ThrottleValve" host="c1">
+    <controller address="200" chamber="C1" descr="C1 throttle valve">C1_TV</controller>
+  </controllers>
+  <!-- LAN power supplies are standalone devices (no host attribute) -->
+  <powersupplies lib="Demo" hwtype="APS.Hardware.Demo.LanPowerSupply">
+    <powersupply host="127.0.0.1" port="5025" mode="PDC" descr="C1 pulsed DC source">C1_PSU1</powersupply>
+    <powersupply host="127.0.0.1" port="5026" mode="RF" descr="C1 RF source B">C1_PSU2</powersupply>
+    <powersupply host="127.0.0.1" port="5027" mode="PDC" descr="C2 pulsed DC source">C2_PSU</powersupply>
+    <powersupply host="127.0.0.1" port="5028" mode="RF" descr="C3 RF source">C3_PSU1</powersupply>
+    <powersupply host="127.0.0.1" port="5029" mode="RF" descr="C3 RF source B">C3_PSU2</powersupply>
+    <powersupply host="127.0.0.1" port="5030" mode="PDC" descr="C4 pulsed DC source">C4_PSU</powersupply>
+  </powersupplies>
+  <!-- ============================================================ -->
+  <!-- C2 PLC: process chamber 2 (clone of c1)                       -->
+  <!-- ============================================================ -->
+  <valves lib="S7" hwtype="APS.Hardware.S7.S7200GasValve" host="c2">
+    <valve address="12" index="1" chamber="C2" descr="Ar inlet">C2_V</valve>
+  </valves>
+  <valves lib="S7" hwtype="APS.Hardware.S7.S7200Valve" host="c2">
+    <valve address="2" index="6" descr="C2 foreline">C2_FL</valve>
+    <!-- Roughing-line + vent -->
+    <valve address="3" index="1" descr="C2 roughing line">C2_RL</valve>
+    <valve address="3" index="2" vent="true" chamber="C2" conductance="3.0" descr="C2 vent">C2_A1</valve>
+    <valve address="3" index="3" chamber="C2" descr="C2 W magnetron shutter">C2_Sh</valve>
+  </valves>
+  <valves lib="S7" hwtype="APS.Hardware.S7.S7200InputValve" host="c2">
+    <valve address="2" index="7" descr="Gate C2 (TP-chamber)">C2_GV</valve>
+  </valves>
+  <mfcs lib="S7" hwtype="APS.Hardware.S7.S7200MFC" host="c2">
+    <mfc address="160" descr="Ar MFC" chamber="C2" valve="C2_V">C2_Ar</mfc>
+  </mfcs>
+  <sensors lib="S7" hwtype="APS.Hardware.S7.S7200Sensor" host="c2">
+    <sensor address="100" chamber="C2" descr="C2 pressure">C2_pm</sensor>
+    <sensor address="124" chamber="C2" property="Temperature" descr="C2 temperature">C2_tmp</sensor>
+  </sensors>
+  <pumps lib="S7" hwtype="APS.Hardware.S7.S7200TurboPump" host="c2">
+    <pump address="17" writeaddr="0" writeindex="4" chamber="C2" gate="C2_GV" foreline="C2_FL" descr="C2 turbo">C2_TP</pump>
+  </pumps>
+  <pumps lib="S7" hwtype="APS.Hardware.S7.S7200Pump" host="c2">
+    <pump address="0" index="5" chamber="C2" gate="C2_RL" descr="C2 backing">C2_SP</pump>
+  </pumps>
+  <stages lib="S7" hwtype="APS.Hardware.S7.S7200Stage" host="c2">
+    <stage address="308" MB="16" index="5" presets="Load:0;Process:25" homePos="0" descr="Substrate lift">C2_VS</stage>
+  </stages>
+  <controllers lib="S7" hwtype="APS.Hardware.S7.S7200ThrottleValve" host="c2">
+    <controller address="200" chamber="C2" descr="C2 throttle valve">C2_TV</controller>
+  </controllers>
+  <!-- ============================================================ -->
+  <!-- C3 PLC: process chamber 3 (clone of c1)                       -->
+  <!-- ============================================================ -->
+  <valves lib="S7" hwtype="APS.Hardware.S7.S7200GasValve" host="c3">
+    <valve address="12" index="1" chamber="C3" descr="Ar inlet">C3_V</valve>
+    <valve address="12" index="2" chamber="C3" descr="N2 inlet">C3_V_N2</valve>
+  </valves>
+  <valves lib="S7" hwtype="APS.Hardware.S7.S7200Valve" host="c3">
+    <valve address="2" index="6" descr="C3 foreline">C3_FL</valve>
+    <!-- Roughing-line + vent -->
+    <valve address="3" index="1" descr="C3 roughing line">C3_RL</valve>
+    <valve address="3" index="2" vent="true" chamber="C3" conductance="3.0" descr="C3 vent">C3_A1</valve>
+    <valve address="3" index="3" chamber="C3" descr="C3 Si magnetron shutter">C3_Sh</valve>
+    <valve address="3" index="4" chamber="C3" descr="C3 B magnetron shutter">C3_Sh_B</valve>
+  </valves>
+  <valves lib="S7" hwtype="APS.Hardware.S7.S7200InputValve" host="c3">
+    <valve address="2" index="7" descr="Gate C3 (TP-chamber)">C3_GV</valve>
+  </valves>
+  <mfcs lib="S7" hwtype="APS.Hardware.S7.S7200MFC" host="c3">
+    <mfc address="160" descr="Ar MFC" chamber="C3" valve="C3_V">C3_Ar</mfc>
+    <mfc address="292" descr="N2 MFC" chamber="C3" valve="C3_V_N2">C3_N2</mfc>
+  </mfcs>
+  <sensors lib="S7" hwtype="APS.Hardware.S7.S7200Sensor" host="c3">
+    <sensor address="100" chamber="C3" descr="C3 pressure">C3_pm</sensor>
+    <sensor address="124" chamber="C3" property="Temperature" descr="C3 temperature">C3_tmp</sensor>
+  </sensors>
+  <pumps lib="S7" hwtype="APS.Hardware.S7.S7200TurboPump" host="c3">
+    <pump address="17" writeaddr="0" writeindex="4" chamber="C3" gate="C3_GV" foreline="C3_FL" descr="C3 turbo">C3_TP</pump>
+  </pumps>
+  <pumps lib="S7" hwtype="APS.Hardware.S7.S7200Pump" host="c3">
+    <pump address="0" index="5" chamber="C3" gate="C3_RL" descr="C3 backing">C3_SP</pump>
+  </pumps>
+  <stages lib="S7" hwtype="APS.Hardware.S7.S7200Stage" host="c3">
+    <stage address="308" MB="16" index="5" presets="Load:0;Process:25" homePos="0" descr="Substrate lift">C3_VS</stage>
+  </stages>
+  <controllers lib="S7" hwtype="APS.Hardware.S7.S7200ThrottleValve" host="c3">
+    <controller address="200" chamber="C3" descr="C3 throttle valve">C3_TV</controller>
+  </controllers>
+  <!-- ============================================================ -->
+  <!-- C4 PLC: process chamber 4 (clone of c1)                       -->
+  <!-- ============================================================ -->
+  <valves lib="S7" hwtype="APS.Hardware.S7.S7200GasValve" host="c4">
+    <valve address="12" index="1" chamber="C4" descr="Ar inlet">C4_V</valve>
+  </valves>
+  <valves lib="S7" hwtype="APS.Hardware.S7.S7200Valve" host="c4">
+    <valve address="2" index="6" descr="C4 foreline">C4_FL</valve>
+    <!-- Roughing-line + vent -->
+    <valve address="3" index="1" descr="C4 roughing line">C4_RL</valve>
+    <valve address="3" index="2" vent="true" chamber="C4" conductance="3.0" descr="C4 vent">C4_A1</valve>
+    <valve address="3" index="3" chamber="C4" descr="C4 Cu magnetron shutter">C4_Sh</valve>
+  </valves>
+  <valves lib="S7" hwtype="APS.Hardware.S7.S7200InputValve" host="c4">
+    <valve address="2" index="7" descr="Gate C4 (TP-chamber)">C4_GV</valve>
+  </valves>
+  <mfcs lib="S7" hwtype="APS.Hardware.S7.S7200MFC" host="c4">
+    <mfc address="160" descr="Ar MFC" chamber="C4" valve="C4_V">C4_Ar</mfc>
+  </mfcs>
+  <sensors lib="S7" hwtype="APS.Hardware.S7.S7200Sensor" host="c4">
+    <sensor address="100" chamber="C4" descr="C4 pressure">C4_pm</sensor>
+    <sensor address="124" chamber="C4" property="Temperature" descr="C4 temperature">C4_tmp</sensor>
+  </sensors>
+  <pumps lib="S7" hwtype="APS.Hardware.S7.S7200TurboPump" host="c4">
+    <pump address="17" writeaddr="0" writeindex="4" chamber="C4" gate="C4_GV" foreline="C4_FL" descr="C4 turbo">C4_TP</pump>
+  </pumps>
+  <pumps lib="S7" hwtype="APS.Hardware.S7.S7200Pump" host="c4">
+    <pump address="0" index="5" chamber="C4" gate="C4_RL" descr="C4 backing">C4_SP</pump>
+  </pumps>
+  <stages lib="S7" hwtype="APS.Hardware.S7.S7200Stage" host="c4">
+    <stage address="308" MB="16" index="5" presets="Load:0;Process:25" homePos="0" descr="Substrate lift">C4_VS</stage>
+  </stages>
+  <controllers lib="S7" hwtype="APS.Hardware.S7.S7200ThrottleValve" host="c4">
+    <controller address="200" chamber="C4" descr="C4 throttle valve">C4_TV</controller>
+  </controllers>
+  <robots lib="Demo" hwtype="APS.Hardware.Demo.LanTransferRobot">
+    <robot host="127.0.0.1" port="5031" descr="Transfer robot" chamber="TM">ROBOT<face name="LL" idx="1" slit="SV_LL" angle="0" /><face name="C1" idx="2" slit="SV_C1" angle="60" /><face name="C2" idx="3" slit="SV_C2" angle="120" /><face name="C3" idx="4" slit="SV_C3" angle="180" /><face name="C4" idx="5" slit="SV_C4" angle="240" /><timing rotateMs="2000" extendMs="1500" liftMs="800" valveWaitMs="3000" /></robot>
+  </robots>
+</hardware>

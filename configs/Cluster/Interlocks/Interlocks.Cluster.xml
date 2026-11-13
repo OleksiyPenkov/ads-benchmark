@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Slit-valve OPEN interlocks — the single canonical definition for each
+  Valve_SV_*_open id.
+
+  Each slit valve sits on `tm` but its open-precondition spans two concerns:
+    1. Cross-host pressure: both sides must be < 1e-4 Torr (the sensor on the
+       far chamber lives on a different PLC host; the runtime resolves device
+       IDs globally).
+    2. Robot state: the arm must not be mid-transfer.
+
+  Both lines MUST live in ONE <interlock> block per id: the loader keys
+  interlocks by id and is last-write-wins (Core.Interlocks.cs), so a second
+  block with the same id in another file would silently overwrite this one.
+-->
+<interlocks>
+	<!-- LL to TM slit. -->
+	<interlock id="Valve_SV_LL_open">
+		<l>Sensor LL_pm less 1e-4</l>
+		<l>Sensor TM_pm less 1e-4</l>
+		<l>Robot ROBOT state notIn transferring</l>
+	</interlock>
+
+	<!-- TM to C1 slit. -->
+	<interlock id="Valve_SV_C1_open">
+		<l>Sensor C1_pm less 1e-4</l>
+		<l>Sensor TM_pm less 1e-4</l>
+		<l>Robot ROBOT state notIn transferring</l>
+	</interlock>
+
+	<!-- TM to C2/C3/C4 slits. -->
+	<interlock id="Valve_SV_C2_open">
+		<l>Sensor C2_pm less 1e-4</l>
+		<l>Sensor TM_pm less 1e-4</l>
+		<l>Robot ROBOT state notIn transferring</l>
+	</interlock>
+	<interlock id="Valve_SV_C3_open">
+		<l>Sensor C3_pm less 1e-4</l>
+		<l>Sensor TM_pm less 1e-4</l>
+		<l>Robot ROBOT state notIn transferring</l>
+	</interlock>
+	<interlock id="Valve_SV_C4_open">
+		<l>Sensor C4_pm less 1e-4</l>
+		<l>Sensor TM_pm less 1e-4</l>
+		<l>Robot ROBOT state notIn transferring</l>
+	</interlock>
+</interlocks>

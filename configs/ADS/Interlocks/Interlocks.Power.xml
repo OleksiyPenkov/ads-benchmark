@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<interlocks>
+	<!--
+	  Do not energize a sputter source at or near atmosphere. One block per PSU id from
+	  HWConf.xml. The threshold is a float literal (750.0): an int literal is boxed as int
+	  and the float unbox of the Sensor branch throws.
+	-->
+	<interlock id="power_PSU_A_on">
+		<l>Sensor pm less 750.0</l>
+	</interlock>
+	<interlock id="power_PSU_B_on">
+		<l>Sensor pm less 750.0</l>
+	</interlock>
+	<interlock id="power_PSU_C_on">
+		<l>Sensor pm less 750.0</l>
+	</interlock>
+	<interlock id="power_PSU_RF1_on">
+		<l>Sensor pm less 750.0</l>
+	</interlock>
+	<interlock id="power_PSU_RF2_on">
+		<l>Sensor pm less 750.0</l>
+	</interlock>
+	<interlock id="power_PSU_ION_on">
+		<l>Sensor pm less 750.0</l>
+	</interlock>
+</interlocks>

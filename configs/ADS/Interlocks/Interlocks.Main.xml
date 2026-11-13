@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<interlocks>
+	<interlock id="Valve_A1_open">
+		<l>Valve PP closed</l>
+		<l>Valve GVM closed</l>
+		<l>Valve GVL closed</l>
+		<l>Valve M1 closed</l>
+		<l>Valve M2 closed</l>
+		<l>Valve M3 closed</l>
+		<l>Valve V5 closed</l>
+		<l>Valve VI closed</l>
+	</interlock>
+	<interlock id="Valve_FL_open">
+		<l>Pump SP1 on</l>
+	</interlock>
+	<!-- Gate open requires the chamber roughed below 200 mTorr with the roughing line closed.
+	     The gate is only opened onto a stopped turbo, so the limit only guards against gross venting;
+	     PP must never pull on the turbo inlet. -->
+	<interlock id="Valve_GVM_open">
+		<l>Sensor pm less 2.0e-1</l>
+		<l>Valve PP closed</l>
+	</interlock>
+	<interlock id="Valve_PP_open">
+		<l>Pump SP1 on</l>
+	</interlock>
+	<interlock id="Pump_SP1_off">
+		<l>Valve FL closed</l>
+		<l>Valve PP closed</l>
+	</interlock>
+</interlocks>

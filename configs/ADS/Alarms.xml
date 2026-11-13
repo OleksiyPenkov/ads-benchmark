@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<alarms>
+	<chamber id="Main">
+		<states initial="startup">
+			<transition from="startup"     to="idle"        sensor="pm" cond="less" val="1e-6" />
+			<transition from="idle"        to="maintenance" valve="A1"  state="open"   require="GVM closed" />
+			<transition from="maintenance" to="startup"     valve="A1"  state="closed" />
+
+			<transition from="startup"    to="processing" group="gasvalve" state="anyOpen" />
+			<transition from="idle"       to="processing" group="gasvalve" state="anyOpen" />
+			<transition from="processing" to="idle"       group="gas"      state="allOff"  />
+		</states>
+		<alarm sensor="pm" cond="more" val="2e-1" state="processing">Main chamber pressure too high!</alarm>
+		<!-- delay="60": the chamber returns to idle the moment the last gas valve closes,
+		     while still at process pressure. Without a settling window this rule fires after
+		     every gas recipe; a genuine leak holds the condition and still fires after 60 s. -->
+		<alarm sensor="pm" cond="more" val="1e-4" state="idle" delay="60">Main chamber pressure too high!</alarm>
+		<alarm device="TP" status="alarm" state="processing">Turbo pump hardware alarm!</alarm>
+		<alarm device="TP" status="alarm" state="idle">Turbo pump hardware alarm!</alarm>
+		<alarm device="TP" status="alarm" state="maintenance">Turbo pump hardware alarm!</alarm>
+	</chamber>
+	<chamber id="Loadlock">
+		<states initial="startup">
+			<transition from="startup"     to="idle"        sensor="pl" cond="less" val="1e-2" />
+			<transition from="idle"        to="maintenance" valve="A2"  state="open"   require="GVL closed" />
+			<transition from="maintenance" to="startup"     valve="A2"  state="closed" />
+		</states>
+	</chamber>
+</alarms>

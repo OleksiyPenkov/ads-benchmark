@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<interlocks>
+	<interlock id="Pump_SP2_off">
+		<l>Valve GVL closed</l>
+	</interlock>
+	<interlock id="Pump_SP2_on">
+		<l>Valve A2 closed</l>
+	</interlock>
+	<interlock id="Valve_A2_open">
+		<l>Valve GVL closed</l>
+		<l>Pump SP2 off</l>
+	</interlock>
+	<interlock id="Valve_GVL_open">
+		<l>Valve A2 closed</l>
+		<l>Pump SP2 on</l>
+		<l>Sensor pl less 5.0e-2</l>
+	</interlock>
+	<interlock id="Valve_GVL_close">
+		<!-- HS (transfer arm) must be retracted to home (pos 15 ± 1) before
+		     the load-lock gate may be commanded shut, or the gate will collide
+		     with the arm shaft. -->
+		<l>Stage HS 15</l>
+	</interlock>
+	<interlock id="Stage_HS">
+		<!-- Inverse of Valve_GVL_close: the arm crosses the GVL gate plane
+		     during load/unload, so moving HS while GVL is closed would
+		     drive the arm into the closed gate. No position suffix — the
+		     rule guards every target position via the position-agnostic
+		     fallback lookup in Core.Interlocks.ResolveInterlockKey. -->
+		<l>Valve GVL open</l>
+	</interlock>
+</interlocks>

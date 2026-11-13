@@ -1,0 +1,896 @@
+--- Process log started 2026-09-02 19:45:44 ---
+------ 2026-09-02  Wednesday ------
+19:45:44.350  [Core]  Magnetron glow map (4 widgets): PSU_A->Mag1, PSU_B->Mag2, PSU_C->Mag3, PSU_RF2->Mag4
+19:45:44.368  [Core]  Hardware configuration loaded from <local-path>
+19:45:44.372  [Core]  DLL 'ADS_HW.dll' loaded WITHOUT hash pinning. Add sha256="41ef66ba3ba0748dcbdba3c0b4e7bf1a46a7744a8185fe01f19e44c571e5dfe7" to the <library> element to lock this binary.
+19:45:44.377  [Core]  Hardware components loaded from <local-path>
+19:45:44.377  [Core]  Controller TC1 connected
+19:45:44.378  [Core]  Controllers connected
+19:45:44.378  [Core]  Power supply PSU_A connected
+19:45:44.383  [Core]  Power supply PSU_B connected
+19:45:44.383  [Core]  Power supply PSU_C connected
+19:45:44.384  [Core]  Power supply PSU_RF1 connected
+19:45:44.384  [Core]  Power supply PSU_RF2 connected
+19:45:44.385  [Core]  Power supply PSU_AUX connected
+19:45:44.385  [Core]  Power supply PSU_ION connection failed
+19:45:44.386  [Core]  Power supply connection failed : 
+19:45:44.386  [Core]  Stepper drive Shutter connected
+19:45:44.387  [Core]  Stepper drive Holder connected
+19:45:44.387  [Core]  Stepper drives connected
+19:45:44.388  [Core]  Sensor pm connected
+19:45:44.388  [Core]  Sensor pl connected
+19:45:44.389  [Core]  Sensor tmp connected
+19:45:44.389  [Core]  Sensor tmp connected
+19:45:44.389  [Core]  Interlocks loaded from <local-path>
+19:45:44.390  [Core]  Interlocks loaded from <local-path>
+19:45:44.390  [Core]  Interlocks loaded from <local-path>
+19:45:44.391  [Core]  Interlocks loaded from <local-path>
+19:45:44.391  [Core]  State transition: Startup -> Idle when pm less 1e-6
+19:45:44.392  [Core]  State transition: Idle -> Maintenance when valve A1 open
+19:45:44.392  [Core]  State transition: Maintenance -> Startup when valve A1 closed
+19:45:44.392  [Core]  State transition: Startup -> Processing when group gasvalve anyOpen
+19:45:44.393  [Core]  State transition: Idle -> Processing when group gasvalve anyOpen
+19:45:44.393  [Core]  State transition: Processing -> Idle when group gas allOff
+19:45:44.393  [Core]  Alarms configuration loaded from <local-path>
+19:45:44.394  [Core]  DLL 'APS.Workers.Generic.dll' loaded WITHOUT hash pinning. Add sha256="5da8bf69090d070852a6d6f492cac0358aa9475aafd84875779870060549e851" to the <library> element to lock this binary.
+19:45:44.394  [Core]  Core worker loaded from APS.Workers.Generic.dll
+19:45:44.395  [Core]  Embedded recipes loaded from <local-path>
+19:45:44.419  [State]  Transition Main: Startup -> Idle (sensor pm = 1e-07)
+19:45:46.527  [Core]  System is ready
+19:46:43.485  [Target]  Target W INV-29 is nearing its erosion limit (94%).
+19:46:43.490  [Target]  Target Si INV-14 is nearing its erosion limit (97%).
+19:48:40.173  [Agent]  [behavior-validation] device.command {"type":"Power","device":"PSU_B","args":["SetCurrent",100]}
+19:48:41.973  [Agent]  [behavior-validation] device.command {"type":"Power","device":"PSU_B","args":["OutputOn"]}
+19:48:46.767  [Agent]  [behavior-validation] device.command {"type":"Power","device":"PSU_B","args":["OutputOff"]}
+19:48:48.456  [Agent]  [behavior-validation] device.command {"type":"Power","device":"PSU_B","args":["SetCurrent",0]}
+19:49:30.403  [Agent]  [behavior-validation] recipe.start {"name":"SMOKE-Si-deposition","parameters":null}
+19:49:30.407  [Recipe]  Recipe started: SMOKE-Si-deposition
+19:49:30.409  [recipe]  Base pressure: 1.01E-007 Torr
+19:49:30.410  [Execute]  Loading recipe: <local-path>
+19:49:30.412  [Execute]  Recipe loaded, 477 chars
+19:49:30.544  [Execute]    exec: valve M1 true
+19:49:30.546  [Execute]    target=Valve, argTypes=[DeviceType,Boolean]
+19:49:30.547  [Execute]    FindElement(Valve, M1) => S7200GasValve
+19:49:31.080  [State]  Transition Main: Idle -> Processing (poll)
+19:49:32.449  [Execute]    result: True
+19:49:32.451  [Execute]  Valve M1 open
+19:49:32.453  [Execute]    exec: valve V3 true
+19:49:32.455  [Execute]    target=Valve, argTypes=[DeviceType,Boolean]
+19:49:32.456  [Execute]    FindElement(Valve, V3) => S7200GasValve
+19:49:34.875  [Execute]    result: True
+19:49:34.877  [Execute]  Valve V3 open
+19:49:34.879  [Execute]    exec: mfc Ar2 40
+19:49:34.880  [Execute]    target=MFC, argTypes=[DeviceType,Single]
+19:49:34.881  [Execute]    FindElement(MFC, Ar2) => S7200MFC
+19:49:39.722  [Execute]    result: 39.975548
+19:49:39.724  [Execute]  MFC Ar2 39.975548
+19:49:39.726  [Execute]    exec: pwait TC1 0.002 300
+19:49:39.727  [Execute]    target=Controller, argTypes=[DeviceType,String,Single,Single]
+19:49:39.728  [Execute]    bound device: TC1
+19:50:32.384  [Execute]    result: 0.0018150001
+19:50:32.385  [Execute]  Controller TC1 0.0018150001
+19:50:32.387  [Execute]    exec: set PSU_A Current 250
+19:50:32.389  [Execute]    target=Power, argTypes=[DeviceType,String,Single]
+19:50:32.390  [Execute]    FindElement(Power, PSU_A) => LanPowerSupply
+19:50:32.597  [Execute]    result: 250
+19:50:32.599  [Execute]  Power PSU_A 250
+19:50:32.600  [Execute]    exec: power PSU_A true
+19:50:32.602  [Execute]    target=Power, argTypes=[DeviceType,Boolean]
+19:50:32.603  [Execute]    FindElement(Power, PSU_A) => LanPowerSupply
+19:50:34.027  [Execute]    result: True
+19:50:34.263  [Execute]  Power PSU_A True
+19:50:34.266  [OpDelay]  Waiting 5s
+19:50:39.122  [OpDelay]  Continue
+19:50:39.124  [Execute]    exec: holder Si
+19:50:39.126  [Execute]    target=Drive, argTypes=[DeviceType,String]
+19:50:39.127  [Execute]    bound device: Holder
+19:50:40.881  [Execute]    result: 4024
+19:50:40.883  [Execute]  Drive Si 4024
+19:50:40.885  [Execute]    exec: deposit Si 20 1
+19:50:40.886  [Execute]    target=Drive, argTypes=[DeviceType,String,Single,String]
+19:50:40.888  [Execute]    bound device: Holder
+19:51:06.401  [Execute]    result: 0
+19:51:06.403  [Execute]  Drive Si 0
+19:51:06.405  [Execute]    exec: holder Home
+19:51:06.406  [Execute]    target=Drive, argTypes=[DeviceType,String]
+19:51:06.407  [Execute]    bound device: Holder
+19:51:06.799  [Execute]    result: 0
+19:51:06.802  [Execute]  Drive Home 0
+19:51:06.804  [Execute]    exec: power PSU_A false
+19:51:06.805  [Execute]    target=Power, argTypes=[DeviceType,Boolean]
+19:51:06.806  [Execute]    FindElement(Power, PSU_A) => LanPowerSupply
+19:51:07.111  [Execute]    result: False
+19:51:07.113  [Execute]  Power PSU_A False
+19:51:07.115  [Execute]    exec: set PSU_A Current 0
+19:51:07.116  [Execute]    target=Power, argTypes=[DeviceType,String,Single]
+19:51:07.118  [Execute]    FindElement(Power, PSU_A) => LanPowerSupply
+19:51:07.314  [Execute]    result: 0
+19:51:07.315  [Execute]  Power PSU_A 0
+19:51:07.317  [Execute]    exec: mfc Ar2 0
+19:51:07.318  [Execute]    target=MFC, argTypes=[DeviceType,Single]
+19:51:07.319  [Execute]    FindElement(MFC, Ar2) => S7200MFC
+19:51:08.328  [Execute]    result: 14.715178
+19:51:08.330  [Execute]  MFC Ar2 14.715178
+19:51:08.334  [Execute]    exec: valve V3 false
+19:51:08.335  [Execute]    target=Valve, argTypes=[DeviceType,Boolean]
+19:51:08.336  [Execute]    FindElement(Valve, V3) => S7200GasValve
+19:51:10.722  [Execute]    result: False
+19:51:10.724  [Execute]  Valve V3 closed
+19:51:10.726  [Execute]    exec: valve M1 false
+19:51:10.727  [Execute]    target=Valve, argTypes=[DeviceType,Boolean]
+19:51:10.728  [Execute]    FindElement(Valve, M1) => S7200GasValve
+19:51:11.360  [State]  Transition Main: Processing -> Idle (poll)
+19:51:12.204  [Execute]    result: False
+19:51:12.206  [Execute]  Valve M1 closed
+19:51:12.207  [Execute]    exec: pwait TC1 0 120
+19:51:12.209  [Execute]    target=Controller, argTypes=[DeviceType,String,Single,Single]
+19:51:12.210  [Execute]    bound device: TC1
+19:51:12.408  [Execute]    result: 0
+19:51:12.411  [Execute]  Controller TC1 0
+19:51:12.413  [Execute]  Recipe complete
+19:51:12.414  [Recipe]  Recipe complete: SMOKE-Si-deposition (01m 41s)
+19:54:22.752  [Agent]  [behavior-validation] device.command {"type":"Power","device":"PSU_B","args":["SetFrequency",40]}
+19:54:30.731  [Agent]  [behavior-validation] device.command {"type":"Power","device":"PSU_B","args":["SetDutyCycle",70]}
+19:57:31.133  [Agent]  [behavior-validation] recipe.upload {"name":"ARM-A-W-B4C-ML-d55.7-G0.29-N30","content":"\u003C?xml version=\u00221.0\u0022 encoding=\u0022utf-8\u0022?\u003E\n\u003CRecipe\u003E\n  \u003CDescription\u003E\n    \u003CTitle\u003EW/B4C peri…
+19:57:34.773  [Agent]  [behavior-validation] recipe.start {"name":"ARM-A-W-B4C-ML-d55.7-G0.29-N30","parameters":null}
+19:57:34.776  [Recipe]  Recipe started: ARM-A-W-B4C-ML-d55.7-G0.29-N30
+19:57:34.778  [recipe]  Base pressure: 1.00E-007 Torr
+19:57:34.779  [Execute]  Loading recipe: <local-path>
+19:57:34.782  [Execute]  Recipe loaded, 2590 chars
+19:57:34.900  [Execute]    exec: stage VS 0
+19:57:34.902  [Execute]    target=Stage, argTypes=[IBaseComponent,Single]
+19:57:34.903  [Execute]    FindElement(Stage, VS) => S7200Stage
+19:57:34.904  [Stage]  VS: moving to 0.0 mm
+19:57:38.099  [Execute]    result: 0
+19:57:38.100  [Execute]  Stage VS: arrived at 0.0 mm
+19:57:38.102  [Execute]    exec: valve V2 true
+19:57:38.103  [Execute]    target=Valve, argTypes=[DeviceType,Boolean]
+19:57:38.104  [Execute]    FindElement(Valve, V2) => S7200GasValve
+19:57:39.219  [State]  Transition Main: Idle -> Processing (poll)
+19:57:41.359  [Execute]    result: True
+19:57:41.361  [Execute]  Valve V2 open
+19:57:41.363  [Execute]    exec: valve V3 true
+19:57:41.364  [Execute]    target=Valve, argTypes=[DeviceType,Boolean]
+19:57:41.365  [Execute]    FindElement(Valve, V3) => S7200GasValve
+19:57:43.325  [Execute]    result: True
+19:57:43.327  [Execute]  Valve V3 open
+19:57:43.329  [Execute]    exec: valve M2 true
+19:57:43.330  [Execute]    target=Valve, argTypes=[DeviceType,Boolean]
+19:57:43.331  [Execute]    FindElement(Valve, M2) => S7200GasValve
+19:57:45.292  [Execute]    result: True
+19:57:45.294  [Execute]  Valve M2 open
+19:57:45.296  [Execute]    exec: valve M3 true
+19:57:45.297  [Execute]    target=Valve, argTypes=[DeviceType,Boolean]
+19:57:45.299  [Execute]    FindElement(Valve, M3) => S7200GasValve
+19:57:46.775  [Execute]    result: True
+19:57:46.776  [Execute]  Valve M3 open
+19:57:46.778  [Execute]    exec: mfc Ar1 40
+19:57:46.779  [Execute]    target=MFC, argTypes=[DeviceType,Single]
+19:57:46.780  [Execute]    FindElement(MFC, Ar1) => S7200MFC
+19:57:50.750  [Execute]    result: 39.933537
+19:57:50.753  [Execute]  MFC Ar1 39.933537
+19:57:50.754  [Execute]    exec: mfc Ar2 40
+19:57:50.756  [Execute]    target=MFC, argTypes=[DeviceType,Single]
+19:57:50.757  [Execute]    FindElement(MFC, Ar2) => S7200MFC
+19:57:54.679  [Execute]    result: 39.933537
+19:57:54.681  [Execute]  MFC Ar2 39.933537
+19:57:54.683  [Execute]    exec: pwait TC1 0.0025 300
+19:57:54.684  [Execute]    target=Controller, argTypes=[DeviceType,String,Single,Single]
+19:57:54.686  [Execute]    bound device: TC1
+19:58:36.047  [Execute]    result: 0.0022551
+19:58:36.048  [Execute]  Controller TC1 0.0022551
+19:58:36.050  [Execute]    exec: set PSU_B Frequency 40
+19:58:36.052  [Execute]    target=Power, argTypes=[DeviceType,String,Single]
+19:58:36.053  [Execute]    FindElement(Power, PSU_B) => LanPowerSupply
+19:58:36.276  [Execute]    result: 40
+19:58:36.278  [Execute]  Power PSU_B 40
+19:58:36.280  [Execute]    exec: set PSU_B DutyCycle 70
+19:58:36.281  [Execute]    target=Power, argTypes=[DeviceType,String,Single]
+19:58:36.282  [Execute]    FindElement(Power, PSU_B) => LanPowerSupply
+19:58:36.493  [Execute]    result: 70
+19:58:36.495  [Execute]  Power PSU_B 70
+19:58:36.496  [Execute]    exec: set PSU_B Current 550
+19:58:36.497  [Execute]    target=Power, argTypes=[DeviceType,String,Single]
+19:58:36.499  [Execute]    FindElement(Power, PSU_B) => LanPowerSupply
+19:58:36.738  [Execute]    result: 550
+19:58:36.740  [Execute]  Power PSU_B 550
+19:58:36.742  [Execute]    exec: set PSU_C Frequency 40
+19:58:36.743  [Execute]    target=Power, argTypes=[DeviceType,String,Single]
+19:58:36.744  [Execute]    FindElement(Power, PSU_C) => LanPowerSupply
+19:58:36.954  [Execute]    result: 40
+19:58:36.956  [Execute]  Power PSU_C 40
+19:58:36.958  [Execute]    exec: set PSU_C DutyCycle 70
+19:58:36.959  [Execute]    target=Power, argTypes=[DeviceType,String,Single]
+19:58:36.960  [Execute]    FindElement(Power, PSU_C) => LanPowerSupply
+19:58:37.168  [Execute]    result: 70
+19:58:37.171  [Execute]  Power PSU_C 70
+19:58:37.172  [Execute]    exec: set PSU_C Current 120
+19:58:37.173  [Execute]    target=Power, argTypes=[DeviceType,String,Single]
+19:58:37.175  [Execute]    FindElement(Power, PSU_C) => LanPowerSupply
+19:58:37.414  [Execute]    result: 120
+19:58:37.416  [Execute]  Power PSU_C 120
+19:58:37.420  [Execute]    exec: power PSU_B true
+19:58:37.422  [Execute]    target=Power, argTypes=[DeviceType,Boolean]
+19:58:37.423  [Execute]    FindElement(Power, PSU_B) => LanPowerSupply
+19:58:38.400  [Execute]    result: True
+19:58:38.492  [Execute]  Power PSU_B True
+19:58:38.495  [Execute]    exec: power PSU_C true
+19:58:38.496  [Execute]    target=Power, argTypes=[DeviceType,Boolean]
+19:58:38.498  [Execute]    FindElement(Power, PSU_C) => LanPowerSupply
+19:58:39.406  [Execute]    result: True
+19:58:39.407  [Execute]  Power PSU_C True
+19:58:39.409  [OpDelay]  Waiting 30s
+19:59:09.885  [OpDelay]  Continue
+19:59:09.888  [Execute]    exec: holder B4C
+19:59:09.889  [Execute]    target=Drive, argTypes=[DeviceType,String]
+19:59:09.891  [Execute]    bound device: Holder
+19:59:13.055  [Execute]    result: 8048
+19:59:13.057  [Execute]  Drive B4C 8048
+19:59:13.059  [Execute]    exec: deposit B4C 100.26 1
+19:59:13.060  [Execute]    target=Drive, argTypes=[DeviceType,String,Single,String]
+19:59:13.062  [Execute]    bound device: Holder
+20:01:08.220  [Execute]    result: 0
+20:01:08.223  [Execute]  Drive B4C 0
+20:01:08.227  [Execute]    exec: holder W
+20:01:08.229  [Execute]    target=Drive, argTypes=[DeviceType,String]
+20:01:08.230  [Execute]    bound device: Holder
+20:01:14.226  [Execute]    result: 16096
+20:01:14.228  [Execute]  Drive W 16096
+20:01:14.230  [Execute]    exec: deposit W 11.95 1
+20:01:14.232  [Execute]    target=Drive, argTypes=[DeviceType,String,Single,String]
+20:01:14.233  [Execute]    bound device: Holder
+20:01:39.755  [Execute]    result: 0
+20:01:39.757  [Execute]  Drive W 0
+20:01:39.759  [Execute]    exec: holder B4C
+20:01:39.761  [Execute]    target=Drive, argTypes=[DeviceType,String]
+20:01:39.762  [Execute]    bound device: Holder
+20:01:42.854  [Execute]    result: 8048
+20:01:42.856  [Execute]  Drive B4C 8048
+20:01:42.858  [Execute]    exec: deposit B4C 33.89 1
+20:01:42.860  [Execute]    target=Drive, argTypes=[DeviceType,String,Single,String]
+20:01:42.861  [Execute]    bound device: Holder
+20:02:26.205  [Execute]    result: 0
+20:02:26.207  [Execute]  Drive B4C 0
+20:02:26.215  [Execute]    exec: holder W
+20:02:26.219  [Execute]    target=Drive, argTypes=[DeviceType,String]
+20:02:26.220  [Execute]    bound device: Holder
+20:02:32.257  [Execute]    result: 16096
+20:02:32.259  [Execute]  Drive W 16096
+20:02:32.261  [Execute]    exec: deposit W 11.95 1
+20:02:32.263  [Execute]    target=Drive, argTypes=[DeviceType,String,Single,String]
+20:02:32.264  [Execute]    bound device: Holder
+20:02:57.755  [Execute]    result: 0
+20:02:57.758  [Execute]  Drive W 0
+20:02:57.759  [Execute]    exec: holder B4C
+20:02:57.761  [Execute]    target=Drive, argTypes=[DeviceType,String]
+20:02:57.762  [Execute]    bound device: Holder
+20:03:00.922  [Execute]    result: 8048
+20:03:00.924  [Execute]  Drive B4C 8048
+20:03:00.926  [Execute]    exec: deposit B4C 33.89 1
+20:03:00.927  [Execute]    target=Drive, argTypes=[DeviceType,String,Single,String]
+20:03:00.929  [Execute]    bound device: Holder
+20:03:44.419  [Execute]    result: 0
+20:03:44.422  [Execute]  Drive B4C 0
+20:03:44.424  [Execute]    exec: holder W
+20:03:44.425  [Execute]    target=Drive, argTypes=[DeviceType,String]
+20:03:44.427  [Execute]    bound device: Holder
+20:03:50.485  [Execute]    result: 16096
+20:03:50.487  [Execute]  Drive W 16096
+20:03:50.488  [Execute]    exec: deposit W 11.95 1
+20:03:50.490  [Execute]    target=Drive, argTypes=[DeviceType,String,Single,String]
+20:03:50.491  [Execute]    bound device: Holder
+20:04:15.996  [Execute]    result: 0
+20:04:15.997  [Execute]  Drive W 0
+20:04:15.999  [Execute]    exec: holder B4C
+20:04:16.001  [Execute]    target=Drive, argTypes=[DeviceType,String]
+20:04:16.002  [Execute]    bound device: Holder
+20:04:19.181  [Execute]    result: 8048
+20:04:19.183  [Execute]  Drive B4C 8048
+20:04:19.185  [Execute]    exec: deposit B4C 33.89 1
+20:04:19.187  [Execute]    target=Drive, argTypes=[DeviceType,String,Single,String]
+20:04:19.188  [Execute]    bound device: Holder
+20:05:02.614  [Execute]    result: 0
+20:05:02.617  [Execute]  Drive B4C 0
+20:05:02.620  [Execute]    exec: holder W
+20:05:02.621  [Execute]    target=Drive, argTypes=[DeviceType,String]
+20:05:02.623  [Execute]    bound device: Holder
+20:05:08.701  [Execute]    result: 16096
+20:05:08.704  [Execute]  Drive W 16096
+20:05:08.705  [Execute]    exec: deposit W 11.95 1
+20:05:08.707  [Execute]    target=Drive, argTypes=[DeviceType,String,Single,String]
+20:05:08.708  [Execute]    bound device: Holder
+20:05:34.216  [Execute]    result: 0
+20:05:34.219  [Execute]  Drive W 0
+20:05:34.220  [Execute]    exec: holder B4C
+20:05:34.222  [Execute]    target=Drive, argTypes=[DeviceType,String]
+20:05:34.223  [Execute]    bound device: Holder
+20:05:37.369  [Execute]    result: 8048
+20:05:37.372  [Execute]  Drive B4C 8048
+20:05:37.373  [Execute]    exec: deposit B4C 33.89 1
+20:05:37.375  [Execute]    target=Drive, argTypes=[DeviceType,String,Single,String]
+20:05:37.376  [Execute]    bound device: Holder
+20:06:20.803  [Execute]    result: 0
+20:06:20.805  [Execute]  Drive B4C 0
+20:06:20.807  [Execute]    exec: holder W
+20:06:20.809  [Execute]    target=Drive, argTypes=[DeviceType,String]
+20:06:20.810  [Execute]    bound device: Holder
+20:06:26.801  [Execute]    result: 16096
+20:06:26.803  [Execute]  Drive W 16096
+20:06:26.805  [Execute]    exec: deposit W 11.95 1
+20:06:26.807  [Execute]    target=Drive, argTypes=[DeviceType,String,Single,String]
+20:06:26.809  [Execute]    bound device: Holder
+20:06:52.257  [Execute]    result: 0
+20:06:52.259  [Execute]  Drive W 0
+20:06:52.261  [Execute]    exec: holder B4C
+20:06:52.263  [Execute]    target=Drive, argTypes=[DeviceType,String]
+20:06:52.264  [Execute]    bound device: Holder
+20:06:55.428  [Execute]    result: 8048
+20:06:55.430  [Execute]  Drive B4C 8048
+20:06:55.431  [Execute]    exec: deposit B4C 33.89 1
+20:06:55.433  [Execute]    target=Drive, argTypes=[DeviceType,String,Single,String]
+20:06:55.434  [Execute]    bound device: Holder
+20:07:38.891  [Execute]    result: 0
+20:07:38.893  [Execute]  Drive B4C 0
+20:07:38.895  [Execute]    exec: holder W
+20:07:38.896  [Execute]    target=Drive, argTypes=[DeviceType,String]
+20:07:38.898  [Execute]    bound device: Holder
+20:07:44.972  [Execute]    result: 16096
+20:07:44.975  [Execute]  Drive W 16096
+20:07:44.977  [Execute]    exec: deposit W 11.95 1
+20:07:44.978  [Execute]    target=Drive, argTypes=[DeviceType,String,Single,String]
+20:07:44.980  [Execute]    bound device: Holder
+20:08:10.443  [Execute]    result: 0
+20:08:10.446  [Execute]  Drive W 0
+20:08:10.448  [Execute]    exec: holder B4C
+20:08:10.449  [Execute]    target=Drive, argTypes=[DeviceType,String]
+20:08:10.450  [Execute]    bound device: Holder
+20:08:13.624  [Execute]    result: 8048
+20:08:13.626  [Execute]  Drive B4C 8048
+20:08:13.628  [Execute]    exec: deposit B4C 33.89 1
+20:08:13.629  [Execute]    target=Drive, argTypes=[DeviceType,String,Single,String]
+20:08:13.630  [Execute]    bound device: Holder
+20:08:57.119  [Execute]    result: 0
+20:08:57.121  [Execute]  Drive B4C 0
+20:08:57.123  [Execute]    exec: holder W
+20:08:57.124  [Execute]    target=Drive, argTypes=[DeviceType,String]
+20:08:57.126  [Execute]    bound device: Holder
+20:09:03.198  [Execute]    result: 16096
+20:09:03.200  [Execute]  Drive W 16096
+20:09:03.202  [Execute]    exec: deposit W 11.95 1
+20:09:03.204  [Execute]    target=Drive, argTypes=[DeviceType,String,Single,String]
+20:09:03.205  [Execute]    bound device: Holder
+20:09:28.683  [Execute]    result: 0
+20:09:28.688  [Execute]  Drive W 0
+20:09:28.691  [Execute]    exec: holder B4C
+20:09:28.693  [Execute]    target=Drive, argTypes=[DeviceType,String]
+20:09:28.695  [Execute]    bound device: Holder
+20:09:32.008  [Execute]    result: 8048
+20:09:32.011  [Execute]  Drive B4C 8048
+20:09:32.013  [Execute]    exec: deposit B4C 33.89 1
+20:09:32.015  [Execute]    target=Drive, argTypes=[DeviceType,String,Single,String]
+20:09:32.017  [Execute]    bound device: Holder
+20:10:15.322  [Execute]    result: 0
+20:10:15.325  [Execute]  Drive B4C 0
+20:10:15.327  [Execute]    exec: holder W
+20:10:15.329  [Execute]    target=Drive, argTypes=[DeviceType,String]
+20:10:15.330  [Execute]    bound device: Holder
+20:10:21.311  [Execute]    result: 16096
+20:10:21.313  [Execute]  Drive W 16096
+20:10:21.315  [Execute]    exec: deposit W 11.95 1
+20:10:21.317  [Execute]    target=Drive, argTypes=[DeviceType,String,Single,String]
+20:10:21.318  [Execute]    bound device: Holder
+20:10:46.768  [Execute]    result: 0
+20:10:46.770  [Execute]  Drive W 0
+20:10:46.772  [Execute]    exec: holder B4C
+20:10:46.774  [Execute]    target=Drive, argTypes=[DeviceType,String]
+20:10:46.775  [Execute]    bound device: Holder
+20:10:49.943  [Execute]    result: 8048
+20:10:49.946  [Execute]  Drive B4C 8048
+20:10:49.948  [Execute]    exec: deposit B4C 33.89 1
+20:10:49.949  [Execute]    target=Drive, argTypes=[DeviceType,String,Single,String]
+20:10:49.950  [Execute]    bound device: Holder
+20:11:33.450  [Execute]    result: 0
+20:11:33.452  [Execute]  Drive B4C 0
+20:11:33.454  [Execute]    exec: holder W
+20:11:33.455  [Execute]    target=Drive, argTypes=[DeviceType,String]
+20:11:33.456  [Execute]    bound device: Holder
+20:11:39.453  [Execute]    result: 16096
+20:11:39.455  [Execute]  Drive W 16096
+20:11:39.457  [Execute]    exec: deposit W 11.95 1
+20:11:39.459  [Execute]    target=Drive, argTypes=[DeviceType,String,Single,String]
+20:11:39.460  [Execute]    bound device: Holder
+20:12:05.037  [Execute]    result: 0
+20:12:05.039  [Execute]  Drive W 0
+20:12:05.040  [Execute]    exec: holder B4C
+20:12:05.042  [Execute]    target=Drive, argTypes=[DeviceType,String]
+20:12:05.043  [Execute]    bound device: Holder
+20:12:08.162  [Execute]    result: 8048
+20:12:08.164  [Execute]  Drive B4C 8048
+20:12:08.166  [Execute]    exec: deposit B4C 33.89 1
+20:12:08.168  [Execute]    target=Drive, argTypes=[DeviceType,String,Single,String]
+20:12:08.169  [Execute]    bound device: Holder
+20:12:51.710  [Execute]    result: 0
+20:12:51.715  [Execute]  Drive B4C 0
+20:12:51.718  [Execute]    exec: holder W
+20:12:51.721  [Execute]    target=Drive, argTypes=[DeviceType,String]
+20:12:51.722  [Execute]    bound device: Holder
+20:12:57.897  [Execute]    result: 16096
+20:12:57.899  [Execute]  Drive W 16096
+20:12:57.901  [Execute]    exec: deposit W 11.95 1
+20:12:57.902  [Execute]    target=Drive, argTypes=[DeviceType,String,Single,String]
+20:12:57.904  [Execute]    bound device: Holder
+20:13:23.289  [Execute]    result: 0
+20:13:23.292  [Execute]  Drive W 0
+20:13:23.294  [Execute]    exec: holder B4C
+20:13:23.295  [Execute]    target=Drive, argTypes=[DeviceType,String]
+20:13:23.297  [Execute]    bound device: Holder
+20:13:26.446  [Execute]    result: 8048
+20:13:26.448  [Execute]  Drive B4C 8048
+20:13:26.450  [Execute]    exec: deposit B4C 33.89 1
+20:13:26.451  [Execute]    target=Drive, argTypes=[DeviceType,String,Single,String]
+20:13:26.453  [Execute]    bound device: Holder
+20:14:09.900  [Execute]    result: 0
+20:14:09.902  [Execute]  Drive B4C 0
+20:14:09.904  [Execute]    exec: holder W
+20:14:09.906  [Execute]    target=Drive, argTypes=[DeviceType,String]
+20:14:09.907  [Execute]    bound device: Holder
+20:14:15.896  [Execute]    result: 16096
+20:14:15.898  [Execute]  Drive W 16096
+20:14:15.900  [Execute]    exec: deposit W 11.95 1
+20:14:15.902  [Execute]    target=Drive, argTypes=[DeviceType,String,Single,String]
+20:14:15.903  [Execute]    bound device: Holder
+20:14:41.496  [Execute]    result: 0
+20:14:41.498  [Execute]  Drive W 0
+20:14:41.500  [Execute]    exec: holder B4C
+20:14:41.502  [Execute]    target=Drive, argTypes=[DeviceType,String]
+20:14:41.503  [Execute]    bound device: Holder
+20:14:44.601  [Execute]    result: 8048
+20:14:44.603  [Execute]  Drive B4C 8048
+20:14:44.605  [Execute]    exec: deposit B4C 33.89 1
+20:14:44.607  [Execute]    target=Drive, argTypes=[DeviceType,String,Single,String]
+20:14:44.608  [Execute]    bound device: Holder
+20:15:28.164  [Execute]    result: 0
+20:15:28.166  [Execute]  Drive B4C 0
+20:15:28.168  [Execute]    exec: holder W
+20:15:28.169  [Execute]    target=Drive, argTypes=[DeviceType,String]
+20:15:28.171  [Execute]    bound device: Holder
+20:15:34.159  [Execute]    result: 16096
+20:15:34.161  [Execute]  Drive W 16096
+20:15:34.163  [Execute]    exec: deposit W 11.95 1
+20:15:34.165  [Execute]    target=Drive, argTypes=[DeviceType,String,Single,String]
+20:15:34.167  [Execute]    bound device: Holder
+20:15:59.699  [Execute]    result: 0
+20:15:59.702  [Execute]  Drive W 0
+20:15:59.704  [Execute]    exec: holder B4C
+20:15:59.705  [Execute]    target=Drive, argTypes=[DeviceType,String]
+20:15:59.706  [Execute]    bound device: Holder
+20:16:02.811  [Execute]    result: 8048
+20:16:02.813  [Execute]  Drive B4C 8048
+20:16:02.815  [Execute]    exec: deposit B4C 33.89 1
+20:16:02.817  [Execute]    target=Drive, argTypes=[DeviceType,String,Single,String]
+20:16:02.818  [Execute]    bound device: Holder
+20:16:46.248  [Execute]    result: 0
+20:16:46.252  [Execute]  Drive B4C 0
+20:16:46.256  [Execute]    exec: holder W
+20:16:46.260  [Execute]    target=Drive, argTypes=[DeviceType,String]
+20:16:46.262  [Execute]    bound device: Holder
+20:16:52.312  [Execute]    result: 16096
+20:16:52.314  [Execute]  Drive W 16096
+20:16:52.316  [Execute]    exec: deposit W 11.95 1
+20:16:52.317  [Execute]    target=Drive, argTypes=[DeviceType,String,Single,String]
+20:16:52.318  [Execute]    bound device: Holder
+20:17:17.743  [Execute]    result: 0
+20:17:18.010  [Execute]  Drive W 0
+20:17:18.013  [Execute]    exec: holder B4C
+20:17:18.015  [Execute]    target=Drive, argTypes=[DeviceType,String]
+20:17:18.016  [Execute]    bound device: Holder
+20:17:20.912  [Execute]    result: 8048
+20:17:20.914  [Execute]  Drive B4C 8048
+20:17:20.916  [Execute]    exec: deposit B4C 33.89 1
+20:17:20.918  [Execute]    target=Drive, argTypes=[DeviceType,String,Single,String]
+20:17:20.919  [Execute]    bound device: Holder
+20:18:04.314  [Execute]    result: 0
+20:18:04.316  [Execute]  Drive B4C 0
+20:18:04.319  [Execute]    exec: holder W
+20:18:04.320  [Execute]    target=Drive, argTypes=[DeviceType,String]
+20:18:04.322  [Execute]    bound device: Holder
+20:18:10.377  [Execute]    result: 16096
+20:18:10.380  [Execute]  Drive W 16096
+20:18:10.384  [Execute]    exec: deposit W 11.95 1
+20:18:10.386  [Execute]    target=Drive, argTypes=[DeviceType,String,Single,String]
+20:18:10.387  [Execute]    bound device: Holder
+20:18:35.802  [Execute]    result: 0
+20:18:35.804  [Execute]  Drive W 0
+20:18:35.807  [Execute]    exec: holder B4C
+20:18:35.808  [Execute]    target=Drive, argTypes=[DeviceType,String]
+20:18:35.809  [Execute]    bound device: Holder
+20:18:38.968  [Execute]    result: 8048
+20:18:38.969  [Execute]  Drive B4C 8048
+20:18:38.971  [Execute]    exec: deposit B4C 33.89 1
+20:18:38.972  [Execute]    target=Drive, argTypes=[DeviceType,String,Single,String]
+20:18:38.974  [Execute]    bound device: Holder
+20:19:22.474  [Execute]    result: 0
+20:19:22.476  [Execute]  Drive B4C 0
+20:19:22.479  [Execute]    exec: holder W
+20:19:22.480  [Execute]    target=Drive, argTypes=[DeviceType,String]
+20:19:22.482  [Execute]    bound device: Holder
+20:19:28.550  [Execute]    result: 16096
+20:19:28.552  [Execute]  Drive W 16096
+20:19:28.554  [Execute]    exec: deposit W 11.95 1
+20:19:28.555  [Execute]    target=Drive, argTypes=[DeviceType,String,Single,String]
+20:19:28.557  [Execute]    bound device: Holder
+20:19:54.124  [Execute]    result: 0
+20:19:54.127  [Execute]  Drive W 0
+20:19:54.129  [Execute]    exec: holder B4C
+20:19:54.131  [Execute]    target=Drive, argTypes=[DeviceType,String]
+20:19:54.132  [Execute]    bound device: Holder
+20:19:57.285  [Execute]    result: 8048
+20:19:57.288  [Execute]  Drive B4C 8048
+20:19:57.290  [Execute]    exec: deposit B4C 33.89 1
+20:19:57.291  [Execute]    target=Drive, argTypes=[DeviceType,String,Single,String]
+20:19:57.293  [Execute]    bound device: Holder
+20:20:40.808  [Execute]    result: 0
+20:20:40.811  [Execute]  Drive B4C 0
+20:20:40.814  [Execute]    exec: holder W
+20:20:40.815  [Execute]    target=Drive, argTypes=[DeviceType,String]
+20:20:40.817  [Execute]    bound device: Holder
+20:20:46.918  [Execute]    result: 16096
+20:20:46.921  [Execute]  Drive W 16096
+20:20:46.922  [Execute]    exec: deposit W 11.95 1
+20:20:46.924  [Execute]    target=Drive, argTypes=[DeviceType,String,Single,String]
+20:20:46.925  [Execute]    bound device: Holder
+20:21:12.445  [Execute]    result: 0
+20:21:12.448  [Execute]  Drive W 0
+20:21:12.450  [Execute]    exec: holder B4C
+20:21:12.451  [Execute]    target=Drive, argTypes=[DeviceType,String]
+20:21:12.453  [Execute]    bound device: Holder
+20:21:15.565  [Execute]    result: 8048
+20:21:15.567  [Execute]  Drive B4C 8048
+20:21:15.569  [Execute]    exec: deposit B4C 33.89 1
+20:21:15.570  [Execute]    target=Drive, argTypes=[DeviceType,String,Single,String]
+20:21:15.571  [Execute]    bound device: Holder
+20:21:59.053  [Execute]    result: 0
+20:21:59.057  [Execute]  Drive B4C 0
+20:21:59.061  [Execute]    exec: holder W
+20:21:59.063  [Execute]    target=Drive, argTypes=[DeviceType,String]
+20:21:59.064  [Execute]    bound device: Holder
+20:22:05.101  [Execute]    result: 16096
+20:22:05.103  [Execute]  Drive W 16096
+20:22:05.105  [Execute]    exec: deposit W 11.95 1
+20:22:05.106  [Execute]    target=Drive, argTypes=[DeviceType,String,Single,String]
+20:22:05.108  [Execute]    bound device: Holder
+20:22:30.611  [Execute]    result: 0
+20:22:30.614  [Execute]  Drive W 0
+20:22:30.617  [Execute]    exec: holder B4C
+20:22:30.618  [Execute]    target=Drive, argTypes=[DeviceType,String]
+20:22:30.620  [Execute]    bound device: Holder
+20:22:33.726  [Execute]    result: 8048
+20:22:33.729  [Execute]  Drive B4C 8048
+20:22:33.731  [Execute]    exec: deposit B4C 33.89 1
+20:22:33.732  [Execute]    target=Drive, argTypes=[DeviceType,String,Single,String]
+20:22:33.734  [Execute]    bound device: Holder
+20:23:17.175  [Execute]    result: 0
+20:23:17.178  [Execute]  Drive B4C 0
+20:23:17.180  [Execute]    exec: holder W
+20:23:17.181  [Execute]    target=Drive, argTypes=[DeviceType,String]
+20:23:17.182  [Execute]    bound device: Holder
+20:23:23.251  [Execute]    result: 16096
+20:23:23.253  [Execute]  Drive W 16096
+20:23:23.255  [Execute]    exec: deposit W 11.95 1
+20:23:23.257  [Execute]    target=Drive, argTypes=[DeviceType,String,Single,String]
+20:23:23.258  [Execute]    bound device: Holder
+20:23:48.727  [Execute]    result: 0
+20:23:48.729  [Execute]  Drive W 0
+20:23:48.731  [Execute]    exec: holder B4C
+20:23:48.733  [Execute]    target=Drive, argTypes=[DeviceType,String]
+20:23:48.736  [Execute]    bound device: Holder
+20:23:51.903  [Execute]    result: 8048
+20:23:51.905  [Execute]  Drive B4C 8048
+20:23:51.907  [Execute]    exec: deposit B4C 33.89 1
+20:23:51.908  [Execute]    target=Drive, argTypes=[DeviceType,String,Single,String]
+20:23:51.909  [Execute]    bound device: Holder
+20:24:35.325  [Execute]    result: 0
+20:24:35.327  [Execute]  Drive B4C 0
+20:24:35.329  [Execute]    exec: holder W
+20:24:35.331  [Execute]    target=Drive, argTypes=[DeviceType,String]
+20:24:35.332  [Execute]    bound device: Holder
+20:24:41.451  [Execute]    result: 16096
+20:24:41.453  [Execute]  Drive W 16096
+20:24:41.455  [Execute]    exec: deposit W 11.95 1
+20:24:41.456  [Execute]    target=Drive, argTypes=[DeviceType,String,Single,String]
+20:24:41.458  [Execute]    bound device: Holder
+20:25:06.914  [Execute]    result: 0
+20:25:06.916  [Execute]  Drive W 0
+20:25:06.919  [Execute]    exec: holder B4C
+20:25:06.920  [Execute]    target=Drive, argTypes=[DeviceType,String]
+20:25:06.922  [Execute]    bound device: Holder
+20:25:10.081  [Execute]    result: 8048
+20:25:10.083  [Execute]  Drive B4C 8048
+20:25:10.085  [Execute]    exec: deposit B4C 33.89 1
+20:25:10.086  [Execute]    target=Drive, argTypes=[DeviceType,String,Single,String]
+20:25:10.088  [Execute]    bound device: Holder
+20:25:53.591  [Execute]    result: 0
+20:25:53.594  [Execute]  Drive B4C 0
+20:25:53.596  [Execute]    exec: holder W
+20:25:53.598  [Execute]    target=Drive, argTypes=[DeviceType,String]
+20:25:53.599  [Execute]    bound device: Holder
+20:25:59.648  [Execute]    result: 16096
+20:25:59.650  [Execute]  Drive W 16096
+20:25:59.652  [Execute]    exec: deposit W 11.95 1
+20:25:59.654  [Execute]    target=Drive, argTypes=[DeviceType,String,Single,String]
+20:25:59.655  [Execute]    bound device: Holder
+20:26:25.085  [Execute]    result: 0
+20:26:25.087  [Execute]  Drive W 0
+20:26:25.089  [Execute]    exec: holder B4C
+20:26:25.090  [Execute]    target=Drive, argTypes=[DeviceType,String]
+20:26:25.092  [Execute]    bound device: Holder
+20:26:28.301  [Execute]    result: 8048
+20:26:28.303  [Execute]  Drive B4C 8048
+20:26:28.305  [Execute]    exec: deposit B4C 33.89 1
+20:26:28.307  [Execute]    target=Drive, argTypes=[DeviceType,String,Single,String]
+20:26:28.308  [Execute]    bound device: Holder
+20:27:11.705  [Execute]    result: 0
+20:27:11.707  [Execute]  Drive B4C 0
+20:27:11.709  [Execute]    exec: holder W
+20:27:11.710  [Execute]    target=Drive, argTypes=[DeviceType,String]
+20:27:11.712  [Execute]    bound device: Holder
+20:27:17.772  [Execute]    result: 16096
+20:27:17.774  [Execute]  Drive W 16096
+20:27:17.776  [Execute]    exec: deposit W 11.95 1
+20:27:17.777  [Execute]    target=Drive, argTypes=[DeviceType,String,Single,String]
+20:27:17.778  [Execute]    bound device: Holder
+20:27:43.238  [Execute]    result: 0
+20:27:43.240  [Execute]  Drive W 0
+20:27:43.243  [Execute]    exec: holder B4C
+20:27:43.244  [Execute]    target=Drive, argTypes=[DeviceType,String]
+20:27:43.245  [Execute]    bound device: Holder
+20:27:46.413  [Execute]    result: 8048
+20:27:46.415  [Execute]  Drive B4C 8048
+20:27:46.417  [Execute]    exec: deposit B4C 33.89 1
+20:27:46.418  [Execute]    target=Drive, argTypes=[DeviceType,String,Single,String]
+20:27:46.419  [Execute]    bound device: Holder
+20:28:29.850  [Execute]    result: 0
+20:28:29.852  [Execute]  Drive B4C 0
+20:28:29.854  [Execute]    exec: holder W
+20:28:29.856  [Execute]    target=Drive, argTypes=[DeviceType,String]
+20:28:29.857  [Execute]    bound device: Holder
+20:28:35.930  [Execute]    result: 16096
+20:28:35.933  [Execute]  Drive W 16096
+20:28:35.935  [Execute]    exec: deposit W 11.95 1
+20:28:35.936  [Execute]    target=Drive, argTypes=[DeviceType,String,Single,String]
+20:28:35.938  [Execute]    bound device: Holder
+20:29:01.381  [Execute]    result: 0
+20:29:01.384  [Execute]  Drive W 0
+20:29:01.385  [Execute]    exec: holder B4C
+20:29:01.387  [Execute]    target=Drive, argTypes=[DeviceType,String]
+20:29:01.388  [Execute]    bound device: Holder
+20:29:04.497  [Execute]    result: 8048
+20:29:04.499  [Execute]  Drive B4C 8048
+20:29:04.501  [Execute]    exec: deposit B4C 33.89 1
+20:29:04.502  [Execute]    target=Drive, argTypes=[DeviceType,String,Single,String]
+20:29:04.504  [Execute]    bound device: Holder
+20:29:48.036  [Execute]    result: 0
+20:29:48.039  [Execute]  Drive B4C 0
+20:29:48.041  [Execute]    exec: holder W
+20:29:48.042  [Execute]    target=Drive, argTypes=[DeviceType,String]
+20:29:48.043  [Execute]    bound device: Holder
+20:29:54.214  [Execute]    result: 16096
+20:29:54.216  [Execute]  Drive W 16096
+20:29:54.218  [Execute]    exec: deposit W 11.95 1
+20:29:54.220  [Execute]    target=Drive, argTypes=[DeviceType,String,Single,String]
+20:29:54.221  [Execute]    bound device: Holder
+20:30:19.742  [Execute]    result: 0
+20:30:19.745  [Execute]  Drive W 0
+20:30:19.747  [Execute]    exec: holder B4C
+20:30:19.750  [Execute]    target=Drive, argTypes=[DeviceType,String]
+20:30:19.751  [Execute]    bound device: Holder
+20:30:22.855  [Execute]    result: 8048
+20:30:22.858  [Execute]  Drive B4C 8048
+20:30:22.860  [Execute]    exec: deposit B4C 33.89 1
+20:30:22.861  [Execute]    target=Drive, argTypes=[DeviceType,String,Single,String]
+20:30:22.862  [Execute]    bound device: Holder
+20:31:06.351  [Execute]    result: 0
+20:31:06.353  [Execute]  Drive B4C 0
+20:31:06.355  [Execute]    exec: holder W
+20:31:06.357  [Execute]    target=Drive, argTypes=[DeviceType,String]
+20:31:06.359  [Execute]    bound device: Holder
+20:31:12.403  [Execute]    result: 16096
+20:31:12.406  [Execute]  Drive W 16096
+20:31:12.407  [Execute]    exec: deposit W 11.95 1
+20:31:12.409  [Execute]    target=Drive, argTypes=[DeviceType,String,Single,String]
+20:31:12.410  [Execute]    bound device: Holder
+20:31:37.929  [Execute]    result: 0
+20:31:37.932  [Execute]  Drive W 0
+20:31:37.934  [Execute]    exec: holder B4C
+20:31:37.935  [Execute]    target=Drive, argTypes=[DeviceType,String]
+20:31:37.937  [Execute]    bound device: Holder
+20:31:41.057  [Execute]    result: 8048
+20:31:41.060  [Execute]  Drive B4C 8048
+20:31:41.062  [Execute]    exec: deposit B4C 33.89 1
+20:31:41.063  [Execute]    target=Drive, argTypes=[DeviceType,String,Single,String]
+20:31:41.064  [Execute]    bound device: Holder
+20:32:24.542  [Execute]    result: 0
+20:32:24.544  [Execute]  Drive B4C 0
+20:32:24.546  [Execute]    exec: holder W
+20:32:24.548  [Execute]    target=Drive, argTypes=[DeviceType,String]
+20:32:24.549  [Execute]    bound device: Holder
+20:32:30.617  [Execute]    result: 16096
+20:32:30.619  [Execute]  Drive W 16096
+20:32:30.621  [Execute]    exec: deposit W 11.95 1
+20:32:30.622  [Execute]    target=Drive, argTypes=[DeviceType,String,Single,String]
+20:32:30.624  [Execute]    bound device: Holder
+20:32:56.119  [Execute]    result: 0
+20:32:56.122  [Execute]  Drive W 0
+20:32:56.124  [Execute]    exec: holder B4C
+20:32:56.125  [Execute]    target=Drive, argTypes=[DeviceType,String]
+20:32:56.127  [Execute]    bound device: Holder
+20:32:59.292  [Execute]    result: 8048
+20:32:59.293  [Execute]  Drive B4C 8048
+20:32:59.296  [Execute]    exec: deposit B4C 33.89 1
+20:32:59.297  [Execute]    target=Drive, argTypes=[DeviceType,String,Single,String]
+20:32:59.299  [Execute]    bound device: Holder
+20:33:42.712  [Execute]    result: 0
+20:33:42.714  [Execute]  Drive B4C 0
+20:33:42.716  [Execute]    exec: holder W
+20:33:42.718  [Execute]    target=Drive, argTypes=[DeviceType,String]
+20:33:42.719  [Execute]    bound device: Holder
+20:33:48.774  [Execute]    result: 16096
+20:33:48.776  [Execute]  Drive W 16096
+20:33:48.778  [Execute]    exec: deposit W 11.95 1
+20:33:48.780  [Execute]    target=Drive, argTypes=[DeviceType,String,Single,String]
+20:33:48.781  [Execute]    bound device: Holder
+20:34:14.259  [Execute]    result: 0
+20:34:14.261  [Execute]  Drive W 0
+20:34:14.263  [Execute]    exec: holder B4C
+20:34:14.265  [Execute]    target=Drive, argTypes=[DeviceType,String]
+20:34:14.266  [Execute]    bound device: Holder
+20:34:17.411  [Execute]    result: 8048
+20:34:17.413  [Execute]  Drive B4C 8048
+20:34:17.415  [Execute]    exec: deposit B4C 33.89 1
+20:34:17.417  [Execute]    target=Drive, argTypes=[DeviceType,String,Single,String]
+20:34:17.418  [Execute]    bound device: Holder
+20:35:00.898  [Execute]    result: 0
+20:35:00.900  [Execute]  Drive B4C 0
+20:35:00.902  [Execute]    exec: holder W
+20:35:00.904  [Execute]    target=Drive, argTypes=[DeviceType,String]
+20:35:00.905  [Execute]    bound device: Holder
+20:35:06.919  [Execute]    result: 16096
+20:35:06.921  [Execute]  Drive W 16096
+20:35:06.923  [Execute]    exec: deposit W 11.95 1
+20:35:06.924  [Execute]    target=Drive, argTypes=[DeviceType,String,Single,String]
+20:35:06.926  [Execute]    bound device: Holder
+20:35:32.527  [Execute]    result: 0
+20:35:32.530  [Execute]  Drive W 0
+20:35:32.533  [Execute]    exec: holder B4C
+20:35:32.535  [Execute]    target=Drive, argTypes=[DeviceType,String]
+20:35:32.537  [Execute]    bound device: Holder
+20:35:35.720  [Execute]    result: 8048
+20:35:35.723  [Execute]  Drive B4C 8048
+20:35:35.725  [Execute]    exec: deposit B4C 33.89 1
+20:35:35.726  [Execute]    target=Drive, argTypes=[DeviceType,String,Single,String]
+20:35:35.728  [Execute]    bound device: Holder
+20:36:19.225  [Execute]    result: 0
+20:36:19.228  [Execute]  Drive B4C 0
+20:36:19.230  [Execute]    exec: holder W
+20:36:19.232  [Execute]    target=Drive, argTypes=[DeviceType,String]
+20:36:19.233  [Execute]    bound device: Holder
+20:36:25.337  [Execute]    result: 16096
+20:36:25.339  [Execute]  Drive W 16096
+20:36:25.341  [Execute]    exec: deposit W 11.95 1
+20:36:25.343  [Execute]    target=Drive, argTypes=[DeviceType,String,Single,String]
+20:36:25.344  [Execute]    bound device: Holder
+20:36:50.781  [Execute]    result: 0
+20:36:50.783  [Execute]  Drive W 0
+20:36:50.785  [Execute]    exec: holder B4C
+20:36:50.789  [Execute]    target=Drive, argTypes=[DeviceType,String]
+20:36:50.790  [Execute]    bound device: Holder
+20:36:53.945  [Execute]    result: 8048
+20:36:53.947  [Execute]  Drive B4C 8048
+20:36:53.949  [Execute]    exec: deposit B4C 33.89 1
+20:36:53.950  [Execute]    target=Drive, argTypes=[DeviceType,String,Single,String]
+20:36:53.952  [Execute]    bound device: Holder
+20:37:37.332  [Execute]    result: 0
+20:37:37.335  [Execute]  Drive B4C 0
+20:37:37.337  [Execute]    exec: holder W
+20:37:37.339  [Execute]    target=Drive, argTypes=[DeviceType,String]
+20:37:37.340  [Execute]    bound device: Holder
+20:37:43.451  [Execute]    result: 16096
+20:37:43.453  [Execute]  Drive W 16096
+20:37:43.455  [Execute]    exec: deposit W 11.95 1
+20:37:43.457  [Execute]    target=Drive, argTypes=[DeviceType,String,Single,String]
+20:37:43.458  [Execute]    bound device: Holder
+20:38:08.965  [Execute]    result: 0
+20:38:08.966  [Execute]  Drive W 0
+20:38:08.969  [Execute]    exec: holder B4C
+20:38:08.970  [Execute]    target=Drive, argTypes=[DeviceType,String]
+20:38:08.972  [Execute]    bound device: Holder
+20:38:12.074  [Execute]    result: 8048
+20:38:12.076  [Execute]  Drive B4C 8048
+20:38:12.079  [Execute]    exec: deposit B4C 33.89 1
+20:38:12.080  [Execute]    target=Drive, argTypes=[DeviceType,String,Single,String]
+20:38:12.082  [Execute]    bound device: Holder
+20:38:55.581  [Execute]    result: 0
+20:38:55.583  [Execute]  Drive B4C 0
+20:38:55.585  [Execute]    exec: holder W
+20:38:55.586  [Execute]    target=Drive, argTypes=[DeviceType,String]
+20:38:55.588  [Execute]    bound device: Holder
+20:39:01.635  [Execute]    result: 16096
+20:39:01.637  [Execute]  Drive W 16096
+20:39:01.639  [Execute]    exec: deposit W 11.95 1
+20:39:01.640  [Execute]    target=Drive, argTypes=[DeviceType,String,Single,String]
+20:39:01.641  [Execute]    bound device: Holder
+20:39:27.059  [Execute]    result: 0
+20:39:27.062  [Execute]  Drive W 0
+20:39:27.064  [Execute]    exec: holder B4C
+20:39:27.066  [Execute]    target=Drive, argTypes=[DeviceType,String]
+20:39:27.067  [Execute]    bound device: Holder
+20:39:30.223  [Execute]    result: 8048
+20:39:30.224  [Execute]  Drive B4C 8048
+20:39:30.226  [Execute]    exec: deposit B4C 33.89 1
+20:39:30.228  [Execute]    target=Drive, argTypes=[DeviceType,String,Single,String]
+20:39:30.229  [Execute]    bound device: Holder
+20:40:13.664  [Execute]    result: 0
+20:40:13.666  [Execute]  Drive B4C 0
+20:40:13.669  [Execute]    exec: power PSU_C false
+20:40:13.670  [Execute]    target=Power, argTypes=[DeviceType,Boolean]
+20:40:13.672  [Execute]    FindElement(Power, PSU_C) => LanPowerSupply
+20:40:14.189  [Execute]    result: False
+20:40:14.191  [Execute]  Power PSU_C False
+20:40:14.193  [Execute]    exec: power PSU_B false
+20:40:14.194  [Execute]    target=Power, argTypes=[DeviceType,Boolean]
+20:40:14.195  [Execute]    FindElement(Power, PSU_B) => LanPowerSupply
+20:40:14.709  [Execute]    result: False
+20:40:14.711  [Execute]  Power PSU_B False
+20:40:14.713  [Execute]    exec: set PSU_C Current 0
+20:40:14.714  [Execute]    target=Power, argTypes=[DeviceType,String,Single]
+20:40:14.716  [Execute]    FindElement(Power, PSU_C) => LanPowerSupply
+20:40:14.940  [Execute]    result: 0
+20:40:14.942  [Execute]  Power PSU_C 0
+20:40:14.944  [Execute]    exec: set PSU_B Current 0
+20:40:14.945  [Execute]    target=Power, argTypes=[DeviceType,String,Single]
+20:40:14.947  [Execute]    FindElement(Power, PSU_B) => LanPowerSupply
+20:40:15.187  [Execute]    result: 0
+20:40:15.189  [Execute]  Power PSU_B 0
+20:40:15.190  [Execute]    exec: holder Home
+20:40:15.192  [Execute]    target=Drive, argTypes=[DeviceType,String]
+20:40:15.193  [Execute]    bound device: Holder
+20:40:15.384  [Execute]    result: 0
+20:40:15.388  [Execute]  Drive Home 0
+20:40:15.391  [Execute]    exec: mfc Ar1 0
+20:40:15.393  [Execute]    target=MFC, argTypes=[DeviceType,Single]
+20:40:15.394  [Execute]    FindElement(MFC, Ar1) => S7200MFC
+20:40:17.273  [Execute]    result: 6.6119556
+20:40:17.276  [Execute]  MFC Ar1 6.6119556
+20:40:17.278  [Execute]    exec: mfc Ar2 0
+20:40:17.281  [Execute]    target=MFC, argTypes=[DeviceType,Single]
+20:40:17.283  [Execute]    FindElement(MFC, Ar2) => S7200MFC
+20:40:18.293  [Execute]    result: 14.715178
+20:40:18.295  [Execute]  MFC Ar2 14.715178
+20:40:18.297  [Execute]    exec: valve M2 false
+20:40:18.298  [Execute]    target=Valve, argTypes=[DeviceType,Boolean]
+20:40:18.300  [Execute]    FindElement(Valve, M2) => S7200GasValve
+20:40:19.816  [Execute]    result: False
+20:40:19.818  [Execute]  Valve M2 closed
+20:40:19.821  [Execute]    exec: valve M3 false
+20:40:19.823  [Execute]    target=Valve, argTypes=[DeviceType,Boolean]
+20:40:19.824  [Execute]    FindElement(Valve, M3) => S7200GasValve
+20:40:22.256  [Execute]    result: False
+20:40:22.258  [Execute]  Valve M3 closed
+20:40:22.260  [Execute]    exec: valve V2 false
+20:40:22.261  [Execute]    target=Valve, argTypes=[DeviceType,Boolean]
+20:40:22.263  [Execute]    FindElement(Valve, V2) => S7200GasValve
+20:40:23.288  [Execute]    result: False
+20:40:23.290  [Execute]  Valve V2 closed
+20:40:23.293  [Execute]    exec: valve V3 false
+20:40:23.295  [Execute]    target=Valve, argTypes=[DeviceType,Boolean]
+20:40:23.297  [Execute]    FindElement(Valve, V3) => S7200GasValve
+20:40:23.938  [State]  Transition Main: Processing -> Idle (poll)
+20:40:25.342  [Execute]    result: False
+20:40:25.344  [Execute]  Valve V3 closed
+20:40:25.346  [Execute]    exec: pwait TC1 1E-05 300
+20:40:25.347  [Execute]    target=Controller, argTypes=[DeviceType,String,Single,Single]
+20:40:25.348  [Execute]    bound device: TC1
+20:40:29.606  [Execute]    result: 1E-05
+20:40:29.608  [Execute]  Controller TC1 1E-05
+20:40:29.610  [Execute]  Recipe complete
+20:40:29.612  [Recipe]  Recipe complete: ARM-A-W-B4C-ML-d55.7-G0.29-N30 (42m 54s)

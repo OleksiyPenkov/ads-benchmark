@@ -1,0 +1,468 @@
+{
+  "Timestamp": "2026-06-02T08:32:01.7139249+08:00",
+  "SimTime": 681.48065,
+  "Chambers": {
+    "TM": {
+      "Id": "TM",
+      "Type": 2,
+      "Pressure": 1.0025e-07,
+      "Volume": 100,
+      "BasePressure": 1e-07,
+      "BaseLeakRate": 5e-07,
+      "LeakRate": 5e-07,
+      "PumpSpeed": 1999.9995,
+      "GasLoad": 0,
+      "ThrottlePosition": 100
+    },
+    "LL": {
+      "Id": "LL",
+      "Type": 1,
+      "Pressure": 1.0050001e-05,
+      "Volume": 10,
+      "BasePressure": 1e-05,
+      "BaseLeakRate": 0.0001,
+      "LeakRate": 0.0001,
+      "PumpSpeed": 1999.9597,
+      "GasLoad": 0,
+      "ThrottlePosition": 100
+    },
+    "C1": {
+      "Id": "C1",
+      "Type": 0,
+      "Pressure": 1.005e-07,
+      "Volume": 30,
+      "BasePressure": 1e-07,
+      "BaseLeakRate": 1e-06,
+      "LeakRate": 1e-06,
+      "PumpSpeed": 1999.9995,
+      "GasLoad": 0,
+      "ThrottlePosition": 100
+    },
+    "C2": {
+      "Id": "C2",
+      "Type": 0,
+      "Pressure": 1.005e-07,
+      "Volume": 30,
+      "BasePressure": 1e-07,
+      "BaseLeakRate": 1e-06,
+      "LeakRate": 1e-06,
+      "PumpSpeed": 1999.9995,
+      "GasLoad": 3e-45,
+      "ThrottlePosition": 100
+    },
+    "C3": {
+      "Id": "C3",
+      "Type": 0,
+      "Pressure": 1.005e-07,
+      "Volume": 30,
+      "BasePressure": 1e-07,
+      "BaseLeakRate": 1e-06,
+      "LeakRate": 1e-06,
+      "PumpSpeed": 1999.9995,
+      "GasLoad": 0,
+      "ThrottlePosition": 100
+    },
+    "C4": {
+      "Id": "C4",
+      "Type": 0,
+      "Pressure": 1.005e-07,
+      "Volume": 30,
+      "BasePressure": 1e-07,
+      "BaseLeakRate": 1e-06,
+      "LeakRate": 1e-06,
+      "PumpSpeed": 1999.9995,
+      "GasLoad": 0,
+      "ThrottlePosition": 100
+    }
+  },
+  "Thermal": {
+    "Temperature": 24,
+    "ChamberTemperature": 24,
+    "AmbientTemp": 24,
+    "HeatLoad": 0,
+    "SubstrateHeatLoad": 0
+  },
+  "ValveStates": {
+    "TM_FL": true,
+    "LL_FL": true,
+    "LL_A1": false,
+    "SV_LL": false,
+    "SV_C1": false,
+    "LL_RL": false,
+    "TM_RL": false,
+    "SV_C2": false,
+    "SV_C3": false,
+    "SV_C4": false,
+    "TM_GV": true,
+    "LL_GV": true,
+    "C1_V": false,
+    "C1_FL": true,
+    "C1_RL": false,
+    "C1_A1": false,
+    "C1_GV": true,
+    "C2_V": false,
+    "C2_FL": true,
+    "C2_RL": false,
+    "C2_A1": false,
+    "C2_GV": true,
+    "C3_V": false,
+    "C3_FL": true,
+    "C3_RL": false,
+    "C3_A1": false,
+    "C3_GV": true,
+    "C4_V": false,
+    "C4_FL": true,
+    "C4_RL": false,
+    "C4_A1": false,
+    "C4_GV": true,
+    "C3_V_N2": false,
+    "C1_Sh": false,
+    "C2_Sh": false,
+    "C3_Sh": false,
+    "C4_Sh": false,
+    "C1_Sh_B": false,
+    "C3_Sh_B": false
+  },
+  "DeviceStates": {
+    "TM_FL": {
+      "commanded": true,
+      "isOpen": true,
+      "delayRemaining": 0
+    },
+    "LL_FL": {
+      "commanded": true,
+      "isOpen": true,
+      "delayRemaining": 0
+    },
+    "LL_A1": {
+      "commanded": false,
+      "isOpen": false,
+      "delayRemaining": 0
+    },
+    "SV_LL": {
+      "commanded": false,
+      "isOpen": false,
+      "delayRemaining": 0
+    },
+    "SV_C1": {
+      "commanded": false,
+      "isOpen": false,
+      "delayRemaining": 0
+    },
+    "LL_RL": {
+      "commanded": false,
+      "isOpen": false,
+      "delayRemaining": 0
+    },
+    "TM_RL": {
+      "commanded": false,
+      "isOpen": false,
+      "delayRemaining": 0
+    },
+    "SV_C2": {
+      "commanded": false,
+      "isOpen": false,
+      "delayRemaining": 0
+    },
+    "SV_C3": {
+      "commanded": false,
+      "isOpen": false,
+      "delayRemaining": 0
+    },
+    "SV_C4": {
+      "commanded": false,
+      "isOpen": false,
+      "delayRemaining": 0
+    },
+    "TM_GV": {
+      "isOpen": true
+    },
+    "LL_GV": {
+      "isOpen": true
+    },
+    "TM_pm": {
+      "currentValue": 1.0029691e-07
+    },
+    "LL_pm": {
+      "currentValue": 1.0038617e-05
+    },
+    "TM_TP": {
+      "commanded": true,
+      "speedFraction": 1,
+      "wasAtSpeed": true,
+      "wasRunning": true
+    },
+    "LL_TP": {
+      "commanded": true,
+      "speedFraction": 1,
+      "wasAtSpeed": true,
+      "wasRunning": true
+    },
+    "TM_SP": {
+      "isRunning": true
+    },
+    "LL_SP": {
+      "isRunning": true
+    },
+    "C1_V": {
+      "commanded": false,
+      "isOpen": false,
+      "delayRemaining": 0
+    },
+    "C1_FL": {
+      "commanded": true,
+      "isOpen": true,
+      "delayRemaining": 0
+    },
+    "C1_RL": {
+      "commanded": false,
+      "isOpen": false,
+      "delayRemaining": 0
+    },
+    "C1_A1": {
+      "commanded": false,
+      "isOpen": false,
+      "delayRemaining": 0
+    },
+    "C1_GV": {
+      "isOpen": true
+    },
+    "C1_Ar": {
+      "setpoint": 0,
+      "actualFlow": 0
+    },
+    "C1_pm": {
+      "currentValue": 1.00392135e-07
+    },
+    "C1_tmp": {
+      "currentValue": 24.00743
+    },
+    "C1_TP": {
+      "commanded": true,
+      "speedFraction": 1,
+      "wasAtSpeed": true,
+      "wasRunning": true
+    },
+    "C1_SP": {
+      "isRunning": true
+    },
+    "C1_VS": {
+      "setpoint": 0,
+      "position": 0,
+      "moving": false
+    },
+    "C1_TV": {
+      "setpointTorr": 0,
+      "position": 100,
+      "integral": 0,
+      "prevError": 0
+    },
+    "C2_V": {
+      "commanded": false,
+      "isOpen": false,
+      "delayRemaining": 0
+    },
+    "C2_FL": {
+      "commanded": true,
+      "isOpen": true,
+      "delayRemaining": 0
+    },
+    "C2_RL": {
+      "commanded": false,
+      "isOpen": false,
+      "delayRemaining": 0
+    },
+    "C2_A1": {
+      "commanded": false,
+      "isOpen": false,
+      "delayRemaining": 0
+    },
+    "C2_GV": {
+      "isOpen": true
+    },
+    "C2_Ar": {
+      "setpoint": 0,
+      "actualFlow": 3e-45
+    },
+    "C2_pm": {
+      "currentValue": 1.0048192e-07
+    },
+    "C2_tmp": {
+      "currentValue": 23.979128
+    },
+    "C2_TP": {
+      "commanded": true,
+      "speedFraction": 1,
+      "wasAtSpeed": true,
+      "wasRunning": true
+    },
+    "C2_SP": {
+      "isRunning": true
+    },
+    "C2_VS": {
+      "setpoint": 0,
+      "position": 0,
+      "moving": false
+    },
+    "C2_TV": {
+      "setpointTorr": 0,
+      "position": 100,
+      "integral": 0,
+      "prevError": 0
+    },
+    "C3_V": {
+      "commanded": false,
+      "isOpen": false,
+      "delayRemaining": 0
+    },
+    "C3_FL": {
+      "commanded": true,
+      "isOpen": true,
+      "delayRemaining": 0
+    },
+    "C3_RL": {
+      "commanded": false,
+      "isOpen": false,
+      "delayRemaining": 0
+    },
+    "C3_A1": {
+      "commanded": false,
+      "isOpen": false,
+      "delayRemaining": 0
+    },
+    "C3_GV": {
+      "isOpen": true
+    },
+    "C3_Ar": {
+      "setpoint": 0,
+      "actualFlow": 0
+    },
+    "C3_pm": {
+      "currentValue": 1.00519856e-07
+    },
+    "C3_tmp": {
+      "currentValue": 24.012655
+    },
+    "C3_TP": {
+      "commanded": true,
+      "speedFraction": 1,
+      "wasAtSpeed": true,
+      "wasRunning": true
+    },
+    "C3_SP": {
+      "isRunning": true
+    },
+    "C3_VS": {
+      "setpoint": 0,
+      "position": 0,
+      "moving": false
+    },
+    "C3_TV": {
+      "setpointTorr": 0,
+      "position": 100,
+      "integral": 0,
+      "prevError": 0
+    },
+    "C4_V": {
+      "commanded": false,
+      "isOpen": false,
+      "delayRemaining": 0
+    },
+    "C4_FL": {
+      "commanded": true,
+      "isOpen": true,
+      "delayRemaining": 0
+    },
+    "C4_RL": {
+      "commanded": false,
+      "isOpen": false,
+      "delayRemaining": 0
+    },
+    "C4_A1": {
+      "commanded": false,
+      "isOpen": false,
+      "delayRemaining": 0
+    },
+    "C4_GV": {
+      "isOpen": true
+    },
+    "C4_Ar": {
+      "setpoint": 0,
+      "actualFlow": 0
+    },
+    "C4_pm": {
+      "currentValue": 1.0036021e-07
+    },
+    "C4_tmp": {
+      "currentValue": 24.005108
+    },
+    "C4_TP": {
+      "commanded": true,
+      "speedFraction": 1,
+      "wasAtSpeed": true,
+      "wasRunning": true
+    },
+    "C4_SP": {
+      "isRunning": true
+    },
+    "C4_VS": {
+      "setpoint": 0,
+      "position": 0,
+      "moving": false
+    },
+    "C4_TV": {
+      "setpointTorr": 0,
+      "position": 100,
+      "integral": 0,
+      "prevError": 0
+    },
+    "ROBOT": {
+      "state": 3,
+      "phase": 0,
+      "currentFace": 0,
+      "hasWafer": false,
+      "homed": true,
+      "errorCode": 0,
+      "lastCmdId": 1
+    },
+    "C3_V_N2": {
+      "commanded": false,
+      "isOpen": false,
+      "delayRemaining": 0
+    },
+    "C3_N2": {
+      "setpoint": 0,
+      "actualFlow": 0
+    },
+    "C1_Sh": {
+      "commanded": false,
+      "isOpen": false,
+      "delayRemaining": 0
+    },
+    "C2_Sh": {
+      "commanded": false,
+      "isOpen": false,
+      "delayRemaining": 0
+    },
+    "C3_Sh": {
+      "commanded": false,
+      "isOpen": false,
+      "delayRemaining": 0
+    },
+    "C4_Sh": {
+      "commanded": false,
+      "isOpen": false,
+      "delayRemaining": 0
+    },
+    "C1_Sh_B": {
+      "commanded": false,
+      "isOpen": false,
+      "delayRemaining": 0
+    },
+    "C3_Sh_B": {
+      "commanded": false,
+      "isOpen": false,
+      "delayRemaining": 0
+    }
+  }
+}

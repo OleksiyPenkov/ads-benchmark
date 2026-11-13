@@ -1,0 +1,106 @@
+{
+  "key": "recipe",
+  "tool": "validate_recipe",
+  "request": {
+    "fixture": "SC2-MoSiO2-60A.rcpx",
+    "sha256": "074177831a0dead59f8e09ec6fe27c56ecd62fce0442f4f5f7716f1afb3f77f0",
+    "arguments": {
+      "content": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<Recipe>\n  <Description title=\"Mo/SiO2 5-bilayer stack on glass, D=60.0A\" type=\"Sputtering\" author=\"LAB\" notes=\"Audit fixture for Sputter batch coater.\"/>\n  <Parameters>\n    <Group name=\"Deposition Conditions\">\n      <Param name=\"P\" caption=\"Working pressure\" unit=\"mTorr\" paramType=\"0\">3.00mT</Param>\n      <Param name=\"ArFlow\" caption=\"Ar flow\" unit=\"sccm\" paramType=\"1\">30</Param>\n      <Param name=\"N\" caption=\"Bilayers\" unit=\"N\" paramType=\"1\">5</Param>\n    </Group>\n    <Group name=\"Mo Layer\">\n      <Param name=\"currentMo\" caption=\"Mo current\" unit=\"mA\" paramType=\"1\">200</Param>\n      <Param name=\"freqMo\" caption=\"Mo frequency\" unit=\"kHz\" paramType=\"1\">50</Param>\n      <Param name=\"dutyMo\" caption=\"Mo duty\" unit=\"%\" paramType=\"1\">60</Param>\n      <Param name=\"timeMo\" caption=\"Mo time\" unit=\"sec\" paramType=\"1\">25.00</Param>\n    </Group>\n    <Group name=\"SiO2 Layer\">\n      <Param name=\"powerSiO2\" caption=\"SiO2 power\" unit=\"W\" paramType=\"1\">150</Param>\n      <Param name=\"timeSiO2\" caption=\"SiO2 time\" unit=\"sec\" paramType=\"1\">100.00</Param>\n    </Group>\n  </Parameters>\n  <Script>\n# --- substrate rotation ---\nrotate 15\n\n# --- admit argon and wait for pressure ---\nvalve V1 open\nvalve M1 open\nvalve M2 open\nmfc Ar1 ArFlow\npwait P 300\n\n# --- configure supplies ---\nset PSU1 Frequency freqMo\nset PSU1 DutyCycle dutyMo\nset PSU1 Current currentMo\nset PSU2 Current powerSiO2\nwarmup PSU1 100 30\npower PSU2 on\nmessage Confirm both plasmas are stable before starting multilayer\n\n# --- 5 bilayers: Mo 20.0 A then SiO2 40.0 A ---\nloop N\ndeposit Mo timeMo Home\ndeposit SiO2 timeSiO2\nendloop\n\n# old cap step; power PSU2 on\n\n# --- teardown ---\npower PSU1 off\npower PSU2 off\nmfc Ar1 0\nvalve M1 close\nvalve M2 close\nvalve V1 close\n  </Script>\n</Recipe>\n"
+    }
+  },
+  "response": {
+    "isError": false,
+    "text": "{\r\n  \"valid\": false,\r\n  \"findings\": [\r\n    {\r\n      \"line\": 18,\r\n      \"column\": 1,\r\n      \"severity\": \"error\",\r\n      \"message\": \"\\u0027pwait\\u0027 requires at least 3 argument(s), got 2\",\r\n      \"xmlLine\": 30\r\n    },\r\n    {\r\n      \"line\": 18,\r\n      \"column\": 1,\r\n      \"severity\": \"error\",\r\n      \"message\": \"\\u0027pwait\\u0027 takes 3 argument(s) on this machine (sensor target timeout) \\u2014 the sensor selects which chamber\\u0027s throttle valve to drive\",\r\n      \"xmlLine\": 30\r\n    },\r\n    {\r\n      \"line\": 24,\r\n      \"column\": 10,\r\n      \"severity\": \"error\",\r\n      \"message\": \"\\u0027set PSU2 Current\\u0027: unknown parameter \\u0027Current\\u0027 for PSU2 \\u2014 the driver would refuse it at run time. Valid (exact spelling): Power\",\r\n      \"xmlLine\": 36\r\n    },\r\n    {\r\n      \"line\": 25,\r\n      \"column\": 8,\r\n      \"severity\": \"error\",\r\n      \"message\": \"\\u0027warmup\\u0027 argument 1 must be a time value (number with optional s, m or h suffix), got \\u0027PSU1\\u0027\",\r\n      \"xmlLine\": 37\r\n    },\r\n    {\r\n      \"line\": 31,\r\n      \"column\": 19,\r\n      \"severity\": \"error\",\r\n      \"message\": \"\\u0027deposit\\u0027 takes 2 argument(s), got 3 \\u2014 \\u0027Home\\u0027 is not used by this command and would be silently discarded\",\r\n      \"xmlLine\": 43\r\n    },\r\n    {\r\n      \"line\": 11,\r\n      \"column\": 1,\r\n      \"severity\": \"warning\",\r\n      \"message\": \"substrate rotation (\\u0027rotate\\u0027) is not operational on this machine\",\r\n      \"xmlLine\": 23\r\n    },\r\n    {\r\n      \"line\": 27,\r\n      \"column\": 1,\r\n      \"severity\": \"warning\",\r\n      \"message\": \"\\u0027message\\u0027 opens a blocking operator dialog on the Control UI that halts unattended execution and survives abort_recipe\",\r\n      \"xmlLine\": 39\r\n    },\r\n    {\r\n      \"line\": 31,\r\n      \"column\": 9,\r\n      \"severity\": \"warning\",\r\n      \"message\": \"deposit \\u0027Mo\\u0027 runs while its power supply \\u0027PSU1\\u0027 is not energized (\\u0027warmup\\u0027 does not leave power on; add \\u0027power PSU1 on\\u0027 before depositing)\",\r\n      \"xmlLine\": 43\r\n    }\r\n  ],\r\n  \"scriptSummary\": {\r\n    \"depositSecondsBySource\": {\r\n      \"Mo\": {\r\n        \"outsideLoopSeconds\": 0,\r\n        \"inLoopSeconds\": 125,\r\n        \"totalSeconds\": 125\r\n      },\r\n      \"SiO2\": {\r\n        \"outsideLoopSeconds\": 0,\r\n        \"inLoopSeconds\": 500,\r\n        \"totalSeconds\": 500\r\n      }\r\n    },\r\n    \"totalDepositSeconds\": 625,\r\n    \"hasUnresolvedVariables\": false,\r\n    \"pwaitTimeoutsNote\": \"pwait/swait timeout arguments (e.g. 600 s, 10 s) are upper-bound ceilings, not fixed durations; total wall-clock run time cannot be determined without running the recipe.\",\r\n    \"inertCommentLinesWithSemicolon\": [\r\n      {\r\n        \"scriptLine\": 35,\r\n        \"xmlLine\": 47\r\n      }\r\n    ],\r\n    \"commentsNote\": \"All text after \\u0027#\\u0027 or \\u0027//\\u0027 on a line (including \\u0027;\\u0027 characters) is stripped before statement splitting and is completely inert.\"\r\n  }\r\n}",
+    "json": {
+      "valid": false,
+      "findings": [
+        {
+          "line": 18,
+          "column": 1,
+          "severity": "error",
+          "message": "'pwait' requires at least 3 argument(s), got 2",
+          "xmlLine": 30
+        },
+        {
+          "line": 18,
+          "column": 1,
+          "severity": "error",
+          "message": "'pwait' takes 3 argument(s) on this machine (sensor target timeout) — the sensor selects which chamber's throttle valve to drive",
+          "xmlLine": 30
+        },
+        {
+          "line": 24,
+          "column": 10,
+          "severity": "error",
+          "message": "'set PSU2 Current': unknown parameter 'Current' for PSU2 — the driver would refuse it at run time. Valid (exact spelling): Power",
+          "xmlLine": 36
+        },
+        {
+          "line": 25,
+          "column": 8,
+          "severity": "error",
+          "message": "'warmup' argument 1 must be a time value (number with optional s, m or h suffix), got 'PSU1'",
+          "xmlLine": 37
+        },
+        {
+          "line": 31,
+          "column": 19,
+          "severity": "error",
+          "message": "'deposit' takes 2 argument(s), got 3 — 'Home' is not used by this command and would be silently discarded",
+          "xmlLine": 43
+        },
+        {
+          "line": 11,
+          "column": 1,
+          "severity": "warning",
+          "message": "substrate rotation ('rotate') is not operational on this machine",
+          "xmlLine": 23
+        },
+        {
+          "line": 27,
+          "column": 1,
+          "severity": "warning",
+          "message": "'message' opens a blocking operator dialog on the Control UI that halts unattended execution and survives abort_recipe",
+          "xmlLine": 39
+        },
+        {
+          "line": 31,
+          "column": 9,
+          "severity": "warning",
+          "message": "deposit 'Mo' runs while its power supply 'PSU1' is not energized ('warmup' does not leave power on; add 'power PSU1 on' before depositing)",
+          "xmlLine": 43
+        }
+      ],
+      "scriptSummary": {
+        "depositSecondsBySource": {
+          "Mo": {
+            "outsideLoopSeconds": 0,
+            "inLoopSeconds": 125,
+            "totalSeconds": 125
+          },
+          "SiO2": {
+            "outsideLoopSeconds": 0,
+            "inLoopSeconds": 500,
+            "totalSeconds": 500
+          }
+        },
+        "totalDepositSeconds": 625,
+        "hasUnresolvedVariables": false,
+        "pwaitTimeoutsNote": "pwait/swait timeout arguments (e.g. 600 s, 10 s) are upper-bound ceilings, not fixed durations; total wall-clock run time cannot be determined without running the recipe.",
+        "inertCommentLinesWithSemicolon": [
+          {
+            "scriptLine": 35,
+            "xmlLine": 47
+          }
+        ],
+        "commentsNote": "All text after '#' or '//' on a line (including ';' characters) is stripped before statement splitting and is completely inert."
+      }
+    }
+  },
+  "recorded_utc": "2026-11-13T00:00:00+00:00",
+  "stack": {
+    "profile": "Sputter",
+    "appVersion": "1.7.1",
+    "controlMode": "Remote"
+  }
+}

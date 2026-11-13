@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<sources>
+	<magnetrons>
+		<magnetron id="MAG1">C1 Cu magnetron</magnetron>
+		<magnetron id="MAG2">C1 Ti magnetron</magnetron>
+		<magnetron id="MAG3">C2 W magnetron</magnetron>
+		<magnetron id="MAG4">C3 Si magnetron</magnetron>
+		<magnetron id="MAG5">C3 B4C magnetron</magnetron>
+		<magnetron id="MAG6">C4 Cu magnetron</magnetron>
+	</magnetrons>
+	<powersources>
+		<powersource>C1_PSU1</powersource>
+		<powersource>C1_PSU2</powersource>
+		<powersource>C2_PSU</powersource>
+		<powersource>C3_PSU1</powersource>
+		<powersource>C3_PSU2</powersource>
+		<powersource>C4_PSU</powersource>
+	</powersources>
+	<source flange="1" chamber="C1" shutterId="C1_Sh" name="C1_Cu">
+		<material>Cu</material>
+		<magnetronId>MAG1</magnetronId>
+		<powerSupplyId>C1_PSU1</powerSupplyId>
+		<model>C1 magnetron</model>
+		<powerType>DC pulse</powerType>
+		<description>C1 Cu magnetron</description>
+		<comment></comment>
+		<installedDate>2026-06-05</installedDate>
+		<totalDepositionTime>00:00:00</totalDepositionTime>
+	</source>
+	<source flange="5" chamber="C1" shutterId="C1_Sh_B">
+		<material>Ti</material>
+		<magnetronId>MAG2</magnetronId>
+		<powerSupplyId>C1_PSU2</powerSupplyId>
+		<model>C1 magnetron</model>
+		<powerType>RF</powerType>
+		<description>C1 Ti magnetron</description>
+		<comment></comment>
+		<installedDate>2026-06-05</installedDate>
+		<totalDepositionTime>00:00:00</totalDepositionTime>
+	</source>
+	<source flange="2" chamber="C2" shutterId="C2_Sh">
+		<material>W</material>
+		<magnetronId>MAG3</magnetronId>
+		<powerSupplyId>C2_PSU</powerSupplyId>
+		<model>C2 magnetron</model>
+		<powerType>DC pulse</powerType>
+		<description>C2 W magnetron</description>
+		<comment></comment>
+		<installedDate>2026-06-05</installedDate>
+		<totalDepositionTime>00:00:00</totalDepositionTime>
+	</source>
+	<source flange="3" chamber="C3" shutterId="C3_Sh">
+		<material>Si</material>
+		<magnetronId>MAG4</magnetronId>
+		<powerSupplyId>C3_PSU1</powerSupplyId>
+		<model>C3 magnetron</model>
+		<powerType>RF</powerType>
+		<description>C3 Si magnetron</description>
+		<comment></comment>
+		<installedDate>2026-06-05</installedDate>
+		<totalDepositionTime>00:00:00</totalDepositionTime>
+	</source>
+	<source flange="6" chamber="C3" shutterId="C3_Sh_B">
+		<material>B4C</material>
+		<magnetronId>MAG5</magnetronId>
+		<powerSupplyId>C3_PSU2</powerSupplyId>
+		<model>C3 magnetron</model>
+		<powerType>RF</powerType>
+		<description>C3 B4C magnetron</description>
+		<comment></comment>
+		<installedDate>2026-06-08</installedDate>
+		<totalDepositionTime>00:00:00</totalDepositionTime>
+	</source>
+	<source flange="4" chamber="C4" shutterId="C4_Sh" name="C4_Cu">
+		<material>Cu</material>
+		<magnetronId>MAG6</magnetronId>
+		<powerSupplyId>C4_PSU</powerSupplyId>
+		<model>C4 magnetron</model>
+		<powerType>DC pulse</powerType>
+		<description>C4 Cu magnetron</description>
+		<comment></comment>
+		<installedDate>2026-06-05</installedDate>
+		<totalDepositionTime>00:00:00</totalDepositionTime>
+	</source>
+</sources>

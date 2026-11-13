@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Recipe>
+  <Description title="Multi-chamber Cu/W bilayer (100A Cu in C1, 150A W in C2)" type="Sputtering" author="LAB" notes="LL -> TM -> C1 (100 A Cu on C1_PSU1 at 250 mA, 50 kHz, 60 percent, 1.250 A/s = 80.00 s) -> C2 (150 A W on C2_PSU at 200 mA, 50 kHz, 60 percent, 0.750 A/s = 200.00 s) -> LL."/>
+  <Parameters>
+    <Group name="Process Pressures">
+      <Param name="PC1" caption="C1 pressure" unit="mTorr" paramType="0">3.00mT</Param>
+      <Param name="PC2" caption="C2 pressure" unit="mTorr" paramType="0">2.00mT</Param>
+      <Param name="Pbase" caption="Release target" unit="mTorr" paramType="0">0mT</Param>
+      <Param name="ArFlow" caption="Ar flow" unit="sccm" paramType="1">40</Param>
+    </Group>
+    <Group name="Layers">
+      <Param name="timeCu" caption="Cu time (100A)" unit="sec" paramType="1">80.00</Param>
+      <Param name="timeW" caption="W time (150A)" unit="sec" paramType="1">200.00</Param>
+    </Group>
+  </Parameters>
+  <Script>
+# --- transfer wafer from LL into C1 ---
+home
+valve SV_LL open
+valve SV_C1 open
+transfer LL C1
+valve SV_LL close
+valve SV_C1 close
+
+# --- C1 Cu deposition (100 A at 1.250 A/s = 80.00 s) ---
+valve C1_V open
+mfc C1_Ar ArFlow
+pwait PC1 300
+set C1_PSU1 Frequency 50
+set C1_PSU1 DutyCycle 60
+set C1_PSU1 Current 250
+power C1_PSU1 on
+deposit C1_Cu timeCu
+power C1_PSU1 off
+set C1_PSU1 Current 0
+pwait C1_pm Pbase 10
+mfc C1_Ar 0
+valve C1_V close
+swait C1_pm 0.05mT 120
+
+# --- transfer wafer from C1 into C2 ---
+valve SV_C1 open
+valve SV_C2 open
+transfer C1 C2
+valve SV_C1 close
+valve SV_C2 close
+
+# --- C2 W deposition (150 A at 0.750 A/s = 200.00 s) ---
+valve C2_V open
+mfc C2_Ar ArFlow
+pwait C2_pm PC2 300
+set C2_PSU Frequency 50
+set C2_PSU DutyCycle 60
+set C2_PSU Current 200
+power C2_PSU on
+deposit W timeW
+power C2_PSU off
+set C2_PSU Current 0
+pwait C2_pm Pbase 10
+mfc C2_Ar 0
+valve C2_V close
+swait C2_pm 0.05mT 120
+
+# --- return wafer from C2 to LL ---
+valve SV_C2 open
+valve SV_LL open
+transfer C2 LL
+valve SV_C2 close
+valve SV_LL close
+home
+  </Script>
+</Recipe>

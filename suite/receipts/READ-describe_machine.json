@@ -1,0 +1,31 @@
+{
+  "key": "read",
+  "tool": "describe_machine",
+  "request": {
+    "arguments": {}
+  },
+  "response": {
+    "isError": false,
+    "text": "{\r\n  \"profile\": \"ADS\",\r\n  \"appVersion\": \"1.7.1\",\r\n  \"machineName\": \"LOCALHOST\",\r\n  \"chambers\": [\r\n    \"Main\",\r\n    \"Loadlock\"\r\n  ],\r\n  \"protocol\": 1,\r\n  \"controlMode\": \"Remote\",\r\n  \"isEmulator\": true,\r\n  \"executionTarget\": \"emulator\",\r\n  \"hostCommands\": \"mutating commands (recipe.upload/start/abort/resolve_pause, device.command) need controlMode == \\u0022Remote\\u0022 (Online-Remote); only an operator can switch it, under Service \\u2192 Control mode\\u2026 \\u2014 do not poll for it\"\r\n}",
+    "json": {
+      "profile": "ADS",
+      "appVersion": "1.7.1",
+      "machineName": "LOCALHOST",
+      "chambers": [
+        "Main",
+        "Loadlock"
+      ],
+      "protocol": 1,
+      "controlMode": "Remote",
+      "isEmulator": true,
+      "executionTarget": "emulator",
+      "hostCommands": "mutating commands (recipe.upload/start/abort/resolve_pause, device.command) need controlMode == \"Remote\" (Online-Remote); only an operator can switch it, under Service → Control mode… — do not poll for it"
+    }
+  },
+  "recorded_utc": "2026-11-13T00:00:00+00:00",
+  "stack": {
+    "profile": "ADS",
+    "appVersion": "1.7.1",
+    "controlMode": "Remote"
+  }
+}

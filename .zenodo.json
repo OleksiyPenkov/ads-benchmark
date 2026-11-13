@@ -1,0 +1,42 @@
+{
+  "title": "ADS-Bench v2.0: A Multi-Architecture Benchmark for Neuro-Symbolic LLM Control of Physical Vapor Deposition Systems",
+  "upload_type": "software",
+  "access_right": "open",
+  "license": "mit",
+  "creators": [
+    {
+      "name": "Penkov, Oleksiy V."
+    },
+    {
+      "name": "Fu, Haoyu"
+    },
+    {
+      "name": "Zhan, Yueying"
+    },
+    {
+      "name": "Wu, Pengyuan"
+    },
+    {
+      "name": "Jin, Jiong"
+    }
+  ],
+  "description": "ADS-Bench v2.0 evaluates language-model agents across 46 tasks (40 short tasks across five cognitive and safety tiers plus 6 live deposition and recipe-audit capstones) on three open physical vapor deposition (PVD) architectures in APS Control Community v1.7.1: single-chamber batch sputtering (Sputter), load-locked multi-source sputtering (ADS), and multi-chamber radial cluster sputtering (Cluster).",
+  "keywords": [
+    "physical vapor deposition",
+    "magnetron sputtering",
+    "benchmark",
+    "large language model agent",
+    "Model Context Protocol",
+    "neuro-symbolic verification",
+    "safety interlocks"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "10.48550/arXiv.2609.12796",
+      "relation": "isSupplementTo",
+      "scheme": "doi",
+      "resource_type": "publication-preprint"
+    }
+  ],
+  "version": "2.0.0"
+}

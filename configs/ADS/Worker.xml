@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<worker>
+	<library lib="Generic">APS.Workers.Generic.dll</library>
+	<operations typename="APS.Workers.Generic.Operations">
+		<op type="o" method="Valve">
+			<var>Valve</var>
+			<var>b</var>
+		</op>
+		<op type="o" method="MFC">
+			<var>MFC</var>
+			<var>f</var>
+		</op>
+		<op type="o" method="Pwait" device="TC1">
+			<var>Controller</var>
+			<var>s</var>
+			<var>f</var>
+			<var>f</var>
+		</op>
+		<op type="o" method="Set">
+			<var>Power</var>
+			<var>s</var>
+			<var>f</var>
+		</op>
+		<op type="o" method="Warmup">
+			<var>Power</var>
+			<var>f</var>
+			<var>f</var>
+		</op>
+		<op type="o" method="Holder" device="Holder">
+			<var>Drive</var>
+			<var>s</var>
+		</op>
+		<op type="o" method="Shutter" device="Shutter">
+			<var>Drive</var>
+			<var>s</var>
+		</op>
+		<op type="o" method="Deposit" device="Holder">
+			<var>Drive</var>
+			<var>s</var>
+			<var>f</var>
+			<var>s</var>
+		</op>
+		<op type="o" method="Power">
+			<var>Power</var>
+			<var>b</var>
+		</op>
+		<op type="o" method="Ramp">
+			<var>Power</var>
+			<var>f</var>
+		</op>
+	</operations>
+	<vars typename="APS.Workers.Generic.Operations">
+		<var type="f">MPressure</var>
+		<var type="f">LLPressure</var>
+		<var type="f">BPressure</var>
+	</vars>
+</worker>

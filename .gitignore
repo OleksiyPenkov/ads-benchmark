@@ -1,0 +1,6 @@
+runs/
+computed/
+__pycache__/
+.pytest_cache/
+*.pyc
+bench.toml

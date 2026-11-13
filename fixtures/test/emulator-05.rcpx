@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Recipe>
+  <Description>
+    <Title>W/B4C periodic multilayer on glass (d=55.7 A, Gamma=0.29, N=30)</Title>
+    <Type>Sputtering</Type>
+    <Author>agent arm-A</Author>
+    <Notes>Glass / B4C 117 A / [ W-bearing 16.153 A / B4C 39.547 A ] x 30, B4C on top.
+Plain Ar, 2.5 mTorr, Ar1 and Ar2 at 40 sccm each. Both pulsed-DC supplies at 40 kHz, 70 percent
+duty, and both plasmas held on for the whole stack. The holder selects which source coats.
+W on PSU_C at 120 mA (1.352 A/s). B4C on PSU_B at 550 mA (1.167 A/s).
+Substrate is assumed already loaded on the holder in the main chamber.</Notes>
+  </Description>
+  <Parameters>
+    <Group name="Deposition Conditions">
+      <Param name="P" caption="Pressure" unit="mTorr" paramType="0">2.50mT</Param>
+      <Param name="PBase" caption="Release pressure" unit="mTorr" paramType="0">0.01mT</Param>
+      <Param name="StageHeight" caption="Height" unit="mm" paramType="1">0</Param>
+      <Param name="MFC_Ar1" caption="MFC Ar #1" unit="sccm" paramType="1">40</Param>
+      <Param name="MFC_Ar2" caption="MFC Ar #2" unit="sccm" paramType="1">40</Param>
+    </Group>
+    <Group name="Pulsed DC">
+      <Param name="DCFreq" caption="Freq" unit="kHz" paramType="1">40</Param>
+      <Param name="DCDuty" caption="Pulse duty" unit="%" paramType="1">70</Param>
+      <Param name="Stabilise" caption="Plasma stabilisation" unit="sec" paramType="1">30</Param>
+    </Group>
+    <Group name="Layer W">
+      <Param name="currentW" caption="Current" unit="mA" paramType="0">120</Param>
+      <Param name="timeW" caption="Time" unit="sec" paramType="0">11.95</Param>
+    </Group>
+    <Group name="Layer B4C">
+      <Param name="currentB4C" caption="Current" unit="mA" paramType="0">550</Param>
+      <Param name="timeB4C" caption="Time" unit="sec" paramType="0">33.89</Param>
+      <Param name="timeB4Cadh" caption="Time (adhesion)" unit="sec" paramType="0">100.26</Param>
+    </Group>
+    <Group name="Multilayer">
+      <Param name="N" caption="Periods" unit="N" paramType="0">30</Param>
+    </Group>
+  </Parameters>
+  <Script>
+# ---------------------------------------------------------------------------
+# W/B4C periodic multilayer on glass
+#   period d     = 55.7 A       Gamma = 0.29       N = 30
+#   W-bearing    = 0.29 x 55.7 = 16.153 A  at 1.352 A/s -> 11.95 s
+#   B4C          = 55.7 - 16.153 = 39.547 A at 1.167 A/s -> 33.89 s
+#   B4C adhesion = 117 A                    at 1.167 A/s -> 100.26 s
+# Stack order: glass / B4C(adh) / [ W / B4C ] x N, so B4C terminates the stack
+# ---------------------------------------------------------------------------
+
+stage VS $StageHeight
+
+# --- process gas -----------------------------------------------------------
+# Si sits on M1 (N2 line 1). W and B4C are the two argon-fed magnetrons M2/M3,
+# so both argon line valves and both magnetron inlet valves are opened together.
+valve V2 open
+valve V3 open
+valve M2 open
+valve M3 open
+mfc Ar1 $MFC_Ar1
+mfc Ar2 $MFC_Ar2
+
+# --- come to working pressure on the throttle valve ------------------------
+pwait $P 300
+
+# --- energise both pulsed-DC supplies --------------------------------------
+# Both plasmas stay lit for the whole stack so that every layer grows at the
+# calibrated steady-state rate. The holder selects which source coats.
+set PSU_B Frequency $DCFreq
+set PSU_B DutyCycle $DCDuty
+set PSU_B Current $currentB4C
+set PSU_C Frequency $DCFreq
+set PSU_C DutyCycle $DCDuty
+set PSU_C Current $currentW
+power PSU_B on
+power PSU_C on
+delay $Stabilise
+
+# --- B4C adhesion layer, 117 A ---------------------------------------------
+holder B4C
+deposit B4C $timeB4Cadh 1
+
+# --- N periods, W first then B4C -------------------------------------------
+loop $N
+holder W
+deposit W $timeW 1
+holder B4C
+deposit B4C $timeB4C 1
+endloop
+
+# --- power down -------------------------------------------------------------
+power PSU_C off
+power PSU_B off
+set PSU_C Current 0
+set PSU_B Current 0
+holder Home
+
+# --- gas off ----------------------------------------------------------------
+mfc Ar1 0
+mfc Ar2 0
+valve M2 close
+valve M3 close
+valve V2 close
+valve V3 close
+
+# --- release the throttle valve and pump to base ----------------------------
+# A pressure wait at the gauge floor drives the controller target to the floor,
+# which opens the throttle valve fully. Without it the valve would stay nearly
+# shut with the gas off and the chamber would sit above its idle alarm limit.
+pwait $PBase 300
+  </Script>
+</Recipe>

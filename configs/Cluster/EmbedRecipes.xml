@@ -1,0 +1,379 @@
+<recipes>
+  <recipe id="SYSTEM_START">
+    <l>state startup</l>
+    <l>MFC C1_Ar 0</l>
+    <l>MFC C2_Ar 0</l>
+    <l>MFC C3_Ar 0</l>
+    <l>MFC C3_N2 0</l>
+    <l>MFC C4_Ar 0</l>
+    <l>valve C1_V close</l>
+    <l>valve C2_V close</l>
+    <l>valve C3_V close</l>
+    <l>valve C3_V_N2 close</l>
+    <l>valve C4_V close</l>
+    <l>valve SV_LL close</l>
+    <l>valve SV_C1 close</l>
+    <l>valve SV_C2 close</l>
+    <l>valve SV_C3 close</l>
+    <l>valve SV_C4 close</l>
+    <l>valve TM_GV close</l>
+    <l>valve LL_GV close</l>
+    <l>valve C1_GV close</l>
+    <l>valve C2_GV close</l>
+    <l>valve C3_GV close</l>
+    <l>valve C4_GV close</l>
+    <l>valve LL_A1 close</l>
+    <l>valve C1_A1 close</l>
+    <l>valve C2_A1 close</l>
+    <l>valve C3_A1 close</l>
+    <l>valve C4_A1 close</l>
+    <l>valve TM_RL close</l>
+    <l>valve LL_RL close</l>
+    <l>valve C1_RL close</l>
+    <l>valve C2_RL close</l>
+    <l>valve C3_RL close</l>
+    <l>valve C4_RL close</l>
+    <l>valve TM_FL close</l>
+    <l>valve LL_FL close</l>
+    <l>valve C1_FL close</l>
+    <l>valve C2_FL close</l>
+    <l>valve C3_FL close</l>
+    <l>valve C4_FL close</l>
+    <l>pump TM_SP on</l>
+    <l>pump LL_SP on</l>
+    <l>pump C1_SP on</l>
+    <l>pump C2_SP on</l>
+    <l>pump C3_SP on</l>
+    <l>pump C4_SP on 5</l>
+    <l>valve TM_RL open</l>
+    <l>valve LL_RL open</l>
+    <l>valve C1_RL open</l>
+    <l>valve C2_RL open</l>
+    <l>valve C3_RL open</l>
+    <l>valve C4_RL open</l>
+    <l>swait TM_pm 30mT 60</l>
+    <l>swait LL_pm 30mT 60</l>
+    <l>swait C1_pm 30mT 60</l>
+    <l>swait C2_pm 30mT 60</l>
+    <l>swait C3_pm 30mT 60</l>
+    <l>swait C4_pm 30mT 60</l>
+    <l>valve TM_RL close</l>
+    <l>valve LL_RL close</l>
+    <l>valve C1_RL close</l>
+    <l>valve C2_RL close</l>
+    <l>valve C3_RL close</l>
+    <l>valve C4_RL close</l>
+    <l>valve TM_FL open</l>
+    <l>valve LL_FL open</l>
+    <l>valve C1_FL open</l>
+    <l>valve C2_FL open</l>
+    <l>valve C3_FL open</l>
+    <l>valve C4_FL open</l>
+    <l>delay 5</l>
+    <l>valve TM_GV open</l>
+    <l>valve LL_GV open</l>
+    <l>valve C1_GV open</l>
+    <l>valve C2_GV open</l>
+    <l>valve C3_GV open</l>
+    <l>valve C4_GV open</l>
+    <l>pump TM_TP on</l>
+    <l>pump LL_TP on</l>
+    <l>pump C1_TP on</l>
+    <l>pump C2_TP on</l>
+    <l>pump C3_TP on</l>
+    <l>pump C4_TP on</l>
+    <l>swait TM_pm 1uT 30</l>
+    <l>swait LL_pm 1mT 30</l>
+    <l>swait C1_pm 1uT 30</l>
+    <l>swait C2_pm 1uT 30</l>
+    <l>swait C3_pm 1uT 30</l>
+    <l>swait C4_pm 1uT 30</l>
+    <l>state idle</l>
+    <l>home</l>
+  </recipe>
+  <recipe id="SYSTEM_PUMP_OUT">
+    <l>state startup</l>
+    <l>valve LL_A1 close</l>
+    <l>valve C1_A1 close</l>
+    <l>valve C2_A1 close</l>
+    <l>valve C3_A1 close</l>
+    <l>valve C4_A1 close</l>
+    <l>valve TM_FL close</l>
+    <l>valve LL_FL close</l>
+    <l>valve C1_FL close</l>
+    <l>valve C2_FL close</l>
+    <l>valve C3_FL close</l>
+    <l>valve C4_FL close</l>
+    <l>valve TM_RL open</l>
+    <l>valve LL_RL open</l>
+    <l>valve C1_RL open</l>
+    <l>valve C2_RL open</l>
+    <l>valve C3_RL open</l>
+    <l>valve C4_RL open</l>
+    <l>swait TM_pm 30mT 60</l>
+    <l>swait LL_pm 30mT 60</l>
+    <l>swait C1_pm 30mT 60</l>
+    <l>swait C2_pm 30mT 60</l>
+    <l>swait C3_pm 30mT 60</l>
+    <l>swait C4_pm 30mT 60</l>
+    <l>valve TM_RL close</l>
+    <l>valve LL_RL close</l>
+    <l>valve C1_RL close</l>
+    <l>valve C2_RL close</l>
+    <l>valve C3_RL close</l>
+    <l>valve C4_RL close</l>
+    <l>valve TM_FL open</l>
+    <l>valve LL_FL open</l>
+    <l>valve C1_FL open</l>
+    <l>valve C2_FL open</l>
+    <l>valve C3_FL open</l>
+    <l>valve C4_FL open</l>
+    <l>delay 5</l>
+    <l>valve TM_GV open</l>
+    <l>valve LL_GV open</l>
+    <l>valve C1_GV open</l>
+    <l>valve C2_GV open</l>
+    <l>valve C3_GV open</l>
+    <l>valve C4_GV open</l>
+    <l>swait TM_pm 1uT 30</l>
+    <l>swait LL_pm 1mT 30</l>
+    <l>swait C1_pm 1uT 30</l>
+    <l>swait C2_pm 1uT 30</l>
+    <l>swait C3_pm 1uT 30</l>
+    <l>swait C4_pm 1uT 30</l>
+    <l>state idle</l>
+  </recipe>
+  <recipe id="SYSTEM_AIR_RELEASE" onStepFailure="continue">
+    <l>state startup</l>
+    <l>MFC C1_Ar 0</l>
+    <l>MFC C2_Ar 0</l>
+    <l>MFC C3_Ar 0</l>
+    <l>MFC C3_N2 0</l>
+    <l>MFC C4_Ar 0</l>
+    <l>valve C1_V close</l>
+    <l>valve C2_V close</l>
+    <l>valve C3_V close</l>
+    <l>valve C3_V_N2 close</l>
+    <l>valve C4_V close</l>
+    <l>valve SV_LL close</l>
+    <l>valve SV_C1 close</l>
+    <l>valve SV_C2 close</l>
+    <l>valve SV_C3 close</l>
+    <l>valve SV_C4 close</l>
+    <l>valve LL_GV close</l>
+    <l>valve C1_GV close</l>
+    <l>valve C2_GV close</l>
+    <l>valve C3_GV close</l>
+    <l>valve C4_GV close</l>
+    <l>valve LL_A1 open</l>
+    <l>valve C1_A1 open</l>
+    <l>valve C2_A1 open</l>
+    <l>valve C3_A1 open</l>
+    <l>valve C4_A1 open</l>
+    <l>state idle</l>
+  </recipe>
+  <recipe id="SYSTEM_SHUTDOWN" onStepFailure="continue">
+    <l>state startup</l>
+    <l>MFC C1_Ar 0</l>
+    <l>MFC C2_Ar 0</l>
+    <l>MFC C3_Ar 0</l>
+    <l>MFC C3_N2 0</l>
+    <l>MFC C4_Ar 0</l>
+    <l>valve C1_V close</l>
+    <l>valve C2_V close</l>
+    <l>valve C3_V close</l>
+    <l>valve C3_V_N2 close</l>
+    <l>valve C4_V close</l>
+    <l>valve SV_LL close</l>
+    <l>valve SV_C1 close</l>
+    <l>valve SV_C2 close</l>
+    <l>valve SV_C3 close</l>
+    <l>valve SV_C4 close</l>
+    <l>valve TM_GV close</l>
+    <l>valve LL_GV close</l>
+    <l>valve C1_GV close</l>
+    <l>valve C2_GV close</l>
+    <l>valve C3_GV close</l>
+    <l>valve C4_GV close</l>
+    <l>pump TM_TP off</l>
+    <l>pump LL_TP off</l>
+    <l>pump C1_TP off</l>
+    <l>pump C2_TP off</l>
+    <l>pump C3_TP off</l>
+    <l>pump C4_TP off</l>
+    <l>delay 10</l>
+    <l>valve TM_FL close</l>
+    <l>valve LL_FL close</l>
+    <l>valve C1_FL close</l>
+    <l>valve C2_FL close</l>
+    <l>valve C3_FL close</l>
+    <l>valve C4_FL close</l>
+    <l>pump TM_SP off</l>
+    <l>pump LL_SP off</l>
+    <l>pump C1_SP off</l>
+    <l>pump C2_SP off</l>
+    <l>pump C3_SP off</l>
+    <l>pump C4_SP off</l>
+    <l>valve LL_A1 open</l>
+    <l>valve C1_A1 open</l>
+    <l>valve C2_A1 open</l>
+    <l>valve C3_A1 open</l>
+    <l>valve C4_A1 open</l>
+  </recipe>
+  <recipe id="LOADLOCK_AIR_RELEASE" onStepFailure="continue">
+    <l>valve SV_LL close</l>
+    <l>valve LL_GV close</l>
+    <l>valve LL_A1 open</l>
+  </recipe>
+  <recipe id="LOADLOCK_PUMP_OUT">
+    <l>valve LL_A1 close</l>
+    <l>pump LL_SP on 8</l>
+    <l>valve LL_FL close</l>
+    <l>valve LL_RL open</l>
+    <l>swait LL_pm 30mT 60</l>
+    <l>valve LL_RL close</l>
+    <l>valve LL_FL open</l>
+    <l>delay 8</l>
+    <l>valve LL_GV open</l>
+    <l>pump LL_TP on</l>
+    <l>swait LL_pm 1mT 30</l>
+  </recipe>
+  <recipe id="LOADLOCK_SHUTDOWN" onStepFailure="continue">
+    <l>valve SV_LL close</l>
+    <l>valve LL_GV close</l>
+    <l>pump LL_TP off</l>
+    <l>delay 10</l>
+    <l>valve LL_FL close</l>
+    <l>pump LL_SP off</l>
+    <l>valve LL_A1 open</l>
+  </recipe>
+  <recipe id="C1_PUMP_OUT">
+    <l>valve SV_C1 close</l>
+    <l>valve C1_A1 close</l>
+    <l>pump C1_SP on 5</l>
+    <l>valve C1_FL close</l>
+    <l>valve C1_RL open</l>
+    <l>swait C1_pm 30mT 60</l>
+    <l>valve C1_RL close</l>
+    <l>valve C1_FL open</l>
+    <l>delay 5</l>
+    <l>valve C1_GV open</l>
+    <l>pump C1_TP on</l>
+    <l>swait C1_pm 1uT 30</l>
+  </recipe>
+  <recipe id="C1_VENT" onStepFailure="continue">
+    <l>MFC C1_Ar 0</l>
+    <l>valve C1_V close</l>
+    <l>valve SV_C1 close</l>
+    <l>valve C1_GV close</l>
+    <l>valve C1_A1 open</l>
+  </recipe>
+  <recipe id="C2_PUMP_OUT">
+    <l>valve SV_C2 close</l>
+    <l>valve C2_A1 close</l>
+    <l>pump C2_SP on 5</l>
+    <l>valve C2_FL close</l>
+    <l>valve C2_RL open</l>
+    <l>swait C2_pm 30mT 60</l>
+    <l>valve C2_RL close</l>
+    <l>valve C2_FL open</l>
+    <l>delay 5</l>
+    <l>valve C2_GV open</l>
+    <l>pump C2_TP on</l>
+    <l>swait C2_pm 1uT 30</l>
+  </recipe>
+  <recipe id="C2_VENT" onStepFailure="continue">
+    <l>MFC C2_Ar 0</l>
+    <l>valve C2_V close</l>
+    <l>valve SV_C2 close</l>
+    <l>valve C2_GV close</l>
+    <l>valve C2_A1 open</l>
+  </recipe>
+  <recipe id="C3_PUMP_OUT">
+    <l>valve SV_C3 close</l>
+    <l>valve C3_A1 close</l>
+    <l>pump C3_SP on 5</l>
+    <l>valve C3_FL close</l>
+    <l>valve C3_RL open</l>
+    <l>swait C3_pm 30mT 60</l>
+    <l>valve C3_RL close</l>
+    <l>valve C3_FL open</l>
+    <l>delay 5</l>
+    <l>valve C3_GV open</l>
+    <l>pump C3_TP on</l>
+    <l>swait C3_pm 1uT 30</l>
+  </recipe>
+  <recipe id="C3_VENT" onStepFailure="continue">
+    <l>MFC C3_Ar 0</l>
+    <l>MFC C3_N2 0</l>
+    <l>valve C3_V close</l>
+    <l>valve C3_V_N2 close</l>
+    <l>valve SV_C3 close</l>
+    <l>valve C3_GV close</l>
+    <l>valve C3_A1 open</l>
+  </recipe>
+  <recipe id="C4_PUMP_OUT">
+    <l>valve SV_C4 close</l>
+    <l>valve C4_A1 close</l>
+    <l>pump C4_SP on 5</l>
+    <l>valve C4_FL close</l>
+    <l>valve C4_RL open</l>
+    <l>swait C4_pm 30mT 60</l>
+    <l>valve C4_RL close</l>
+    <l>valve C4_FL open</l>
+    <l>delay 5</l>
+    <l>valve C4_GV open</l>
+    <l>pump C4_TP on</l>
+    <l>swait C4_pm 1uT 30</l>
+  </recipe>
+  <recipe id="C4_VENT" onStepFailure="continue">
+    <l>MFC C4_Ar 0</l>
+    <l>valve C4_V close</l>
+    <l>valve SV_C4 close</l>
+    <l>valve C4_GV close</l>
+    <l>valve C4_A1 open</l>
+  </recipe>
+  <recipe id="FAILURE_PROTOCOL" onStepFailure="continue">
+    <l>power C1_PSU1 off</l>
+    <l>power C1_PSU2 off</l>
+    <l>power C2_PSU off</l>
+    <l>power C3_PSU1 off</l>
+    <l>power C3_PSU2 off</l>
+    <l>power C4_PSU off</l>
+    <l>set C1_PSU1 Power 0</l>
+    <l>set C1_PSU2 Power 0</l>
+    <l>set C2_PSU Power 0</l>
+    <l>set C3_PSU1 Power 0</l>
+    <l>set C3_PSU2 Power 0</l>
+    <l>set C4_PSU Power 0</l>
+    <l>valve C1_Sh close</l>
+    <l>valve C1_Sh_B close</l>
+    <l>valve C2_Sh close</l>
+    <l>valve C3_Sh close</l>
+    <l>valve C3_Sh_B close</l>
+    <l>valve C4_Sh close</l>
+    <l>MFC C1_Ar 0</l>
+    <l>MFC C2_Ar 0</l>
+    <l>MFC C3_Ar 0</l>
+    <l>MFC C3_N2 0</l>
+    <l>MFC C4_Ar 0</l>
+    <l>pwait C1_pm 0 1</l>
+    <l>pwait C2_pm 0 1</l>
+    <l>pwait C3_pm 0 1</l>
+    <l>pwait C4_pm 0 1</l>
+    <l>valve C1_V close</l>
+    <l>valve C2_V close</l>
+    <l>valve C3_V close</l>
+    <l>valve C3_V_N2 close</l>
+    <l>valve C4_V close</l>
+  </recipe>
+  <!-- Fault pause soft hold: magnetron shutters only (one per shutterId in Sources.xml). -->
+  <recipe id="FAILURE_HOLD" onStepFailure="continue">
+    <l>valve C1_Sh close</l>
+    <l>valve C1_Sh_B close</l>
+    <l>valve C2_Sh close</l>
+    <l>valve C3_Sh close</l>
+    <l>valve C3_Sh_B close</l>
+    <l>valve C4_Sh close</l>
+  </recipe>
+</recipes>

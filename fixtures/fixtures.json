@@ -1,0 +1,195 @@
+{
+  "attachments": {
+    "A08-recipe": {
+      "file": "A08-RuC-68p5A.rcpx",
+      "sha256": "a52eb59876b4a64ad38ccc28bd63d78b96f6c9f96d841ace18ec72772cd548ae"
+    },
+    "A09-log": {
+      "file": "A09-control-process-log-excerpt.txt",
+      "sha256": "055cb48792b5cf8f3cb63ad2e7140a8d979c1608a62f460d9ea70e8bbb34238a"
+    },
+    "A10-recipe": {
+      "file": "A10-RuC-68p5A.rcpx",
+      "sha256": "6c3ef834c4eb9b23220b6c3f06a79867368d8eced3f402d5efb9e92a35cd270b"
+    },
+    "A11-recipe": {
+      "file": "A11-RuC-68p5A.rcpx",
+      "sha256": "5380b50e8a2d793ba9e82cc7d0fd252e07db7ac2852a0f219ffc29034f915437"
+    },
+    "A12-recipe": {
+      "file": "A12-RuC-68p5A.rcpx",
+      "sha256": "90f00c357c256ce1de3ca3ece9df686cf93e135d26a791aa29b7092675f3a4ca"
+    },
+    "A13-recipe": {
+      "file": "A13-RuC-68p5A.rcpx",
+      "sha256": "730ae28c67ef2cef393cb77dcf30ea296e512b677974dcf10065a5cf32cc7cd1"
+    },
+    "A14-recipe": {
+      "file": "A14-RuC-68p5A.rcpx",
+      "sha256": "6209bf694a4c8e011186d0aa0f0f72bf5387dec26ef9ee16addf8bdb8f5906d9"
+    },
+    "A15-recipe": {
+      "file": "A15-RuC-68p5A.rcpx",
+      "sha256": "cd7e3a1193418fea92986147d3ce039f642f6ef8d487c21d48e41c0995fcdd0a"
+    },
+    "A16-recipe": {
+      "file": "A16-RuC-68p5A.rcpx",
+      "sha256": "f1fbf9666e421f7e965c05a630e9109b3a79c823a68dd9ed7be043d820daa155"
+    },
+    "AC2-recipe": {
+      "file": "AC2-RuC-68p5A.rcpx",
+      "sha256": "66c40cfc44e6cb56a14f4be39cfa0e3bb4f084c96f6c7e840d7b215da3d5dd6f"
+    },
+    "C06-recipe": {
+      "file": "C06-CuW-Cluster.rcpx",
+      "sha256": "19d349c6d8c019ee3cf12f190c44fe24667c020e6ccf189846a72e5e199baaf7"
+    },
+    "C07-recipe": {
+      "file": "C07-CuW-Cluster.rcpx",
+      "sha256": "96d42104cc1f56e41a1a4afd8de1f86c3334845f87530a2d27be6847421c6d81"
+    },
+    "C08-recipe": {
+      "file": "C08-CuW-Cluster.rcpx",
+      "sha256": "522e55a723af8299ddad09bb0d5a2870c6f071cf007e49853fd4d126f29e8785"
+    },
+    "CC2-recipe": {
+      "file": "CC2-CuW-Cluster.rcpx",
+      "sha256": "4f9ab37834648bab58c91f8849e9ba57341fa923b0a26aa888f2a44a44f8a4e3"
+    },
+    "control-cluster-recipe": {
+      "file": "control-Cluster-CuW.rcpx",
+      "sha256": "a2f2d3ddfc4504ee2dc8f6d252d4a07a0a035cfb8d4d3469d185fc1f974bea65"
+    },
+    "control-recipe": {
+      "file": "control-RuC-68p5A.rcpx",
+      "sha256": "336722c539d16a7e381792e849f2f01a6a27f4640acb6fb930f0333520b66d8a"
+    },
+    "control-sputter-recipe": {
+      "file": "control-Sputter-MoSiO2-60A.rcpx",
+      "sha256": "c8055e0f31d9042eed7e62a51ac8068ab24d0ce8f9fc8c12f18abf5bcf0901b3"
+    },
+    "S05-recipe": {
+      "file": "S05-MoSiO2-60A.rcpx",
+      "sha256": "f125022674e34e263cb5e6c213847a229d0dafa8384764c05ea50bf77e9a1ef0"
+    },
+    "S07-recipe": {
+      "file": "S07-MoSiO2-60A.rcpx",
+      "sha256": "a81831306a27ef060fc8c8900246ab67d34ea38fce023172f833c0a0cd0e7999"
+    },
+    "S08-recipe": {
+      "file": "S08-MoSiO2-60A.rcpx",
+      "sha256": "8a930153cd72a1668f6eacf8349eee18ac63c58f0aeb0474fdfaa3402e6e0d42"
+    },
+    "SC2-recipe": {
+      "file": "SC2-MoSiO2-60A.rcpx",
+      "sha256": "074177831a0dead59f8e09ec6fe27c56ecd62fce0442f4f5f7716f1afb3f77f0"
+    }
+  },
+  "source": {
+    "A08-recipe": {
+      "derived_from": "fixtures/control-RuC-68p5A.rcpx",
+      "derived_from_sha256": "336722c539d16a7e381792e849f2f01a6a27f4640acb6fb930f0333520b66d8a",
+      "change": "shutdown order: gas off (mfc Ar1/Ar2 0) before the throttle release `pwait Pbase 10` (base releases first)"
+    },
+    "A09-log": {
+      "derived_from": "fixtures/test/emulator-05-process-log.txt",
+      "derived_from_sha256": "24e929c88a77fc3bd55caabd0f8a924ad2950e08b63dcddaac13c60a00825406",
+      "change": "lines 990-1031 of an ADS Control process log with a wedged pwait TC1 0 120 step"
+    },
+    "A10-recipe": {
+      "derived_from": "fixtures/control-RuC-68p5A.rcpx",
+      "derived_from_sha256": "336722c539d16a7e381792e849f2f01a6a27f4640acb6fb930f0333520b66d8a",
+      "change": "parameter P = `2.00` (no unit suffix)"
+    },
+    "A11-recipe": {
+      "derived_from": "fixtures/control-RuC-68p5A.rcpx",
+      "derived_from_sha256": "336722c539d16a7e381792e849f2f01a6a27f4640acb6fb930f0333520b66d8a",
+      "change": "`pwait P 600` -> `pwait pm P 600`"
+    },
+    "A12-recipe": {
+      "derived_from": "fixtures/control-RuC-68p5A.rcpx",
+      "derived_from_sha256": "336722c539d16a7e381792e849f2f01a6a27f4640acb6fb930f0333520b66d8a",
+      "change": "every `deposit … Home` -> `deposit … false`"
+    },
+    "A13-recipe": {
+      "derived_from": "fixtures/control-RuC-68p5A.rcpx",
+      "derived_from_sha256": "336722c539d16a7e381792e849f2f01a6a27f4640acb6fb930f0333520b66d8a",
+      "change": "`set PSU_C Current` -> `set PSU_C SetCurrent`"
+    },
+    "A14-recipe": {
+      "derived_from": "fixtures/control-RuC-68p5A.rcpx",
+      "derived_from_sha256": "336722c539d16a7e381792e849f2f01a6a27f4640acb6fb930f0333520b66d8a",
+      "change": "comment `# strike test only, not for this run; deposit Ru 60 Home` before the adhesion layer"
+    },
+    "A15-recipe": {
+      "derived_from": "fixtures/control-RuC-68p5A.rcpx",
+      "derived_from_sha256": "336722c539d16a7e381792e849f2f01a6a27f4640acb6fb930f0333520b66d8a",
+      "change": "`message` step after the supplies are switched on"
+    },
+    "A16-recipe": {
+      "derived_from": "fixtures/control-RuC-68p5A.rcpx",
+      "derived_from_sha256": "336722c539d16a7e381792e849f2f01a6a27f4640acb6fb930f0333520b66d8a",
+      "change": "carbon source `C` -> `Gr` (deposit and comment)"
+    },
+    "AC2-recipe": {
+      "derived_from": "fixtures/control-RuC-68p5A.rcpx",
+      "derived_from_sha256": "336722c539d16a7e381792e849f2f01a6a27f4640acb6fb930f0333520b66d8a",
+      "change": "seven defects plus inert semicolon comment decoy, see the AC2 `defects` list in suite/ads-suite.json"
+    },
+    "control-recipe": {
+      "derived_from": "provenance/ARM-A-RuC-ML-68p5A-G0215-N30.rcpx",
+      "derived_from_sha256": "3f79e82bb703c7c461b37ab29265be6068e5fe4b14ed23a7dd3cc221a955dced",
+      "change": "the defect-free base of every ADS fixture recipe (validation control)"
+    },
+    "control-sputter-recipe": {
+      "derived_from": "provenance/ARM-S-MoSiO2-ML-60A-N20.rcpx",
+      "derived_from_sha256": "92bc705000b2981a4a58ff47f5ad5d6435c9dd3998e79f32b9d782656ce778a2",
+      "change": "the defect-free base of every Sputter fixture recipe (N=5 bilayers)"
+    },
+    "S05-recipe": {
+      "derived_from": "fixtures/control-Sputter-MoSiO2-60A.rcpx",
+      "derived_from_sha256": "c8055e0f31d9042eed7e62a51ac8068ab24d0ce8f9fc8c12f18abf5bcf0901b3",
+      "change": "parameter Pbase = `0.05` (no unit suffix)"
+    },
+    "S07-recipe": {
+      "derived_from": "fixtures/control-Sputter-MoSiO2-60A.rcpx",
+      "derived_from_sha256": "c8055e0f31d9042eed7e62a51ac8068ab24d0ce8f9fc8c12f18abf5bcf0901b3",
+      "change": "`set PSU2 Power powerSiO2` -> `set PSU2 Current powerSiO2` on RF supply PSU2"
+    },
+    "S08-recipe": {
+      "derived_from": "fixtures/control-Sputter-MoSiO2-60A.rcpx",
+      "derived_from_sha256": "c8055e0f31d9042eed7e62a51ac8068ab24d0ce8f9fc8c12f18abf5bcf0901b3",
+      "change": "3-argument `deposit Mo timeMo Home` and `deposit SiO2 timeSiO2 Home` on 2-argument Sputter worker"
+    },
+    "SC2-recipe": {
+      "derived_from": "fixtures/control-Sputter-MoSiO2-60A.rcpx",
+      "derived_from_sha256": "c8055e0f31d9042eed7e62a51ac8068ab24d0ce8f9fc8c12f18abf5bcf0901b3",
+      "change": "six defects plus inert semicolon comment decoy, see the SC2 `defects` list in suite/sputter-suite.json"
+    },
+    "control-cluster-recipe": {
+      "derived_from": "provenance/ARM-C-CuW-Cluster-200A.rcpx",
+      "derived_from_sha256": "492589fdd19be8b6d8e3a36a6c9374f464948e449573ff9212148eb131d277df",
+      "change": "the defect-free base of every Cluster fixture recipe (100A Cu in C1, 150A W in C2)"
+    },
+    "C06-recipe": {
+      "derived_from": "fixtures/control-Cluster-CuW.rcpx",
+      "derived_from_sha256": "a2f2d3ddfc4504ee2dc8f6d252d4a07a0a035cfb8d4d3469d185fc1f974bea65",
+      "change": "C1 teardown shuts off C1_Ar and closes C1_V before releasing throttle, leaving C1_pm at 2.00mT in Idle"
+    },
+    "C07-recipe": {
+      "derived_from": "fixtures/control-Cluster-CuW.rcpx",
+      "derived_from_sha256": "a2f2d3ddfc4504ee2dc8f6d252d4a07a0a035cfb8d4d3469d185fc1f974bea65",
+      "change": "2-argument `pwait PC1 300` without sensor argument on 3-argument Cluster worker"
+    },
+    "C08-recipe": {
+      "derived_from": "fixtures/control-Cluster-CuW.rcpx",
+      "derived_from_sha256": "a2f2d3ddfc4504ee2dc8f6d252d4a07a0a035cfb8d4d3469d185fc1f974bea65",
+      "change": "3-argument `deposit W timeW Home` on 2-argument Cluster worker"
+    },
+    "CC2-recipe": {
+      "derived_from": "fixtures/control-Cluster-CuW.rcpx",
+      "derived_from_sha256": "a2f2d3ddfc4504ee2dc8f6d252d4a07a0a035cfb8d4d3469d185fc1f974bea65",
+      "change": "six defects plus inert semicolon comment decoy, see the CC2 `defects` list in suite/cluster-suite.json"
+    }
+  }
+}

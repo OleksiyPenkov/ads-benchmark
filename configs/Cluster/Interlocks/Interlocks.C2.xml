@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<interlocks>
+	<!-- ============================================================ -->
+	<!-- C2 vacuum topology:                                          -->
+	<!--   chamber =[C2_GV]= TP =[C2_FL]= SP(backing)                 -->
+	<!--   chamber =[C2_RL]= SP   (roughing line, bypasses the TP)    -->
+	<!--   chamber =[C2_A1]= atmosphere (vent)                        -->
+	<!--   chamber =[SV_C2]= transfer module                          -->
+	<!-- SP's inlet manifold (C2_FL + C2_RL) must never be open       -->
+	<!-- simultaneously; the TP must never be stranded without        -->
+	<!-- foreline backing while pumping the chamber.                  -->
+	<!-- ============================================================ -->
+
+	<!-- Foreline open requires the backing pump running AND the
+	     roughing line closed (manifold exclusivity). -->
+	<interlock id="Valve_C2_FL_open">
+		<l>Pump C2_SP on</l>
+		<l>Valve C2_RL closed</l>
+	</interlock>
+
+	<!-- Foreline close requires the gate closed: closing the foreline
+	     while the gate is open strands the spinning turbo with no
+	     backing path. (Gate-closed, not TP-off, so the warm pump-out
+	     can still close FL with the TP coasting during roughing.) -->
+	<interlock id="Valve_C2_FL_close">
+		<l>Valve C2_GV closed</l>
+	</interlock>
+
+	<!-- Backing pump off requires both of its manifold valves closed. -->
+	<interlock id="Pump_C2_SP_off">
+		<l>Valve C2_FL closed</l>
+		<l>Valve C2_RL closed</l>
+	</interlock>
+
+	<!-- Roughing line open requires the gate closed (so the rough-side
+	     pressure never reaches the turbo), the foreline closed (manifold
+	     exclusivity), and the backing pump running. -->
+	<interlock id="Valve_C2_RL_open">
+		<l>Valve C2_GV closed</l>
+		<l>Valve C2_FL closed</l>
+		<l>Pump C2_SP on</l>
+	</interlock>
+
+	<!-- Gate open requires the chamber roughed below 50 mTorr (never
+	     expose the turbo to atmosphere) and the roughing line closed. -->
+	<interlock id="Valve_C2_GV_open">
+		<l>Sensor C2_pm less 5.0e-2</l>
+		<l>Valve C2_RL closed</l>
+	</interlock>
+
+	<!-- Vent requires the slit closed (else venting floods the whole
+	     transfer module and every other open chamber), the gate closed
+	     (don't vent into the turbo) and the roughing line closed (don't
+	     vent into the backing pump). FL may stay open: with the gate
+	     closed the foreline cannot see the vented chamber. -->
+	<interlock id="Valve_C2_A1_open">
+		<l>Valve SV_C2 closed</l>
+		<l>Valve C2_GV closed</l>
+		<l>Valve C2_RL closed</l>
+	</interlock>
+
+	<!-- Gas inlet must only open when C2 is pumped (gate open). -->
+	<interlock id="Valve_C2_V_open">
+		<l>Valve C2_GV open</l>
+	</interlock>
+
+	<!-- Source power on requires working gas + gate open. -->
+	<interlock id="Power_C2_PSU_on">
+		<l>Valve C2_V open</l>
+		<l>Valve C2_GV open</l>
+	</interlock>
+</interlocks>

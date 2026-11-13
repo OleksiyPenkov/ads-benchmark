@@ -1,0 +1,187 @@
+<recipes>
+  <recipe id="LOAD_SUBSTRATE" notIn="processing" confirm="Pump the load lock, open GVL and transfer the substrate onto the holder.">
+    <l>valve A2 close</l>
+    <l>pump SP2 on</l>
+    <l>swait pl 50mT 120</l>
+    <l>stage VS -10</l>
+    <l>valve GVL open</l>
+    <l>stage HS -283</l>
+    <l>stage VS 25</l>
+    <l>stage HS 15</l>
+    <l>valve GVL close</l>
+    <l>stage VS 0</l>
+  </recipe>
+  <recipe id="UNLOAD_SUBSTRATE" notIn="processing" confirm="Transfer the substrate to the arm, then vent the load lock.">
+    <l>valve A2 close</l>
+    <l>pump SP2 on</l>
+    <l>swait pl 50mT 120</l>
+    <l>stage VS 25</l>
+    <l>valve GVL open</l>
+    <l>stage HS -283</l>
+    <l>stage VS -10</l>
+    <l>stage HS 15</l>
+    <l>valve GVL close</l>
+    <l>pump SP2 off</l>
+    <l>valve A2 open</l>
+  </recipe>
+  <recipe id="LOADLOCK_AIR_RELEASE" onStepFailure="continue" confirm="Vent the load lock: SP2 off, A2 open.">
+    <l>pump SP2 off</l>
+    <l>valve A2 open</l>
+  </recipe>
+  <recipe id="LOADLOCK_PUMP_OUT" confirm="Close A2 and pump the load lock with SP2.">
+    <l>valve A2 close</l>
+    <l>pump SP2 on</l>
+  </recipe>
+  <recipe id="SYSTEM_START" notIn="processing" confirm="Start from cold: rough the chamber, open GVM, start the turbo. Up to ~35 min.">
+    <l>state startup</l>
+    <l>pwait pm 0 1</l>
+    <l>valve V1 close</l>
+    <l>valve V2 close</l>
+    <l>valve V3 close</l>
+    <l>valve V4 close</l>
+    <l>valve V5 close</l>
+    <l>valve V6 close</l>
+    <l>valve VI close</l>
+    <l>valve M1 close</l>
+    <l>valve M2 close</l>
+    <l>valve M3 close</l>
+    <l>valve A1 close</l>
+    <l>valve A2 close</l>
+    <l>pump SP2 on</l>
+    <l>swait pl 50mT 300</l>
+    <l>valve GVL open</l>
+    <l>stage HS 15</l>
+    <l>valve GVL close</l>
+    <l>valve PP close</l>
+    <l>valve FL close</l>
+    <l>pump SP1 on 30</l>
+    <l>valve PP open</l>
+    <l>swait pm 100mT 900</l>
+    <l>valve PP close</l>
+    <l>valve FL open</l>
+    <l>delay 60</l>
+    <l>valve GVM open</l>
+    <l>pump TP on</l>
+    <l>swait pm 1uT 1800</l>
+  </recipe>
+  <!-- Zero the MFCs before roughing so the closing swait can reach base pressure against no gas load.
+       Roughing path: close GVM first (PP must never pull on the turbo inlet), stop TP before FL closes
+       (the backing pump cannot serve roughing and the turbo at once), restart TP after FL and GVM reopen.
+       Gas valves close in both branches, or the idle->processing group transition undoes 'state idle'. -->
+  <recipe id="SYSTEM_PUMP_OUT" confirm="Pump the main chamber to base pressure. Zeroes MFCs and closes all gas valves.">
+    <l>state startup</l>
+    <l>pwait pm 0 1</l>
+    <l>MFC N21 0</l>
+    <l>MFC Ar1 0</l>
+    <l>MFC Ar2 0</l>
+    <l>MFC N22 0</l>
+    <l>valve V1 close</l>
+    <l>valve V2 close</l>
+    <l>valve V3 close</l>
+    <l>valve V4 close</l>
+    <l>valve V5 close</l>
+    <l>valve V6 close</l>
+    <l>valve VI close</l>
+    <l>valve M1 close</l>
+    <l>valve M2 close</l>
+    <l>valve M3 close</l>
+    <l>if pm > 10mT</l>
+    <l>valve GVM close</l>
+    <l>valve A1 close</l>
+    <l>pump TP off</l>
+    <l>valve FL close</l>
+    <l>valve PP open</l>
+    <l>swait pm 100mT 900</l>
+    <l>valve PP close</l>
+    <l>valve FL open</l>
+    <l>delay 60</l>
+    <l>valve GVM open</l>
+    <l>pump TP on</l>
+    <l>else</l>
+    <l>valve GVM open</l>
+    <l>endif</l>
+    <l>swait pm 1uT 1800</l>
+    <l>state idle</l>
+  </recipe>
+  <recipe id="SYSTEM_AIR_RELEASE" notIn="processing" onStepFailure="continue" confirm="Vent the main chamber: sources and gas off, GVM closed, A1 opened. Turbo keeps running.">
+    <l>state startup</l>
+    <l>pwait pm 0 1</l>
+    <l>power PSU_A off</l>
+    <l>power PSU_B off</l>
+    <l>power PSU_C off</l>
+    <l>power PSU_RF1 off</l>
+    <l>power PSU_RF2 off</l>
+    <l>MFC N21 0</l>
+    <l>MFC Ar1 0</l>
+    <l>MFC Ar2 0</l>
+    <l>MFC N22 0</l>
+    <l>valve V1 close</l>
+    <l>valve V2 close</l>
+    <l>valve V3 close</l>
+    <l>valve V4 close</l>
+    <l>valve V5 close</l>
+    <l>valve V6 close</l>
+    <l>valve VI close</l>
+    <l>valve M1 close</l>
+    <l>valve M2 close</l>
+    <l>valve M3 close</l>
+    <l>valve GVM close</l>
+    <l>valve A1 open</l>
+  </recipe>
+  <recipe id="SYSTEM_SHUTDOWN" notIn="processing" onStepFailure="continue" confirm="Full shutdown: sources and gas off, turbo stopped (20 min coast-down), SP1 off, chamber vented.">
+    <l>state startup</l>
+    <l>pwait pm 0 1</l>
+    <l>power PSU_A off</l>
+    <l>power PSU_B off</l>
+    <l>power PSU_C off</l>
+    <l>power PSU_RF1 off</l>
+    <l>power PSU_RF2 off</l>
+    <l>MFC N21 0</l>
+    <l>MFC Ar1 0</l>
+    <l>MFC Ar2 0</l>
+    <l>MFC N22 0</l>
+    <l>valve V1 close</l>
+    <l>valve V2 close</l>
+    <l>valve V3 close</l>
+    <l>valve V4 close</l>
+    <l>valve V5 close</l>
+    <l>valve V6 close</l>
+    <l>valve VI close</l>
+    <l>valve M1 close</l>
+    <l>valve M2 close</l>
+    <l>valve M3 close</l>
+    <l>valve GVM close</l>
+    <l>pump TP off</l>
+    <l>delay 1200</l>
+    <l>valve FL close</l>
+    <l>pump SP1 off</l>
+    <l>valve A1 open</l>
+  </recipe>
+  <recipe id="FAILURE_PROTOCOL" onStepFailure="continue">
+    <l>power PSU_A off</l>
+    <l>power PSU_B off</l>
+    <l>power PSU_C off</l>
+    <l>power PSU_RF1 off</l>
+    <l>power PSU_RF2 off</l>
+    <l>pwait pm 0 1</l>
+    <l>MFC N21 0</l>
+    <l>MFC Ar1 0</l>
+    <l>MFC Ar2 0</l>
+    <l>MFC N22 0</l>
+    <l>valve V1 close</l>
+    <l>valve V2 close</l>
+    <l>valve V3 close</l>
+    <l>valve V4 close</l>
+    <l>valve V5 close</l>
+    <l>valve V6 close</l>
+    <l>valve VI close</l>
+    <l>valve M1 close</l>
+    <l>valve M2 close</l>
+    <l>valve M3 close</l>
+  </recipe>
+  <!-- Soft hold run before the operator is asked Retry / Skip / Abort: only the shutter is homed;
+       gas and the other supplies stay as they are. Every line is attempted, like FAILURE_PROTOCOL. -->
+  <recipe id="FAILURE_HOLD" onStepFailure="continue">
+    <l>shutter Home</l>
+  </recipe>
+</recipes>

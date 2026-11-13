@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<alarms>
+	<!-- ============================================================ -->
+	<!-- TM: kept under vacuum continuously; no maintenance state.     -->
+	<!-- ============================================================ -->
+	<chamber id="TM">
+		<states initial="startup">
+			<transition from="startup" to="idle" sensor="TM_pm" cond="less" val="1e-5" />
+		</states>
+		<alarm sensor="TM_pm" cond="more" val="1e-3" state="idle">TM pressure too high!</alarm>
+		<alarm device="TM_TP" status="alarm" state="idle">TM turbo pump hardware alarm!</alarm>
+		<alarm device="ROBOT" status="error" state="idle">Transfer robot fault!</alarm>
+	</chamber>
+
+	<!-- ============================================================ -->
+	<!-- LL: cycles atmosphere on every load; has maintenance state.   -->
+	<!-- ============================================================ -->
+	<chamber id="LL">
+		<states initial="startup">
+			<transition from="startup"     to="idle"        sensor="LL_pm" cond="less" val="1e-3" />
+			<transition from="idle"        to="maintenance" valve="LL_A1"  state="open"   require="SV_LL closed" />
+			<transition from="maintenance" to="startup"     valve="LL_A1"  state="closed" />
+		</states>
+		<alarm sensor="LL_pm" cond="more" val="1e-1" state="idle" unless="LL_A1 open">LL pressure too high!</alarm>
+		<alarm device="LL_TP" status="alarm" state="idle">LL turbo pump hardware alarm!</alarm>
+	</chamber>
+
+	<!-- ============================================================ -->
+	<!-- C1: process chamber; full startup/idle/processing.            -->
+	<!-- ============================================================ -->
+	<chamber id="C1">
+		<states initial="startup">
+			<transition from="startup"    to="idle"       sensor="C1_pm" cond="less" val="1e-6" />
+			<transition from="startup"    to="processing" group="gasvalve" state="anyOpen" />
+			<transition from="idle"       to="processing" group="gasvalve" state="anyOpen" />
+			<transition from="processing" to="idle"       group="gas"      state="allOff" />
+			<transition from="idle"        to="maintenance" valve="C1_A1" state="open"   require="C1_GV closed" />
+			<transition from="maintenance" to="startup"     valve="C1_A1" state="closed" />
+		</states>
+		<alarm sensor="C1_pm" cond="more" val="2e-1" state="processing" unless="C1_A1 open">C1 pressure too high!</alarm>
+		<alarm sensor="C1_pm" cond="more" val="1e-4" state="idle" unless="C1_A1 open">C1 pressure too high!</alarm>
+		<alarm device="C1_TP" status="alarm" state="processing">C1 turbo pump hardware alarm!</alarm>
+		<alarm device="C1_TP" status="alarm" state="idle">C1 turbo pump hardware alarm!</alarm>
+		<alarm device="C1_TP" status="alarm" state="maintenance">C1 turbo pump hardware alarm!</alarm>
+	</chamber>
+
+	<!-- ============================================================ -->
+	<!-- C2: process chamber; full startup/idle/processing.            -->
+	<!-- ============================================================ -->
+	<chamber id="C2">
+		<states initial="startup">
+			<transition from="startup"    to="idle"       sensor="C2_pm" cond="less" val="1e-6" />
+			<transition from="startup"    to="processing" group="gasvalve" state="anyOpen" />
+			<transition from="idle"       to="processing" group="gasvalve" state="anyOpen" />
+			<transition from="processing" to="idle"       group="gas"      state="allOff" />
+			<transition from="idle"        to="maintenance" valve="C2_A1" state="open"   require="C2_GV closed" />
+			<transition from="maintenance" to="startup"     valve="C2_A1" state="closed" />
+		</states>
+		<alarm sensor="C2_pm" cond="more" val="2e-1" state="processing" unless="C2_A1 open">C2 pressure too high!</alarm>
+		<alarm sensor="C2_pm" cond="more" val="1e-4" state="idle" unless="C2_A1 open">C2 pressure too high!</alarm>
+		<alarm device="C2_TP" status="alarm" state="processing">C2 turbo pump hardware alarm!</alarm>
+		<alarm device="C2_TP" status="alarm" state="idle">C2 turbo pump hardware alarm!</alarm>
+		<alarm device="C2_TP" status="alarm" state="maintenance">C2 turbo pump hardware alarm!</alarm>
+	</chamber>
+
+	<!-- ============================================================ -->
+	<!-- C3: process chamber; full startup/idle/processing.            -->
+	<!-- ============================================================ -->
+	<chamber id="C3">
+		<states initial="startup">
+			<transition from="startup"    to="idle"       sensor="C3_pm" cond="less" val="1e-6" />
+			<transition from="startup"    to="processing" group="gasvalve" state="anyOpen" />
+			<transition from="idle"       to="processing" group="gasvalve" state="anyOpen" />
+			<transition from="processing" to="idle"       group="gas"      state="allOff" />
+			<transition from="idle"        to="maintenance" valve="C3_A1" state="open"   require="C3_GV closed" />
+			<transition from="maintenance" to="startup"     valve="C3_A1" state="closed" />
+		</states>
+		<alarm sensor="C3_pm" cond="more" val="2e-1" state="processing" unless="C3_A1 open">C3 pressure too high!</alarm>
+		<alarm sensor="C3_pm" cond="more" val="1e-4" state="idle" unless="C3_A1 open">C3 pressure too high!</alarm>
+		<alarm device="C3_TP" status="alarm" state="processing">C3 turbo pump hardware alarm!</alarm>
+		<alarm device="C3_TP" status="alarm" state="idle">C3 turbo pump hardware alarm!</alarm>
+		<alarm device="C3_TP" status="alarm" state="maintenance">C3 turbo pump hardware alarm!</alarm>
+	</chamber>
+
+	<!-- ============================================================ -->
+	<!-- C4: process chamber; full startup/idle/processing.            -->
+	<!-- ============================================================ -->
+	<chamber id="C4">
+		<states initial="startup">
+			<transition from="startup"    to="idle"       sensor="C4_pm" cond="less" val="1e-6" />
+			<transition from="startup"    to="processing" group="gasvalve" state="anyOpen" />
+			<transition from="idle"       to="processing" group="gasvalve" state="anyOpen" />
+			<transition from="processing" to="idle"       group="gas"      state="allOff" />
+			<transition from="idle"        to="maintenance" valve="C4_A1" state="open"   require="C4_GV closed" />
+			<transition from="maintenance" to="startup"     valve="C4_A1" state="closed" />
+		</states>
+		<alarm sensor="C4_pm" cond="more" val="2e-1" state="processing" unless="C4_A1 open">C4 pressure too high!</alarm>
+		<alarm sensor="C4_pm" cond="more" val="1e-4" state="idle" unless="C4_A1 open">C4 pressure too high!</alarm>
+		<alarm device="C4_TP" status="alarm" state="processing">C4 turbo pump hardware alarm!</alarm>
+		<alarm device="C4_TP" status="alarm" state="idle">C4 turbo pump hardware alarm!</alarm>
+		<alarm device="C4_TP" status="alarm" state="maintenance">C4 turbo pump hardware alarm!</alarm>
+	</chamber>
+</alarms>

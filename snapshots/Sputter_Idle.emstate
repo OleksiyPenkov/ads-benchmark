@@ -1,0 +1,120 @@
+{
+  "Timestamp": "2026-11-12T00:00:00.0000000+00:00",
+  "SimTime": 60.0,
+  "Chambers": {
+    "Main": {
+      "Id": "Main",
+      "Type": 0,
+      "Pressure": 1e-07,
+      "Volume": 120.0,
+      "BasePressure": 1e-07,
+      "BaseLeakRate": 1e-06,
+      "LeakRate": 1e-06,
+      "PumpSpeed": 800.0,
+      "GasLoad": 0.0,
+      "ThrottlePosition": 100.0
+    }
+  },
+  "Thermal": {
+    "Temperature": 24.0,
+    "ChamberTemperature": 24.0,
+    "AmbientTemp": 24.0,
+    "HeatLoad": 0.0,
+    "SubstrateHeatLoad": 0.0
+  },
+  "ValveStates": {
+    "V1": false,
+    "V2": false,
+    "M1": false,
+    "M2": false,
+    "PP": false,
+    "FL": true,
+    "A1": false,
+    "Sh1": false,
+    "Sh2": false,
+    "GVM": true
+  },
+  "DeviceStates": {
+    "V1": {
+      "commanded": false,
+      "isOpen": false,
+      "delayRemaining": 0
+    },
+    "V2": {
+      "commanded": false,
+      "isOpen": false,
+      "delayRemaining": 0
+    },
+    "M1": {
+      "commanded": false,
+      "isOpen": false,
+      "delayRemaining": 0
+    },
+    "M2": {
+      "commanded": false,
+      "isOpen": false,
+      "delayRemaining": 0
+    },
+    "PP": {
+      "commanded": false,
+      "isOpen": false,
+      "delayRemaining": 0
+    },
+    "FL": {
+      "commanded": true,
+      "isOpen": true,
+      "delayRemaining": 0
+    },
+    "A1": {
+      "commanded": false,
+      "isOpen": false,
+      "delayRemaining": 0
+    },
+    "Sh1": {
+      "commanded": false,
+      "isOpen": false,
+      "delayRemaining": 0
+    },
+    "Sh2": {
+      "commanded": false,
+      "isOpen": false,
+      "delayRemaining": 0
+    },
+    "GVM": {
+      "isOpen": true
+    },
+    "Ar1": {
+      "setpoint": 0,
+      "actualFlow": 0
+    },
+    "N21": {
+      "setpoint": 0,
+      "actualFlow": 0
+    },
+    "pm": {
+      "currentValue": 1e-07
+    },
+    "tmp": {
+      "currentValue": 24.0
+    },
+    "TP": {
+      "commanded": true,
+      "speedFraction": 1,
+      "wasAtSpeed": true,
+      "wasRunning": true
+    },
+    "SP1": {
+      "isRunning": true
+    },
+    "VS": {
+      "setpoint": 0,
+      "position": 0,
+      "moving": false
+    },
+    "rotation": {
+      "setpoint": 0,
+      "speed": 0,
+      "enabled": false
+    }
+  }
+}

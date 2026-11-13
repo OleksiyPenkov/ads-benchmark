@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<sources xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <magnetrons>
+    <magnetron id="MAG1">Magnetron 1</magnetron>
+    <magnetron id="MAG2">4" magnetron with chimney</magnetron>
+    <magnetron id="MAG3">4" magnetron with chimney</magnetron>
+    <magnetron id="MAG4">Ion source</magnetron>
+    <magnetron id="MAG5">4" magnetron with chimney</magnetron>
+    <magnetron id="MAG6">160 mm rectangular magnetron</magnetron>
+  </magnetrons>
+  <powersources>
+    <powersource id="PSU_A" />
+    <powersource id="PSU_B" />
+    <powersource id="PSU_C" />
+    <powersource id="PSU_ION" />
+    <powersource id="PSU_RF1" />
+    <powersource id="PSU_RF2" />
+  </powersources>
+  <formats>
+    <format id="4&quot; round">4" round</format>
+    <format id="160mm">160 mm Rect</format>
+  </formats>
+  <magnetronInstances>
+    <magnetronInstance id="c8a2bcc8-63a0-47a0-8585-7a10db82b846">
+      <label>Mag2</label>
+      <modelId>MAG2</modelId>
+      <format>4&quot; round</format>
+      <physicsJson>{"version":1,"racetrack":{"peakRadiusMm":24,"widthMm":8,"shape":"gaussian"},"health":{"cumulativeKWh":0,"hotHours":0,"powerCycles":0,"serviceLimits":{"kWh":0,"hotHours":0,"powerCycles":0}}}</physicsJson>
+      <state>Active</state>
+    </magnetronInstance>
+    <magnetronInstance id="706a7ec9-af4c-43c0-bed3-64b3a05b78b9">
+      <label>Mag3</label>
+      <modelId>MAG3</modelId>
+      <format>4&quot; round</format>
+      <physicsJson>{"version":1,"racetrack":{"peakRadiusMm":25,"widthMm":2,"shape":"gaussian"},"health":{"cumulativeKWh":0,"hotHours":0,"powerCycles":0,"serviceLimits":{"kWh":0,"hotHours":0,"powerCycles":0}}}</physicsJson>
+      <state>Active</state>
+    </magnetronInstance>
+    <magnetronInstance id="2e9d34de-fbd0-4932-b12c-9d1ee2510a64">
+      <label>Mag5</label>
+      <modelId>MAG5</modelId>
+      <format>4&quot; round</format>
+      <physicsJson>{"version":1,"racetrack":{"peakRadiusMm":25,"widthMm":2,"shape":"uniform"},"health":{"cumulativeKWh":0,"hotHours":0,"powerCycles":0,"serviceLimits":{"kWh":0,"hotHours":0,"powerCycles":0}}}</physicsJson>
+      <state>Active</state>
+    </magnetronInstance>
+    <magnetronInstance id="bf640cbc-b249-4155-bd2c-99e7502ca219">
+      <label>Mag6</label>
+      <modelId>MAG6</modelId>
+      <format>160mm</format>
+      <physicsJson>{"version":1,"racetrack":{"peakRadiusMm":15,"widthMm":3,"shape":"gaussian"},"health":{"cumulativeKWh":0,"hotHours":0,"powerCycles":0,"serviceLimits":{"kWh":0,"hotHours":0,"powerCycles":0}}}</physicsJson>
+      <state>Active</state>
+    </magnetronInstance>
+  </magnetronInstances>
+  <layout start="90" direction="ccw" />
+  <source flange="1">
+    <material />
+    <magnetronId />
+    <magnetronInstanceId />
+    <powerSupplyId />
+    <model />
+    <powerType />
+    <description>Flange 1</description>
+    <comment />
+    <installedDate>2026-01-01</installedDate>
+    <totalDepositionTime>00:00:00</totalDepositionTime>
+  </source>
+  <source flange="2" zeroDistanceMm="100" liftMm="40" name="Si">
+    <material>Si</material>
+    <magnetronId>MAG2</magnetronId>
+    <magnetronInstanceId>c8a2bcc8-63a0-47a0-8585-7a10db82b846</magnetronInstanceId>
+    <powerSupplyId>PSU_A</powerSupplyId>
+    <model>4" magnetron with chimney</model>
+    <powerType />
+    <description>Flange 2</description>
+    <comment />
+    <installedDate>2026-01-01</installedDate>
+    <totalDepositionTime>00:00:00</totalDepositionTime>
+  </source>
+  <source flange="3" zeroDistanceMm="100" liftMm="20" name="C">
+    <material>Graphite</material>
+    <magnetronId>MAG3</magnetronId>
+    <magnetronInstanceId>706a7ec9-af4c-43c0-bed3-64b3a05b78b9</magnetronInstanceId>
+    <powerSupplyId>PSU_B</powerSupplyId>
+    <model>4" magnetron with chimney</model>
+    <powerType />
+    <description>Flange 3</description>
+    <comment />
+    <installedDate>2026-01-01</installedDate>
+    <totalDepositionTime>00:00:00</totalDepositionTime>
+  </source>
+  <source flange="4">
+    <material>Ion</material>
+    <magnetronId>MAG4</magnetronId>
+    <magnetronInstanceId></magnetronInstanceId>
+    <powerSupplyId>PSU_ION</powerSupplyId>
+    <model>Ion source</model>
+    <powerType>Ion source</powerType>
+    <description>Flange 4</description>
+    <comment />
+    <installedDate>2026-01-01</installedDate>
+    <totalDepositionTime>00:00:00</totalDepositionTime>
+  </source>
+  <source flange="5" zeroDistanceMm="40" liftMm="40" name="Ru">
+    <material>Ru</material>
+    <magnetronId>MAG5</magnetronId>
+    <magnetronInstanceId>2e9d34de-fbd0-4932-b12c-9d1ee2510a64</magnetronInstanceId>
+    <powerSupplyId>PSU_C</powerSupplyId>
+    <model>4" magnetron with chimney</model>
+    <powerType />
+    <description>Flange 5</description>
+    <comment />
+    <installedDate>2026-01-01</installedDate>
+    <totalDepositionTime>00:00:00</totalDepositionTime>
+  </source>
+  <source flange="6" name="Co">
+    <material>Co</material>
+    <magnetronId>MAG6</magnetronId>
+    <magnetronInstanceId>bf640cbc-b249-4155-bd2c-99e7502ca219</magnetronInstanceId>
+    <powerSupplyId>PSU_RF2</powerSupplyId>
+    <model>160 mm rectangular magnetron</model>
+    <powerType />
+    <description>Flange 6</description>
+    <comment />
+    <installedDate>2026-01-01</installedDate>
+    <totalDepositionTime>00:00:00</totalDepositionTime>
+  </source>
+</sources>

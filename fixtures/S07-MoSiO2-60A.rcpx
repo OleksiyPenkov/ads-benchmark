@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Recipe>
+  <Description title="Mo/SiO2 5-bilayer stack on glass, D=60.0A" type="Sputtering" author="LAB" notes="5 bilayers of Mo (20.0 A at 0.800 A/s = 25.00 s on PSU1 PDC 200 mA, 50 kHz, 60 percent) and SiO2 (40.0 A at 0.400 A/s = 100.00 s on PSU2 RF 150 W). Ar1 = 30 sccm with V1, M1, M2 open."/>
+  <Parameters>
+    <Group name="Deposition Conditions">
+      <Param name="Pbase" caption="Base vacuum" unit="mTorr" paramType="0">0.05mT</Param>
+      <Param name="ArFlow" caption="Ar flow" unit="sccm" paramType="1">30</Param>
+      <Param name="N" caption="Bilayers" unit="N" paramType="1">5</Param>
+    </Group>
+    <Group name="Mo Layer">
+      <Param name="currentMo" caption="Mo current" unit="mA" paramType="1">200</Param>
+      <Param name="freqMo" caption="Mo frequency" unit="kHz" paramType="1">50</Param>
+      <Param name="dutyMo" caption="Mo duty" unit="%" paramType="1">60</Param>
+      <Param name="timeMo" caption="Mo time" unit="sec" paramType="1">25.00</Param>
+    </Group>
+    <Group name="SiO2 Layer">
+      <Param name="powerSiO2" caption="SiO2 power" unit="W" paramType="1">150</Param>
+      <Param name="timeSiO2" caption="SiO2 time" unit="sec" paramType="1">100.00</Param>
+    </Group>
+  </Parameters>
+  <Script>
+# --- verify base pressure before admitting process gas ---
+swait pm Pbase 120
+
+# --- admit argon to Main chamber ---
+valve V1 open
+valve M1 open
+valve M2 open
+mfc Ar1 ArFlow
+delay 10
+
+# --- configure and energize PSU1 (Mo, PDC) and PSU2 (SiO2, RF) ---
+set PSU1 Frequency freqMo
+set PSU1 DutyCycle dutyMo
+set PSU1 Current currentMo
+set PSU2 Current powerSiO2
+power PSU1 on
+power PSU2 on
+delay 5
+
+# --- 5 bilayers: Mo 20.0 A then SiO2 40.0 A ---
+loop N
+deposit Mo timeMo
+deposit SiO2 timeSiO2
+endloop
+
+# --- sources off and gas teardown ---
+power PSU1 off
+power PSU2 off
+set PSU1 Current 0
+set PSU2 Power 0
+mfc Ar1 0
+valve M1 close
+valve M2 close
+valve V1 close
+  </Script>
+</Recipe>

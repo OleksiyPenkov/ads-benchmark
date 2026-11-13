@@ -1,0 +1,52 @@
+{
+  "key": "recipe",
+  "tool": "validate_recipe",
+  "request": {
+    "fixture": "A08-RuC-68p5A.rcpx",
+    "sha256": "a52eb59876b4a64ad38ccc28bd63d78b96f6c9f96d841ace18ec72772cd548ae",
+    "arguments": {
+      "content": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<Recipe>\n  <Description title=\"Ru/C periodic multilayer on glass, d=68.5A, G=0.215, N=30\" type=\"Sputtering\" author=\"LAB\" notes=\"Glass / Ru 197A adhesion / [C 53.77A / Ru 14.73A] x30. Plain Ar, 2 mTorr, 40+40 sccm. Ru on PSU_C (Mag3, inlet M3, Ar line 1) at 50 mA. C on PSU_B (Mag2, inlet M2, Ar line 2) at 300 mA. Both pulsed 50 kHz / 60 percent. Times from calibration 0.4711 A/s (Ru, 50 mA) and 0.4030 A/s (C, 300 mA). No bias, no RF.\"/>\n  <Parameters>\n    <Group name=\"Deposition Conditions\">\n      <Param name=\"P\" caption=\"Pressure\" unit=\"mTorr\" paramType=\"0\">2.00mT</Param>\n      <Param name=\"Pbase\" caption=\"Release pressure\" unit=\"mTorr\" paramType=\"0\">0mT</Param>\n      <Param name=\"ArFlow\" caption=\"Ar flow per line\" unit=\"sccm\" paramType=\"1\">40</Param>\n      <Param name=\"StageHeight\" caption=\"Height\" unit=\"mm\" paramType=\"1\">0</Param>\n      <Param name=\"N\" caption=\"Bilayers\" unit=\"N\" paramType=\"1\">30</Param>\n    </Group>\n    <Group name=\"Pulsed DC\">\n      <Param name=\"DCFreq\" caption=\"Freq\" unit=\"kHz\" paramType=\"1\">50</Param>\n      <Param name=\"DCDuty\" caption=\"Duty\" unit=\"%\" paramType=\"1\">60</Param>\n    </Group>\n    <Group name=\"Layer Ru\">\n      <Param name=\"currentRu\" caption=\"Current\" unit=\"mA\" paramType=\"1\">50</Param>\n      <Param name=\"timeRuAdh\" caption=\"Time (adhesion 197A)\" unit=\"sec\" paramType=\"1\">418.17</Param>\n      <Param name=\"timeRu\" caption=\"Time (period 14.73A)\" unit=\"sec\" paramType=\"1\">31.26</Param>\n    </Group>\n    <Group name=\"Layer C\">\n      <Param name=\"currentC\" caption=\"Current\" unit=\"mA\" paramType=\"1\">300</Param>\n      <Param name=\"timeC\" caption=\"Time (period 53.77A)\" unit=\"sec\" paramType=\"1\">133.43</Param>\n    </Group>\n  </Parameters>\n  <Script>\n# --- substrate height ---\nstage VS StageHeight\n\n# --- process gas: Ar line 1 -> M3 (Ru, Mag3), Ar line 2 -> M2 (C, Mag2) ---\nvalve V2 open\nvalve V3 open\nvalve M3 open\nvalve M2 open\nmfc Ar1 ArFlow\nmfc Ar2 ArFlow\npwait P 600\n\n# --- supplies: pulsed DC 50 kHz / 60 %, levels before outputs ---\nset PSU_C Frequency DCFreq\nset PSU_C DutyCycle DCDuty\nset PSU_C Current currentRu\nset PSU_B Frequency DCFreq\nset PSU_B DutyCycle DCDuty\nset PSU_B Current currentC\npower PSU_C on\npower PSU_B on\n\n# --- Ru adhesion layer, 197 A ---\ndeposit Ru timeRuAdh Home\n\n# --- 30 periods: C 53.77 A then Ru 14.73 A ---\nloop N\ndeposit C timeC Home\ndeposit Ru timeRu Home\nendloop\n\n# --- sources off ---\npower PSU_B off\npower PSU_C off\n\n# --- gas off, release the throttle, then shut the lines ---\nmfc Ar1 0\nmfc Ar2 0\npwait Pbase 10\nvalve M2 close\nvalve M3 close\nvalve V2 close\nvalve V3 close\n\n# --- leave the drives at Home for the next run ---\nholder Home\n  </Script>\n</Recipe>\n"
+    }
+  },
+  "response": {
+    "isError": false,
+    "text": "{\r\n  \"valid\": true,\r\n  \"findings\": [\r\n    {\r\n      \"line\": 50,\r\n      \"column\": 1,\r\n      \"severity\": \"warning\",\r\n      \"message\": \"mfc \\u0027Ar2\\u0027 0 stops the last gas flow in chamber \\u0027Main\\u0027, which then enters Idle while the throttle still holds the pwait target \\u00272.00mT\\u0027 (above the 0.0001 Torr Idle ceiling): the Idle over-pressure alarm trips if the pressure stays above 0.0001 Torr for 60 s. Release the throttle while gas still flows, before zeroing the MFCs: \\u0027pwait 0 1\\u0027.\",\r\n      \"xmlLine\": 64\r\n    }\r\n  ],\r\n  \"scriptSummary\": {\r\n    \"depositSecondsBySource\": {\r\n      \"Ru\": {\r\n        \"outsideLoopSeconds\": 418.17,\r\n        \"inLoopSeconds\": 937.8,\r\n        \"totalSeconds\": 1355.97\r\n      },\r\n      \"C\": {\r\n        \"outsideLoopSeconds\": 0,\r\n        \"inLoopSeconds\": 4002.9,\r\n        \"totalSeconds\": 4002.9\r\n      }\r\n    },\r\n    \"totalDepositSeconds\": 5358.87,\r\n    \"hasUnresolvedVariables\": false,\r\n    \"pwaitTimeoutsNote\": \"pwait/swait timeout arguments (e.g. 600 s, 10 s) are upper-bound ceilings, not fixed durations; total wall-clock run time cannot be determined without running the recipe.\",\r\n    \"inertCommentLinesWithSemicolon\": [],\r\n    \"commentsNote\": \"All text after \\u0027#\\u0027 or \\u0027//\\u0027 on a line (including \\u0027;\\u0027 characters) is stripped before statement splitting and is completely inert.\"\r\n  }\r\n}",
+    "json": {
+      "valid": true,
+      "findings": [
+        {
+          "line": 50,
+          "column": 1,
+          "severity": "warning",
+          "message": "mfc 'Ar2' 0 stops the last gas flow in chamber 'Main', which then enters Idle while the throttle still holds the pwait target '2.00mT' (above the 0.0001 Torr Idle ceiling): the Idle over-pressure alarm trips if the pressure stays above 0.0001 Torr for 60 s. Release the throttle while gas still flows, before zeroing the MFCs: 'pwait 0 1'.",
+          "xmlLine": 64
+        }
+      ],
+      "scriptSummary": {
+        "depositSecondsBySource": {
+          "Ru": {
+            "outsideLoopSeconds": 418.17,
+            "inLoopSeconds": 937.8,
+            "totalSeconds": 1355.97
+          },
+          "C": {
+            "outsideLoopSeconds": 0,
+            "inLoopSeconds": 4002.9,
+            "totalSeconds": 4002.9
+          }
+        },
+        "totalDepositSeconds": 5358.87,
+        "hasUnresolvedVariables": false,
+        "pwaitTimeoutsNote": "pwait/swait timeout arguments (e.g. 600 s, 10 s) are upper-bound ceilings, not fixed durations; total wall-clock run time cannot be determined without running the recipe.",
+        "inertCommentLinesWithSemicolon": [],
+        "commentsNote": "All text after '#' or '//' on a line (including ';' characters) is stripped before statement splitting and is completely inert."
+      }
+    }
+  },
+  "recorded_utc": "2026-11-13T00:00:00+00:00",
+  "stack": {
+    "profile": "ADS",
+    "appVersion": "1.7.1",
+    "controlMode": "Remote"
+  }
+}

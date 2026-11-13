@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Recipe>
+  <Description title="Multi-chamber Cu/W/Si stack" type="Sputtering" author="LAB" notes="Audit fixture for Cluster tool."/>
+  <Parameters>
+    <Group name="Process Pressures">
+      <Param name="PC1" caption="C1 pressure" unit="mTorr" paramType="0">5.00mT</Param>
+      <Param name="PC2" caption="C2 pressure" unit="mTorr" paramType="0">2.00mT</Param>
+      <Param name="Pbase" caption="Release target" unit="mTorr" paramType="0">0mT</Param>
+      <Param name="ArFlow" caption="Ar flow" unit="sccm" paramType="1">40</Param>
+    </Group>
+  </Parameters>
+  <Script>
+# --- transfer wafer from LL into C1 ---
+home
+valve SV_LL open
+valve SV_C1 open
+transfer LL C1
+valve SV_LL close
+valve SV_C1 close
+
+# --- C1 setup and deposition ---
+valve C1_V open
+mfc C1_Ar ArFlow
+pwait PC1 600
+set C1_PSU1 Frequency 50
+set C1_PSU1 DutyCycle 60
+set C1_PSU1 Current 250
+set C3_PSU1 Current 100
+power C1_PSU1 on
+message Verify C1 plasma through viewport before opening shutter
+deposit C1_Cu 80
+deposit Gr 60
+power C1_PSU1 off
+pwait C1_pm Pbase 10
+mfc C1_Ar 0
+valve C1_V close
+swait C1_pm 0.05mT 120
+
+# --- transfer wafer from C1 into C2 ---
+valve SV_C1 open
+valve SV_C2 open
+transfer C1 C2
+valve SV_C1 close
+valve SV_C2 close
+
+# --- C2 W deposition (missing valve C2_V open) ---
+mfc C2_Ar ArFlow
+pwait C2_pm PC2 300
+set C2_PSU Frequency 50
+set C2_PSU DutyCycle 60
+set C2_PSU Current 200
+power C2_PSU on
+deposit W 60 Home
+power C2_PSU off
+pwait C2_pm Pbase 10
+mfc C2_Ar 0
+
+# legacy cap; deposit W 30
+
+# --- return wafer to LL ---
+valve SV_C2 open
+valve SV_LL open
+transfer C2 LL
+valve SV_C2 close
+valve SV_LL close
+home
+  </Script>
+</Recipe>

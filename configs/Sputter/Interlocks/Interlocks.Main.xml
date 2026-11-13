@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<interlocks>
+	<interlock id="Valve_A1_open">
+		<l>Valve GVM closed</l>
+		<l>Valve M1 closed</l>
+		<l>Valve M2 closed</l>
+	</interlock>
+	<interlock id="Valve_FL_open">
+		<l>Pump SP1 on</l>
+	</interlock>
+	<interlock id="Pump_SP1_off">
+		<l>Valve FL closed</l>
+	</interlock>
+</interlocks>

@@ -1,0 +1,52 @@
+cff-version: 1.2.0
+message: "If you use ADS-Bench in your research, please cite both this repository and the accompanying preprint."
+title: "ADS-Bench v2.0: A Multi-Architecture Benchmark for Neuro-Symbolic LLM Control of Physical Vapor Deposition Systems"
+abstract: >-
+  ADS-Bench v2.0 evaluates language-model agents across 46 tasks (40 short tasks across five cognitive
+  and safety tiers plus 6 live deposition and recipe-audit capstones) on three open physical vapor
+  deposition (PVD) architectures in APS Control Community v1.7.1: single-chamber batch sputtering
+  (Sputter), load-locked multi-source sputtering (ADS), and multi-chamber radial cluster sputtering
+  (Cluster). Includes frozen wire receipts, deterministic capstone scorers, campaign execution harness,
+  and leakage-free synthetic topology SFT/DPO training scripts.
+type: software
+authors:
+  - family-names: Penkov
+    given-names: "Oleksiy V."
+  - family-names: Fu
+    given-names: Haoyu
+  - family-names: Zhan
+    given-names: Yueying
+  - family-names: Wu
+    given-names: Pengyuan
+  - family-names: Jin
+    given-names: Jiong
+keywords:
+  - physical vapor deposition
+  - magnetron sputtering
+  - benchmark
+  - large language model agent
+  - Model Context Protocol
+  - neuro-symbolic verification
+  - safety interlocks
+version: "2.0.0"
+date-released: "2026-11-13"
+license: MIT
+repository-code: "https://github.com/OleksiyPenkov/ads-benchmark"
+references:
+  - type: article
+    title: "Agent-authored deposition recipes for X-ray multilayer mirrors: schema-bound LLM control of a magnetron sputtering system with reflectivity-verified outcomes"
+    status: preprint
+    year: 2026
+    doi: 10.48550/arXiv.2609.12796
+    url: "https://arxiv.org/abs/2609.12796"
+    authors:
+      - family-names: Penkov
+        given-names: "Oleksiy V."
+      - family-names: Fu
+        given-names: Haoyu
+      - family-names: Zhan
+        given-names: Yueying
+      - family-names: Wu
+        given-names: Pengyuan
+      - family-names: Jin
+        given-names: Jiong

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<alarms>
+	<chamber id="Main">
+		<states initial="startup">
+			<transition from="startup"     to="idle"        sensor="pm" cond="less" val="1e-6" />
+			<transition from="idle"        to="maintenance" valve="A1"  state="open"   require="GVM closed" />
+			<transition from="maintenance" to="startup"     valve="A1"  state="closed" />
+
+			<transition from="startup"    to="processing" group="gasvalve" state="anyOpen" />
+			<transition from="idle"       to="processing" group="gasvalve" state="anyOpen" />
+			<transition from="processing" to="idle"       group="gas"      state="allOff"  />
+		</states>
+		<alarm sensor="pm" cond="more" val="2e-1" state="processing">Main chamber pressure too high!</alarm>
+		<alarm sensor="pm" cond="more" val="1e-4" state="idle">Main chamber pressure too high!</alarm>
+		<alarm device="TP" status="alarm" state="processing">Turbo pump hardware alarm!</alarm>
+		<alarm device="TP" status="alarm" state="idle">Turbo pump hardware alarm!</alarm>
+		<alarm device="TP" status="alarm" state="maintenance">Turbo pump hardware alarm!</alarm>
+	</chamber>
+</alarms>

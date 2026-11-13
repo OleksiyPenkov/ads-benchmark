@@ -1,0 +1,23 @@
+{
+  "key": "read",
+  "tool": "system_status",
+  "request": {
+    "arguments": {}
+  },
+  "response": {
+    "json": {
+      "chambers": [
+        {
+          "id": "Main",
+          "state": "Idle"
+        }
+      ],
+      "activeAlarms": [],
+      "isRecipeRunning": false,
+      "isDepositionActive": false,
+      "controlMode": "Remote",
+      "recipe": null
+    }
+  },
+  "recorded_utc": "2026-10-09T10:56:17+00:00"
+}

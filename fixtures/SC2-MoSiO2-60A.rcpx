@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Recipe>
+  <Description title="Mo/SiO2 5-bilayer stack on glass, D=60.0A" type="Sputtering" author="LAB" notes="Audit fixture for Sputter batch coater."/>
+  <Parameters>
+    <Group name="Deposition Conditions">
+      <Param name="P" caption="Working pressure" unit="mTorr" paramType="0">3.00mT</Param>
+      <Param name="ArFlow" caption="Ar flow" unit="sccm" paramType="1">30</Param>
+      <Param name="N" caption="Bilayers" unit="N" paramType="1">5</Param>
+    </Group>
+    <Group name="Mo Layer">
+      <Param name="currentMo" caption="Mo current" unit="mA" paramType="1">200</Param>
+      <Param name="freqMo" caption="Mo frequency" unit="kHz" paramType="1">50</Param>
+      <Param name="dutyMo" caption="Mo duty" unit="%" paramType="1">60</Param>
+      <Param name="timeMo" caption="Mo time" unit="sec" paramType="1">25.00</Param>
+    </Group>
+    <Group name="SiO2 Layer">
+      <Param name="powerSiO2" caption="SiO2 power" unit="W" paramType="1">150</Param>
+      <Param name="timeSiO2" caption="SiO2 time" unit="sec" paramType="1">100.00</Param>
+    </Group>
+  </Parameters>
+  <Script>
+# --- substrate rotation ---
+rotate 15
+
+# --- admit argon and wait for pressure ---
+valve V1 open
+valve M1 open
+valve M2 open
+mfc Ar1 ArFlow
+pwait P 300
+
+# --- configure supplies ---
+set PSU1 Frequency freqMo
+set PSU1 DutyCycle dutyMo
+set PSU1 Current currentMo
+set PSU2 Current powerSiO2
+warmup PSU1 100 30
+power PSU2 on
+message Confirm both plasmas are stable before starting multilayer
+
+# --- 5 bilayers: Mo 20.0 A then SiO2 40.0 A ---
+loop N
+deposit Mo timeMo Home
+deposit SiO2 timeSiO2
+endloop
+
+# old cap step; power PSU2 on
+
+# --- teardown ---
+power PSU1 off
+power PSU2 off
+mfc Ar1 0
+valve M1 close
+valve M2 close
+valve V1 close
+  </Script>
+</Recipe>

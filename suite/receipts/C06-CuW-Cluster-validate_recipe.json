@@ -1,0 +1,52 @@
+{
+  "key": "recipe",
+  "tool": "validate_recipe",
+  "request": {
+    "fixture": "C06-CuW-Cluster.rcpx",
+    "sha256": "19d349c6d8c019ee3cf12f190c44fe24667c020e6ccf189846a72e5e199baaf7",
+    "arguments": {
+      "content": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<Recipe>\n  <Description title=\"Multi-chamber Cu/W bilayer (100A Cu in C1, 150A W in C2)\" type=\"Sputtering\" author=\"LAB\" notes=\"LL -> TM -> C1 (100 A Cu on C1_PSU1 at 250 mA, 50 kHz, 60 percent, 1.250 A/s = 80.00 s) -> C2 (150 A W on C2_PSU at 200 mA, 50 kHz, 60 percent, 0.750 A/s = 200.00 s) -> LL.\"/>\n  <Parameters>\n    <Group name=\"Process Pressures\">\n      <Param name=\"PC1\" caption=\"C1 pressure\" unit=\"mTorr\" paramType=\"0\">3.00mT</Param>\n      <Param name=\"PC2\" caption=\"C2 pressure\" unit=\"mTorr\" paramType=\"0\">2.00mT</Param>\n      <Param name=\"Pbase\" caption=\"Release target\" unit=\"mTorr\" paramType=\"0\">0mT</Param>\n      <Param name=\"ArFlow\" caption=\"Ar flow\" unit=\"sccm\" paramType=\"1\">40</Param>\n    </Group>\n    <Group name=\"Layers\">\n      <Param name=\"timeCu\" caption=\"Cu time (100A)\" unit=\"sec\" paramType=\"1\">80.00</Param>\n      <Param name=\"timeW\" caption=\"W time (150A)\" unit=\"sec\" paramType=\"1\">200.00</Param>\n    </Group>\n  </Parameters>\n  <Script>\n# --- transfer wafer from LL into C1 ---\nhome\nvalve SV_LL open\nvalve SV_C1 open\ntransfer LL C1\nvalve SV_LL close\nvalve SV_C1 close\n\n# --- C1 Cu deposition (100 A at 1.250 A/s = 80.00 s) ---\nvalve C1_V open\nmfc C1_Ar ArFlow\npwait C1_pm PC1 300\nset C1_PSU1 Frequency 50\nset C1_PSU1 DutyCycle 60\nset C1_PSU1 Current 250\npower C1_PSU1 on\ndeposit C1_Cu timeCu\npower C1_PSU1 off\nset C1_PSU1 Current 0\nmfc C1_Ar 0\nvalve C1_V close\npwait C1_pm 2.00mT 10\nswait C1_pm 0.05mT 120\n\n# --- transfer wafer from C1 into C2 ---\nvalve SV_C1 open\nvalve SV_C2 open\ntransfer C1 C2\nvalve SV_C1 close\nvalve SV_C2 close\n\n# --- C2 W deposition (150 A at 0.750 A/s = 200.00 s) ---\nvalve C2_V open\nmfc C2_Ar ArFlow\npwait C2_pm PC2 300\nset C2_PSU Frequency 50\nset C2_PSU DutyCycle 60\nset C2_PSU Current 200\npower C2_PSU on\ndeposit W timeW\npower C2_PSU off\nset C2_PSU Current 0\npwait C2_pm Pbase 10\nmfc C2_Ar 0\nvalve C2_V close\nswait C2_pm 0.05mT 120\n\n# --- return wafer from C2 to LL ---\nvalve SV_C2 open\nvalve SV_LL open\ntransfer C2 LL\nvalve SV_C2 close\nvalve SV_LL close\nhome\n  </Script>\n</Recipe>\n"
+    }
+  },
+  "response": {
+    "isError": false,
+    "text": "{\r\n  \"valid\": true,\r\n  \"findings\": [\r\n    {\r\n      \"line\": 26,\r\n      \"column\": 1,\r\n      \"severity\": \"warning\",\r\n      \"message\": \"mfc \\u0027C1_Ar\\u0027 0 stops the last gas flow in chamber \\u0027C1\\u0027, which then enters Idle while the throttle still holds the pwait target \\u00273.00mT\\u0027 (above the 0.0001 Torr Idle ceiling): the Idle over-pressure alarm can trip immediately (delay 0 s, suppressed only while \\u0027C1_A1 open\\u0027). Release the throttle while gas still flows, before zeroing the MFCs: \\u0027pwait C1_pm 0 1\\u0027.\",\r\n      \"xmlLine\": 36\r\n    }\r\n  ],\r\n  \"scriptSummary\": {\r\n    \"depositSecondsBySource\": {\r\n      \"C1_Cu\": {\r\n        \"outsideLoopSeconds\": 80,\r\n        \"inLoopSeconds\": 0,\r\n        \"totalSeconds\": 80\r\n      },\r\n      \"W\": {\r\n        \"outsideLoopSeconds\": 200,\r\n        \"inLoopSeconds\": 0,\r\n        \"totalSeconds\": 200\r\n      }\r\n    },\r\n    \"totalDepositSeconds\": 280,\r\n    \"hasUnresolvedVariables\": false,\r\n    \"pwaitTimeoutsNote\": \"pwait/swait timeout arguments (e.g. 600 s, 10 s) are upper-bound ceilings, not fixed durations; total wall-clock run time cannot be determined without running the recipe.\",\r\n    \"inertCommentLinesWithSemicolon\": [],\r\n    \"commentsNote\": \"All text after \\u0027#\\u0027 or \\u0027//\\u0027 on a line (including \\u0027;\\u0027 characters) is stripped before statement splitting and is completely inert.\"\r\n  }\r\n}",
+    "json": {
+      "valid": true,
+      "findings": [
+        {
+          "line": 26,
+          "column": 1,
+          "severity": "warning",
+          "message": "mfc 'C1_Ar' 0 stops the last gas flow in chamber 'C1', which then enters Idle while the throttle still holds the pwait target '3.00mT' (above the 0.0001 Torr Idle ceiling): the Idle over-pressure alarm can trip immediately (delay 0 s, suppressed only while 'C1_A1 open'). Release the throttle while gas still flows, before zeroing the MFCs: 'pwait C1_pm 0 1'.",
+          "xmlLine": 36
+        }
+      ],
+      "scriptSummary": {
+        "depositSecondsBySource": {
+          "C1_Cu": {
+            "outsideLoopSeconds": 80,
+            "inLoopSeconds": 0,
+            "totalSeconds": 80
+          },
+          "W": {
+            "outsideLoopSeconds": 200,
+            "inLoopSeconds": 0,
+            "totalSeconds": 200
+          }
+        },
+        "totalDepositSeconds": 280,
+        "hasUnresolvedVariables": false,
+        "pwaitTimeoutsNote": "pwait/swait timeout arguments (e.g. 600 s, 10 s) are upper-bound ceilings, not fixed durations; total wall-clock run time cannot be determined without running the recipe.",
+        "inertCommentLinesWithSemicolon": [],
+        "commentsNote": "All text after '#' or '//' on a line (including ';' characters) is stripped before statement splitting and is completely inert."
+      }
+    }
+  },
+  "recorded_utc": "2026-11-13T00:00:00+00:00",
+  "stack": {
+    "profile": "Cluster",
+    "appVersion": "1.7.1",
+    "controlMode": "Remote"
+  }
+}

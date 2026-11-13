@@ -1,0 +1,42 @@
+ 990  16:58:41.849  [Execute]  Power PSU_B False
+ 991  16:58:41.851  [Execute]    exec: set PSU_B Current 0
+ 992  16:58:41.852  [Execute]    target=Power, argTypes=[DeviceType,String,Single]
+ 993  16:58:41.854  [Execute]    FindElement(Power, PSU_B) => LanPowerSupply
+ 994  16:58:42.079  [Execute]    result: 0
+ 995  16:58:42.082  [Execute]  Power PSU_B 0
+ 996  16:58:42.084  [Execute]    exec: mfc Ar1 0
+ 997  16:58:42.086  [Execute]    target=MFC, argTypes=[DeviceType,Single]
+ 998  16:58:42.088  [Execute]    FindElement(MFC, Ar1) => S7200MFC
+ 999  16:58:43.133  [Execute]    result: 14.715178
+1000  16:58:43.135  [Execute]  MFC Ar1 14.715178
+1001  16:58:43.138  [Execute]    exec: mfc Ar2 0
+1002  16:58:43.139  [Execute]    target=MFC, argTypes=[DeviceType,Single]
+1003  16:58:43.141  [Execute]    FindElement(MFC, Ar2) => S7200MFC
+1004  16:58:45.038  [Execute]    result: 2.4324028
+1005  16:58:45.040  [Execute]  MFC Ar2 2.4324028
+1006  16:58:45.042  [Execute]    exec: valve V1 false
+1007  16:58:45.043  [Execute]    target=Valve, argTypes=[DeviceType,Boolean]
+1008  16:58:45.044  [Execute]    FindElement(Valve, V1) => S7200GasValve
+1009  16:58:47.009  [Execute]    result: False
+1010  16:58:47.011  [Execute]  Valve V1 closed
+1011  16:58:47.012  [Execute]    exec: valve V3 false
+1012  16:58:47.014  [Execute]    target=Valve, argTypes=[DeviceType,Boolean]
+1013  16:58:47.015  [Execute]    FindElement(Valve, V3) => S7200GasValve
+1014  16:58:48.924  [Execute]    result: False
+1015  16:58:48.927  [Execute]  Valve V3 closed
+1016  16:58:48.929  [Execute]    exec: valve M3 false
+1017  16:58:48.931  [Execute]    target=Valve, argTypes=[DeviceType,Boolean]
+1018  16:58:48.933  [Execute]    FindElement(Valve, M3) => S7200GasValve
+1019  16:58:51.362  [Execute]    result: False
+1020  16:58:51.364  [Execute]  Valve M3 closed
+1021  16:58:51.366  [Execute]    exec: valve M2 false
+1022  16:58:51.367  [Execute]    target=Valve, argTypes=[DeviceType,Boolean]
+1023  16:58:51.368  [Execute]    FindElement(Valve, M2) => S7200GasValve
+1024  16:58:52.032  [State]  Transition Main: Processing -> Idle (poll)
+1025  16:58:53.385  [Execute]    result: False
+1026  16:58:53.387  [Execute]  Valve M2 closed
+1027  16:58:53.390  [Execute]    exec: pwait TC1 0 120
+1028  16:58:53.391  [Execute]    target=Controller, argTypes=[DeviceType,String,Single,Single]
+1029  16:58:53.392  [Execute]    bound device: TC1
+1030  17:08:49.720  [Agent]  [behavior-validation] recipe.abort 
+1031  17:14:28.514  [Agent]  [behavior-validation] recipe.abort 

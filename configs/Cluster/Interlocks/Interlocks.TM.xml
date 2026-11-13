@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<interlocks>
+	<!-- ============================================================ -->
+	<!-- TM vacuum topology:                                          -->
+	<!--   TM =[TM_GV]= TP =[TM_FL]= SP(backing)                      -->
+	<!--   TM =[TM_RL]= SP   (roughing line, bypasses the TP)         -->
+	<!--   TM has NO vent valve (no TM_A1).                           -->
+	<!-- ============================================================ -->
+
+	<!-- Foreline open requires the backing pump running AND the
+	     roughing line closed (manifold exclusivity). -->
+	<interlock id="Valve_TM_FL_open">
+		<l>Pump TM_SP on</l>
+		<l>Valve TM_RL closed</l>
+	</interlock>
+
+	<!-- Foreline close requires the gate closed: closing the foreline
+	     while the gate is open strands the spinning turbo with no
+	     backing path. -->
+	<interlock id="Valve_TM_FL_close">
+		<l>Valve TM_GV closed</l>
+	</interlock>
+
+	<!-- Backing pump off requires both of its manifold valves closed. -->
+	<interlock id="Pump_TM_SP_off">
+		<l>Valve TM_FL closed</l>
+		<l>Valve TM_RL closed</l>
+	</interlock>
+
+	<!-- Roughing line open requires the gate closed, the foreline closed
+	     (manifold exclusivity), and the backing pump running. -->
+	<interlock id="Valve_TM_RL_open">
+		<l>Valve TM_GV closed</l>
+		<l>Valve TM_FL closed</l>
+		<l>Pump TM_SP on</l>
+	</interlock>
+
+	<!-- Gate open requires the TM roughed below 50 mTorr (never expose
+	     the turbo to atmosphere) and the roughing line closed. -->
+	<interlock id="Valve_TM_GV_open">
+		<l>Sensor TM_pm less 5.0e-2</l>
+		<l>Valve TM_RL closed</l>
+	</interlock>
+
+	<!-- ============================================================ -->
+	<!-- LL vacuum topology:                                          -->
+	<!--   LL =[LL_GV]= TP =[LL_FL]= SP(backing)                      -->
+	<!--   LL =[LL_RL]= SP   (roughing line, bypasses the TP)         -->
+	<!--   LL =[LL_A1]= atmosphere (vent)                             -->
+	<!--   LL =[SV_LL]= transfer module                               -->
+	<!-- ============================================================ -->
+
+	<!-- Foreline open requires the backing pump running AND the
+	     roughing line closed (manifold exclusivity). -->
+	<interlock id="Valve_LL_FL_open">
+		<l>Pump LL_SP on</l>
+		<l>Valve LL_RL closed</l>
+	</interlock>
+
+	<!-- Foreline close requires the gate closed (strand protection). -->
+	<interlock id="Valve_LL_FL_close">
+		<l>Valve LL_GV closed</l>
+	</interlock>
+
+	<!-- Backing pump off requires both of its manifold valves closed. -->
+	<interlock id="Pump_LL_SP_off">
+		<l>Valve LL_FL closed</l>
+		<l>Valve LL_RL closed</l>
+	</interlock>
+
+	<!-- Roughing line open requires the gate closed, the foreline closed
+	     (manifold exclusivity), and the backing pump running. -->
+	<interlock id="Valve_LL_RL_open">
+		<l>Valve LL_GV closed</l>
+		<l>Valve LL_FL closed</l>
+		<l>Pump LL_SP on</l>
+	</interlock>
+
+	<!-- Gate open requires the LL roughed below 50 mTorr and the
+	     roughing line closed. -->
+	<interlock id="Valve_LL_GV_open">
+		<l>Sensor LL_pm less 5.0e-2</l>
+		<l>Valve LL_RL closed</l>
+	</interlock>
+
+	<!-- LL vent must not vent into TM (slit), the turbo (gate) or the
+	     backing pump (roughing line). -->
+	<interlock id="Valve_LL_A1_open">
+		<l>Valve SV_LL closed</l>
+		<l>Valve LL_GV closed</l>
+		<l>Valve LL_RL closed</l>
+	</interlock>
+
+	<!-- ============================================================ -->
+	<!-- Slit valves                                                  -->
+	<!-- ============================================================ -->
+	<!-- Slit OPEN interlocks (Valve_SV_*_open) live in Interlocks.Cluster.xml as a
+	     single canonical block per id, combining the cross-host pressure guard with
+	     the robot-not-transferring guard. They MUST NOT be defined here too: the
+	     loader is last-write-wins by id (Core.Interlocks.cs), so a duplicate block
+	     would silently drop the other file's conditions. -->
+
+	<!-- Slit close requires the robot not be mid-transfer. -->
+	<interlock id="Valve_SV_LL_close">
+		<l>Robot ROBOT state notIn transferring</l>
+	</interlock>
+	<interlock id="Valve_SV_C1_close">
+		<l>Robot ROBOT state notIn transferring</l>
+	</interlock>
+
+	<!-- C2-C4 slits: close requires the robot not transferring (open rules are in
+	     Interlocks.Cluster.xml). -->
+	<interlock id="Valve_SV_C2_close">
+		<l>Robot ROBOT state notIn transferring</l>
+	</interlock>
+	<interlock id="Valve_SV_C3_close">
+		<l>Robot ROBOT state notIn transferring</l>
+	</interlock>
+	<interlock id="Valve_SV_C4_close">
+		<l>Robot ROBOT state notIn transferring</l>
+	</interlock>
+</interlocks>

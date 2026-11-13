@@ -1,0 +1,17 @@
+retry:
+  enabled: false
+  maxRetries: 0
+  modelFallback: false
+  usageAwareFallback: false
+providers:
+  cacheWarming: off
+recap:
+  enabled: false
+autolearn:
+  enabled: false
+  autoContinue: false
+compaction:
+  enabled: false
+  midTurnEnabled: false
+  asyncEnabled: false
+  idleEnabled: false

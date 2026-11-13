@@ -1,0 +1,92 @@
+{
+  "benchmark": "ADS-Bench",
+  "version": "2.0",
+  "total_tasks": 46,
+  "tracks": [
+    {
+      "track": "sputter",
+      "profile": "Sputter",
+      "suite_file": "suite/sputter-suite.json",
+      "snapshot_file": "snapshots/Sputter_Idle.emstate",
+      "short_tasks": 10,
+      "capstones": [
+        "SC1",
+        "SC2"
+      ],
+      "task_ids": [
+        "S01",
+        "S02",
+        "S03",
+        "S04",
+        "S05",
+        "S06",
+        "S07",
+        "S08",
+        "S09",
+        "S10",
+        "SC1",
+        "SC2"
+      ]
+    },
+    {
+      "track": "ads",
+      "profile": "ADS",
+      "suite_file": "suite/ads-suite.json",
+      "snapshot_file": "snapshots/ADS_Idle.emstate",
+      "short_tasks": 20,
+      "capstones": [
+        "AC1",
+        "AC2"
+      ],
+      "task_ids": [
+        "A01",
+        "A02",
+        "A03",
+        "A04",
+        "A05",
+        "A06",
+        "A07",
+        "A08",
+        "A09",
+        "A10",
+        "A11",
+        "A12",
+        "A13",
+        "A14",
+        "A15",
+        "A16",
+        "A17",
+        "A18",
+        "A19",
+        "A20",
+        "AC1",
+        "AC2"
+      ]
+    },
+    {
+      "track": "cluster",
+      "profile": "Cluster",
+      "suite_file": "suite/cluster-suite.json",
+      "snapshot_file": "snapshots/Cluster_Idle.emstate",
+      "short_tasks": 10,
+      "capstones": [
+        "CC1",
+        "CC2"
+      ],
+      "task_ids": [
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C07",
+        "C08",
+        "C09",
+        "C10",
+        "CC1",
+        "CC2"
+      ]
+    }
+  ]
+}

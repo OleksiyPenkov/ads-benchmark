@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<hardware xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<libraries>
+		<library lib="S7">APS.Hardware.S7.dll</library>
+		<library lib="Demo">APS.Hardware.Demo.dll</library>
+	</libraries>
+	<plcs lib="S7">
+		<plc type="APS.Hardware.S7.S7200PLC" address="127.0.0.1">main</plc>
+	</plcs>
+	<valves lib="S7" hwtype="APS.Hardware.S7.S7200GasValve" host="main">
+		<valve address="12" index="1" descr="N2 inlet">V1</valve>
+		<valve address="12" index="2" descr="Ar inlet">V2</valve>
+		<valve address="12" index="3" descr="Ar inlet">V3</valve>
+		<valve address="12" index="4" descr="N2 inlet">V4</valve>
+		<valve address="2" index="2" descr="Inlet">V5</valve>
+		<valve address="12" index="5" descr="Bypass">V6</valve>
+		<valve address="2" index="5" descr="Ion">VI</valve>
+		<valve address="2" index="3" descr="Magnetron 1">M1</valve>
+		<valve address="12" index="7" descr="Magnetron 2">M2</valve>
+		<valve address="12" index="6" descr="Magnetron 3">M3</valve>
+	</valves>
+	<valves lib="S7" hwtype="APS.Hardware.S7.S7200Valve" host="main">
+		<valve address="2" index="4" descr="Pre-pump">PP</valve>
+		<valve address="2" index="6" descr="Fore line">FL</valve>
+		<valve address="2" index="1" vent="true" chamber="Main" conductance="3.0" descr="Air 1">A1</valve>
+		<valve address="2" index="0" vent="true" chamber="Loadlock" conductance="3.0" descr="Air 2">A2</valve>
+	</valves>
+	<valves lib="S7" hwtype="APS.Hardware.S7.S7200InputValve" host="main">
+		<valve address="2" index="6" descr="Gate Main">GVM</valve>
+	</valves>
+	<valves lib="S7" hwtype="APS.Hardware.S7.S7200PositionValve" host="main">
+		<valve address="2" index="7" descr="Gate LL" statusaddr="2" statusbit="7" statusinvert="0">GVL</valve>
+	</valves>
+	<mfcs lib="S7" hwtype="APS.Hardware.S7.S7200MFC" host="main">
+		<mfc address="160" descr="MFC #1" chamber="Main" valve="V1,V4">N21</mfc>
+		<mfc address="168" descr="MFC #2" chamber="Main" valve="V2,V3">Ar1</mfc>
+		<mfc address="284" descr="MFC #3" chamber="Main" valve="V2,V3">Ar2</mfc>
+		<mfc address="292" descr="MFC #2" chamber="Main" valve="V1,V4">N22</mfc>
+	</mfcs>
+	<sensors lib="S7" hwtype="APS.Hardware.S7.S7200Sensor" host="main">
+		<sensor address="100" chamber="Main" descr="System">pm</sensor>
+		<sensor address="280" chamber="Loadlock" descr="Loadlock">pl</sensor>
+		<sensor address="124" chamber="Main" property="Temperature" descr="Temp">tmp</sensor>
+	</sensors>
+	<pumps lib="S7" hwtype="APS.Hardware.S7.S7200TurboPump" host="main">
+		<pump address="17" writeaddr="0" writeindex="4" chamber="Main" gate="GVM" foreline="FL" descr="Main pump">TP</pump>
+	</pumps>
+	<pumps lib="S7" hwtype="APS.Hardware.S7.S7200Pump" host="main">
+		<pump address="0" index="5" chamber="Main" gate="PP" descr="Backing pump">SP1</pump>
+		<pump address="0" index="6" chamber="Loadlock" descr="LL pump">SP2</pump>
+	</pumps>
+	<stages lib="S7" hwtype="APS.Hardware.S7.S7200Stage" host="main">
+		<stage address="152" MB="7" index="1" presets="Load:0;Process:25;Down:-10" homePos="0" descr="Substrate">VS</stage>
+		<stage address="308" MB="16" index="5" presets="Retract:15;Transfer:-283" homePos="15" descr="Arm">HS</stage>
+	</stages>
+	<stages lib="S7" hwtype="APS.Hardware.S7.S7200RotationStage" host="main">
+		<stage address="1974" feedbackAddr="1978" enableByte="30" enableBit="0" descr="Substrate Rotation" operational="false">rotation</stage>
+	</stages>
+	<powersupplies lib="Demo" hwtype="APS.Hardware.Demo.LanPowerSupply">
+		<powersupply host="127.0.0.1" port="5025" mode="DC" descr="DC supply A">PSU_A</powersupply>
+		<powersupply host="127.0.0.1" port="5026" mode="PDC" descr="Pulsed DC supply B">PSU_B</powersupply>
+		<powersupply host="127.0.0.1" port="5027" mode="PDC" descr="Pulsed DC supply C">PSU_C</powersupply>
+		<powersupply host="127.0.0.1" port="5028" mode="DC" descr="Ion source supply">PSU_ION</powersupply>
+		<powersupply host="127.0.0.1" port="5029" mode="RF" descr="RF supply 1">PSU_RF1</powersupply>
+		<powersupply host="127.0.0.1" port="5030" mode="RF" descr="RF supply 2">PSU_RF2</powersupply>
+	</powersupplies>
+	<controllers lib="Demo" hwtype="APS.Hardware.Demo.LanThrottleController">
+		<controller host="127.0.0.1" port="5031" descr="Throttle controller" chamber="Main">TC1</controller>
+	</controllers>
+	<drives lib="Demo" hwtype="APS.Hardware.Demo.LanRotaryDrive">
+		<drive host="127.0.0.1" port="5033" descr="Shutter">Shutter</drive>
+		<drive host="127.0.0.1" port="5032" descr="Holder">Holder</drive>
+	</drives>
+</hardware>

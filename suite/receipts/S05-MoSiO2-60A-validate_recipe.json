@@ -1,0 +1,44 @@
+{
+  "key": "recipe",
+  "tool": "validate_recipe",
+  "request": {
+    "fixture": "S05-MoSiO2-60A.rcpx",
+    "sha256": "f125022674e34e263cb5e6c213847a229d0dafa8384764c05ea50bf77e9a1ef0",
+    "arguments": {
+      "content": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<Recipe>\n  <Description title=\"Mo/SiO2 5-bilayer stack on glass, D=60.0A\" type=\"Sputtering\" author=\"LAB\" notes=\"5 bilayers of Mo (20.0 A at 0.800 A/s = 25.00 s on PSU1 PDC 200 mA, 50 kHz, 60 percent) and SiO2 (40.0 A at 0.400 A/s = 100.00 s on PSU2 RF 150 W). Ar1 = 30 sccm with V1, M1, M2 open.\"/>\n  <Parameters>\n    <Group name=\"Deposition Conditions\">\n      <Param name=\"Pbase\" caption=\"Base vacuum\" unit=\"mTorr\" paramType=\"0\">0.05</Param>\n      <Param name=\"ArFlow\" caption=\"Ar flow\" unit=\"sccm\" paramType=\"1\">30</Param>\n      <Param name=\"N\" caption=\"Bilayers\" unit=\"N\" paramType=\"1\">5</Param>\n    </Group>\n    <Group name=\"Mo Layer\">\n      <Param name=\"currentMo\" caption=\"Mo current\" unit=\"mA\" paramType=\"1\">200</Param>\n      <Param name=\"freqMo\" caption=\"Mo frequency\" unit=\"kHz\" paramType=\"1\">50</Param>\n      <Param name=\"dutyMo\" caption=\"Mo duty\" unit=\"%\" paramType=\"1\">60</Param>\n      <Param name=\"timeMo\" caption=\"Mo time\" unit=\"sec\" paramType=\"1\">25.00</Param>\n    </Group>\n    <Group name=\"SiO2 Layer\">\n      <Param name=\"powerSiO2\" caption=\"SiO2 power\" unit=\"W\" paramType=\"1\">150</Param>\n      <Param name=\"timeSiO2\" caption=\"SiO2 time\" unit=\"sec\" paramType=\"1\">100.00</Param>\n    </Group>\n  </Parameters>\n  <Script>\n# --- verify base pressure before admitting process gas ---\nswait pm Pbase 120\n\n# --- admit argon to Main chamber ---\nvalve V1 open\nvalve M1 open\nvalve M2 open\nmfc Ar1 ArFlow\ndelay 10\n\n# --- configure and energize PSU1 (Mo, PDC) and PSU2 (SiO2, RF) ---\nset PSU1 Frequency freqMo\nset PSU1 DutyCycle dutyMo\nset PSU1 Current currentMo\nset PSU2 Power powerSiO2\npower PSU1 on\npower PSU2 on\ndelay 5\n\n# --- 5 bilayers: Mo 20.0 A then SiO2 40.0 A ---\nloop N\ndeposit Mo timeMo\ndeposit SiO2 timeSiO2\nendloop\n\n# --- sources off and gas teardown ---\npower PSU1 off\npower PSU2 off\nset PSU1 Current 0\nset PSU2 Power 0\nmfc Ar1 0\nvalve M1 close\nvalve M2 close\nvalve V1 close\n  </Script>\n</Recipe>\n"
+    }
+  },
+  "response": {
+    "isError": false,
+    "text": "{\r\n  \"valid\": true,\r\n  \"findings\": [],\r\n  \"scriptSummary\": {\r\n    \"depositSecondsBySource\": {\r\n      \"Mo\": {\r\n        \"outsideLoopSeconds\": 0,\r\n        \"inLoopSeconds\": 125,\r\n        \"totalSeconds\": 125\r\n      },\r\n      \"SiO2\": {\r\n        \"outsideLoopSeconds\": 0,\r\n        \"inLoopSeconds\": 500,\r\n        \"totalSeconds\": 500\r\n      }\r\n    },\r\n    \"totalDepositSeconds\": 625,\r\n    \"hasUnresolvedVariables\": false,\r\n    \"pwaitTimeoutsNote\": \"pwait/swait timeout arguments (e.g. 600 s, 10 s) are upper-bound ceilings, not fixed durations; total wall-clock run time cannot be determined without running the recipe.\",\r\n    \"inertCommentLinesWithSemicolon\": [],\r\n    \"commentsNote\": \"All text after \\u0027#\\u0027 or \\u0027//\\u0027 on a line (including \\u0027;\\u0027 characters) is stripped before statement splitting and is completely inert.\"\r\n  }\r\n}",
+    "json": {
+      "valid": true,
+      "findings": [],
+      "scriptSummary": {
+        "depositSecondsBySource": {
+          "Mo": {
+            "outsideLoopSeconds": 0,
+            "inLoopSeconds": 125,
+            "totalSeconds": 125
+          },
+          "SiO2": {
+            "outsideLoopSeconds": 0,
+            "inLoopSeconds": 500,
+            "totalSeconds": 500
+          }
+        },
+        "totalDepositSeconds": 625,
+        "hasUnresolvedVariables": false,
+        "pwaitTimeoutsNote": "pwait/swait timeout arguments (e.g. 600 s, 10 s) are upper-bound ceilings, not fixed durations; total wall-clock run time cannot be determined without running the recipe.",
+        "inertCommentLinesWithSemicolon": [],
+        "commentsNote": "All text after '#' or '//' on a line (including ';' characters) is stripped before statement splitting and is completely inert."
+      }
+    }
+  },
+  "recorded_utc": "2026-11-13T00:00:00+00:00",
+  "stack": {
+    "profile": "Sputter",
+    "appVersion": "1.7.1",
+    "controlMode": "Remote"
+  }
+}

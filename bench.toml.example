@@ -1,0 +1,28 @@
+# Reference environment variables for running ADS-Bench v2.0 live campaigns.
+# Export the needed ADS_BENCH_* variables in your shell (PowerShell `$env:ADS_BENCH_...`
+# or POSIX `export ADS_BENCH_...=...`) before invoking `harness/freeze.py` or `harness/run_campaign.py`.
+
+[env]
+# Directory containing APS.ControlCommunity.exe and APS.EmulatorCommunity.exe
+# built from https://github.com/APS-Techno/Control-Community (v1.7.1+).
+ADS_BENCH_APP_DIR = "../Control-Community/bin"
+
+# Optional explicit overrides if Control and Emulator live in separate folders:
+# ADS_BENCH_CONTROL_BIN = "../Control-Community/bin/APS.ControlCommunity.exe"
+# ADS_BENCH_EMULATOR_BIN = "../Control-Community/bin/APS.EmulatorCommunity.exe"
+
+# Path to the APS.Mcp stdio server binary built from Control-Community:
+ADS_BENCH_MCP_BIN = "../Control-Community/Mcp/APS.Mcp/bin/Release/net10.0/APS.Mcp.exe"
+
+# Path to the Oh-My-Pi (`omp`) agent CLI executable:
+ADS_BENCH_OMP_BIN = "omp"
+
+# Benchmark hardware profiles and idle emulator snapshots (defaults to this repository):
+ADS_BENCH_CONFIGS_DIR = "./configs"
+ADS_BENCH_SNAPSHOT_DIR = "./snapshots"
+
+# Checkout of https://github.com/OleksiyPenkov/aps-operator-skill (`skills/aps-operator` directory containing SKILL.md):
+ADS_BENCH_SKILL_DIR = "../aps-operator-skill/skills/aps-operator"
+
+# Scratch/output directory for synthetic SFT/DPO datasets and checkpoints:
+ADS_BENCH_COMPUTED_DIR = "./computed"

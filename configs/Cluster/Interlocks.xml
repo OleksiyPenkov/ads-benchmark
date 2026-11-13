@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<interlocks>
+	<includes>
+		<file>Interlocks.TM.xml</file>
+		<file>Interlocks.C1.xml</file>
+		<file>Interlocks.C2.xml</file>
+		<file>Interlocks.C3.xml</file>
+		<file>Interlocks.C4.xml</file>
+		<file>Interlocks.Cluster.xml</file>
+	</includes>
+</interlocks>

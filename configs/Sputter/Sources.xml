@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<sources>
+	<magnetrons>
+		<magnetron id="MAG1">Magnetron 1</magnetron>
+		<magnetron id="MAG2">Magnetron 2</magnetron>
+	</magnetrons>
+	<powersources>
+		<powersource>PSU1</powersource>
+		<powersource>PSU2</powersource>
+	</powersources>
+	<source flange="1" shutterId="Sh1">
+		<material>Mo</material>
+		<magnetronId>MAG1</magnetronId>
+		<powerSupplyId>PSU1</powerSupplyId>
+		<model>Magnetron 1</model>
+		<powerType>DC pulse</powerType>
+		<description>Magnetron 1 (PSU1)</description>
+		<comment></comment>
+		<installedDate>2026-05-21</installedDate>
+		<totalDepositionTime>00:00:00</totalDepositionTime>
+	</source>
+	<source flange="2" shutterId="Sh2">
+		<material>SiO2</material>
+		<magnetronId>MAG2</magnetronId>
+		<powerSupplyId>PSU2</powerSupplyId>
+		<model>Magnetron 2</model>
+		<powerType>RF</powerType>
+		<description>Magnetron 2 (PSU2)</description>
+		<comment></comment>
+		<installedDate>2026-05-21</installedDate>
+		<totalDepositionTime>00:00:00</totalDepositionTime>
+	</source>
+</sources>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Recipe>
+  <Description title="Ru/C periodic multilayer on glass, d=68.5A, G=0.215, N=30" type="Sputtering" author="LAB" notes="Glass / Ru 197A adhesion / [C 53.77A / Ru 14.73A] x30. Plain Ar, 2 mTorr, 40+40 sccm. Ru on PSU_C (Mag3, inlet M3, Ar line 1) at 50 mA. C on PSU_B (Mag2, inlet M2, Ar line 2) at 300 mA. Both pulsed 50 kHz / 60 percent. Times from calibration 0.4711 A/s (Ru, 50 mA) and 0.4030 A/s (C, 300 mA). No bias, no RF."/>
+  <Parameters>
+    <Group name="Deposition Conditions">
+      <Param name="P" caption="Pressure" unit="mTorr" paramType="0">2.00mT</Param>
+      <Param name="Pbase" caption="Release pressure" unit="mTorr" paramType="0">0mT</Param>
+      <Param name="ArFlow" caption="Ar flow per line" unit="sccm" paramType="1">40</Param>
+      <Param name="StageHeight" caption="Height" unit="mm" paramType="1">0</Param>
+      <Param name="N" caption="Bilayers" unit="N" paramType="1">30</Param>
+    </Group>
+    <Group name="Pulsed DC">
+      <Param name="DCFreq" caption="Freq" unit="kHz" paramType="1">50</Param>
+      <Param name="DCDuty" caption="Duty" unit="%" paramType="1">60</Param>
+    </Group>
+    <Group name="Layer Ru">
+      <Param name="currentRu" caption="Current" unit="mA" paramType="1">50</Param>
+      <Param name="timeRuAdh" caption="Time (adhesion 197A)" unit="sec" paramType="1">418.17</Param>
+      <Param name="timeRu" caption="Time (period 14.73A)" unit="sec" paramType="1">31.26</Param>
+    </Group>
+    <Group name="Layer C">
+      <Param name="currentC" caption="Current" unit="mA" paramType="1">300</Param>
+      <Param name="timeC" caption="Time (period 53.77A)" unit="sec" paramType="1">133.43</Param>
+    </Group>
+  </Parameters>
+  <Script>
+# --- substrate height ---
+stage VS StageHeight
+
+# --- process gas: Ar line 1 -> M3 (Ru, Mag3), Ar line 2 -> M2 (C, Mag2) ---
+valve V2 open
+valve V3 open
+valve M3 open
+valve M2 open
+mfc Ar1 ArFlow
+mfc Ar2 ArFlow
+pwait P 600
+
+# --- supplies: pulsed DC 50 kHz / 60 %, levels before outputs ---
+set PSU_C Frequency DCFreq
+set PSU_C DutyCycle DCDuty
+set PSU_C Current currentRu
+set PSU_B Frequency DCFreq
+set PSU_B DutyCycle DCDuty
+set PSU_B Current currentC
+power PSU_C on
+power PSU_B on
+
+# --- Ru adhesion layer, 197 A ---
+deposit Ru timeRuAdh Home
+
+# --- 30 periods: C 53.77 A then Ru 14.73 A ---
+loop N
+deposit C timeC Home
+deposit Ru timeRu Home
+endloop
+
+# --- sources off ---
+power PSU_B off
+power PSU_C off
+
+# --- gas off, release the throttle, then shut the lines ---
+mfc Ar1 0
+mfc Ar2 0
+pwait Pbase 10
+valve M2 close
+valve M3 close
+valve V2 close
+valve V3 close
+
+# --- leave the drives at Home for the next run ---
+holder Home
+  </Script>
+</Recipe>

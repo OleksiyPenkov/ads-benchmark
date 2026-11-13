@@ -1,0 +1,97 @@
+{
+  "key": "recipe",
+  "tool": "validate_recipe",
+  "request": {
+    "fixture": "CC2-CuW-Cluster.rcpx",
+    "sha256": "4f9ab37834648bab58c91f8849e9ba57341fa923b0a26aa888f2a44a44f8a4e3",
+    "arguments": {
+      "content": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<Recipe>\n  <Description title=\"Multi-chamber Cu/W/Si stack\" type=\"Sputtering\" author=\"LAB\" notes=\"Audit fixture for Cluster tool.\"/>\n  <Parameters>\n    <Group name=\"Process Pressures\">\n      <Param name=\"PC1\" caption=\"C1 pressure\" unit=\"mTorr\" paramType=\"0\">5.00mT</Param>\n      <Param name=\"PC2\" caption=\"C2 pressure\" unit=\"mTorr\" paramType=\"0\">2.00mT</Param>\n      <Param name=\"Pbase\" caption=\"Release target\" unit=\"mTorr\" paramType=\"0\">0mT</Param>\n      <Param name=\"ArFlow\" caption=\"Ar flow\" unit=\"sccm\" paramType=\"1\">40</Param>\n    </Group>\n  </Parameters>\n  <Script>\n# --- transfer wafer from LL into C1 ---\nhome\nvalve SV_LL open\nvalve SV_C1 open\ntransfer LL C1\nvalve SV_LL close\nvalve SV_C1 close\n\n# --- C1 setup and deposition ---\nvalve C1_V open\nmfc C1_Ar ArFlow\npwait PC1 600\nset C1_PSU1 Frequency 50\nset C1_PSU1 DutyCycle 60\nset C1_PSU1 Current 250\nset C3_PSU1 Current 100\npower C1_PSU1 on\nmessage Verify C1 plasma through viewport before opening shutter\ndeposit C1_Cu 80\ndeposit Gr 60\npower C1_PSU1 off\npwait C1_pm Pbase 10\nmfc C1_Ar 0\nvalve C1_V close\nswait C1_pm 0.05mT 120\n\n# --- transfer wafer from C1 into C2 ---\nvalve SV_C1 open\nvalve SV_C2 open\ntransfer C1 C2\nvalve SV_C1 close\nvalve SV_C2 close\n\n# --- C2 W deposition (missing valve C2_V open) ---\nmfc C2_Ar ArFlow\npwait C2_pm PC2 300\nset C2_PSU Frequency 50\nset C2_PSU DutyCycle 60\nset C2_PSU Current 200\npower C2_PSU on\ndeposit W 60 Home\npower C2_PSU off\npwait C2_pm Pbase 10\nmfc C2_Ar 0\n\n# legacy cap; deposit W 30\n\n# --- return wafer to LL ---\nvalve SV_C2 open\nvalve SV_LL open\ntransfer C2 LL\nvalve SV_C2 close\nvalve SV_LL close\nhome\n  </Script>\n</Recipe>\n"
+    }
+  },
+  "response": {
+    "isError": false,
+    "text": "{\r\n  \"valid\": false,\r\n  \"findings\": [\r\n    {\r\n      \"line\": 24,\r\n      \"column\": 9,\r\n      \"severity\": \"error\",\r\n      \"message\": \"Unknown target \\u0027Gr\\u0027 for \\u0027deposit\\u0027. Installed sources: C1_Cu, Ti, W, Si, B4C, C4_Cu\",\r\n      \"xmlLine\": 32\r\n    },\r\n    {\r\n      \"line\": 16,\r\n      \"column\": 1,\r\n      \"severity\": \"error\",\r\n      \"message\": \"\\u0027pwait\\u0027 takes 3 argument(s) on this machine (sensor target timeout) \\u2014 the sensor selects which chamber\\u0027s throttle valve to drive\",\r\n      \"xmlLine\": 24\r\n    },\r\n    {\r\n      \"line\": 20,\r\n      \"column\": 13,\r\n      \"severity\": \"error\",\r\n      \"message\": \"\\u0027set C3_PSU1 Current\\u0027: unknown parameter \\u0027Current\\u0027 for C3_PSU1 \\u2014 the driver would refuse it at run time. Valid (exact spelling): Power\",\r\n      \"xmlLine\": 28\r\n    },\r\n    {\r\n      \"line\": 45,\r\n      \"column\": 14,\r\n      \"severity\": \"error\",\r\n      \"message\": \"\\u0027deposit\\u0027 takes 2 argument(s), got 3 \\u2014 \\u0027Home\\u0027 is not used by this command and would be silently discarded\",\r\n      \"xmlLine\": 53\r\n    },\r\n    {\r\n      \"line\": 22,\r\n      \"column\": 1,\r\n      \"severity\": \"warning\",\r\n      \"message\": \"\\u0027message\\u0027 opens a blocking operator dialog on the Control UI that halts unattended execution and survives abort_recipe\",\r\n      \"xmlLine\": 30\r\n    },\r\n    {\r\n      \"line\": 40,\r\n      \"column\": 1,\r\n      \"severity\": \"warning\",\r\n      \"message\": \"mfc \\u0027C2_Ar\\u0027 has non-zero flow but none of its inlet gate valves (C2_V) are open\",\r\n      \"xmlLine\": 48\r\n    }\r\n  ],\r\n  \"scriptSummary\": {\r\n    \"depositSecondsBySource\": {\r\n      \"C1_Cu\": {\r\n        \"outsideLoopSeconds\": 80,\r\n        \"inLoopSeconds\": 0,\r\n        \"totalSeconds\": 80\r\n      },\r\n      \"Gr\": {\r\n        \"outsideLoopSeconds\": 60,\r\n        \"inLoopSeconds\": 0,\r\n        \"totalSeconds\": 60\r\n      },\r\n      \"W\": {\r\n        \"outsideLoopSeconds\": 60,\r\n        \"inLoopSeconds\": 0,\r\n        \"totalSeconds\": 60\r\n      }\r\n    },\r\n    \"totalDepositSeconds\": 200,\r\n    \"hasUnresolvedVariables\": false,\r\n    \"pwaitTimeoutsNote\": \"pwait/swait timeout arguments (e.g. 600 s, 10 s) are upper-bound ceilings, not fixed durations; total wall-clock run time cannot be determined without running the recipe.\",\r\n    \"inertCommentLinesWithSemicolon\": [\r\n      {\r\n        \"scriptLine\": 50,\r\n        \"xmlLine\": 58\r\n      }\r\n    ],\r\n    \"commentsNote\": \"All text after \\u0027#\\u0027 or \\u0027//\\u0027 on a line (including \\u0027;\\u0027 characters) is stripped before statement splitting and is completely inert.\"\r\n  }\r\n}",
+    "json": {
+      "valid": false,
+      "findings": [
+        {
+          "line": 24,
+          "column": 9,
+          "severity": "error",
+          "message": "Unknown target 'Gr' for 'deposit'. Installed sources: C1_Cu, Ti, W, Si, B4C, C4_Cu",
+          "xmlLine": 32
+        },
+        {
+          "line": 16,
+          "column": 1,
+          "severity": "error",
+          "message": "'pwait' takes 3 argument(s) on this machine (sensor target timeout) — the sensor selects which chamber's throttle valve to drive",
+          "xmlLine": 24
+        },
+        {
+          "line": 20,
+          "column": 13,
+          "severity": "error",
+          "message": "'set C3_PSU1 Current': unknown parameter 'Current' for C3_PSU1 — the driver would refuse it at run time. Valid (exact spelling): Power",
+          "xmlLine": 28
+        },
+        {
+          "line": 45,
+          "column": 14,
+          "severity": "error",
+          "message": "'deposit' takes 2 argument(s), got 3 — 'Home' is not used by this command and would be silently discarded",
+          "xmlLine": 53
+        },
+        {
+          "line": 22,
+          "column": 1,
+          "severity": "warning",
+          "message": "'message' opens a blocking operator dialog on the Control UI that halts unattended execution and survives abort_recipe",
+          "xmlLine": 30
+        },
+        {
+          "line": 40,
+          "column": 1,
+          "severity": "warning",
+          "message": "mfc 'C2_Ar' has non-zero flow but none of its inlet gate valves (C2_V) are open",
+          "xmlLine": 48
+        }
+      ],
+      "scriptSummary": {
+        "depositSecondsBySource": {
+          "C1_Cu": {
+            "outsideLoopSeconds": 80,
+            "inLoopSeconds": 0,
+            "totalSeconds": 80
+          },
+          "Gr": {
+            "outsideLoopSeconds": 60,
+            "inLoopSeconds": 0,
+            "totalSeconds": 60
+          },
+          "W": {
+            "outsideLoopSeconds": 60,
+            "inLoopSeconds": 0,
+            "totalSeconds": 60
+          }
+        },
+        "totalDepositSeconds": 200,
+        "hasUnresolvedVariables": false,
+        "pwaitTimeoutsNote": "pwait/swait timeout arguments (e.g. 600 s, 10 s) are upper-bound ceilings, not fixed durations; total wall-clock run time cannot be determined without running the recipe.",
+        "inertCommentLinesWithSemicolon": [
+          {
+            "scriptLine": 50,
+            "xmlLine": 58
+          }
+        ],
+        "commentsNote": "All text after '#' or '//' on a line (including ';' characters) is stripped before statement splitting and is completely inert."
+      }
+    }
+  },
+  "recorded_utc": "2026-11-13T00:00:00+00:00",
+  "stack": {
+    "profile": "Cluster",
+    "appVersion": "1.7.1",
+    "controlMode": "Remote"
+  }
+}

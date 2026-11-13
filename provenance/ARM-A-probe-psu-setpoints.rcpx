@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Recipe>
+  <Description title="ARM-A probe: PSU setpoint tokens" type="Sputtering" author="ARM-A" notes="Scratch probe. Sets levels on PSU_C only; no output energised, no gas, no holder motion."/>
+  <Parameters>
+    <Group name="Parameters">
+      <Param name="Ical" caption="Current" unit="mA" paramType="1">42</Param>
+    </Group>
+  </Parameters>
+  <Script>
+set PSU_C Current Ical
+delay 2
+set PSU_C Frequency 50
+delay 2
+set PSU_C DutyCycle 60
+delay 2
+  </Script>
+</Recipe>

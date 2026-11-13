@@ -1,0 +1,376 @@
+{
+  "key": "read",
+  "tool": "describe_hardware",
+  "request": {
+    "arguments": {}
+  },
+  "response": {
+    "isError": false,
+    "text": "{\r\n  \"devices\": {\r\n    \"Valve\": [\r\n      {\r\n        \"id\": \"V1\",\r\n        \"plcId\": \"V1\",\r\n        \"description\": \"N2 inlet\",\r\n        \"connected\": true,\r\n        \"chamber\": null\r\n      },\r\n      {\r\n        \"id\": \"V2\",\r\n        \"plcId\": \"V2\",\r\n        \"description\": \"Ar inlet\",\r\n        \"connected\": true,\r\n        \"chamber\": null\r\n      },\r\n      {\r\n        \"id\": \"V3\",\r\n        \"plcId\": \"V3\",\r\n        \"description\": \"Ar inlet\",\r\n        \"connected\": true,\r\n        \"chamber\": null\r\n      },\r\n      {\r\n        \"id\": \"V4\",\r\n        \"plcId\": \"V4\",\r\n        \"description\": \"N2 inlet\",\r\n        \"connected\": true,\r\n        \"chamber\": null\r\n      },\r\n      {\r\n        \"id\": \"V5\",\r\n        \"plcId\": \"V5\",\r\n        \"description\": \"Inlet\",\r\n        \"connected\": true,\r\n        \"chamber\": null\r\n      },\r\n      {\r\n        \"id\": \"V6\",\r\n        \"plcId\": \"V6\",\r\n        \"description\": \"Bypass\",\r\n        \"connected\": true,\r\n        \"chamber\": null\r\n      },\r\n      {\r\n        \"id\": \"VI\",\r\n        \"plcId\": \"VI\",\r\n        \"description\": \"Ion\",\r\n        \"connected\": true,\r\n        \"chamber\": null\r\n      },\r\n      {\r\n        \"id\": \"M1\",\r\n        \"plcId\": \"M1\",\r\n        \"description\": \"Magnetron 1\",\r\n        \"connected\": true,\r\n        \"chamber\": null\r\n      },\r\n      {\r\n        \"id\": \"M2\",\r\n        \"plcId\": \"M2\",\r\n        \"description\": \"Magnetron 2\",\r\n        \"connected\": true,\r\n        \"chamber\": null\r\n      },\r\n      {\r\n        \"id\": \"M3\",\r\n        \"plcId\": \"M3\",\r\n        \"description\": \"Magnetron 3\",\r\n        \"connected\": true,\r\n        \"chamber\": null\r\n      },\r\n      {\r\n        \"id\": \"PP\",\r\n        \"plcId\": \"PP\",\r\n        \"description\": \"Pre-pump\",\r\n        \"connected\": true,\r\n        \"chamber\": null\r\n      },\r\n      {\r\n        \"id\": \"FL\",\r\n        \"plcId\": \"FL\",\r\n        \"description\": \"Fore line\",\r\n        \"connected\": true,\r\n        \"chamber\": null\r\n      },\r\n      {\r\n        \"id\": \"A1\",\r\n        \"plcId\": \"A1\",\r\n        \"description\": \"Air 1\",\r\n        \"connected\": true,\r\n        \"chamber\": \"Main\"\r\n      },\r\n      {\r\n        \"id\": \"A2\",\r\n        \"plcId\": \"A2\",\r\n        \"description\": \"Air 2\",\r\n        \"connected\": true,\r\n        \"chamber\": \"Loadlock\"\r\n      },\r\n      {\r\n        \"id\": \"GVM\",\r\n        \"plcId\": \"GVM\",\r\n        \"description\": \"Gate Main\",\r\n        \"connected\": true,\r\n        \"chamber\": null\r\n      },\r\n      {\r\n        \"id\": \"GVL\",\r\n        \"plcId\": \"GVL\",\r\n        \"description\": \"Gate LL\",\r\n        \"connected\": true,\r\n        \"chamber\": null\r\n      }\r\n    ],\r\n    \"MFC\": [\r\n      {\r\n        \"id\": \"N21\",\r\n        \"plcId\": \"N21\",\r\n        \"description\": \"MFC #1\",\r\n        \"connected\": true,\r\n        \"chamber\": \"Main\",\r\n        \"gateValves\": [\r\n          \"V1\",\r\n          \"V4\"\r\n        ],\r\n        \"gatingLogic\": \"OR\"\r\n      },\r\n      {\r\n        \"id\": \"Ar1\",\r\n        \"plcId\": \"Ar1\",\r\n        \"description\": \"MFC #2\",\r\n        \"connected\": true,\r\n        \"chamber\": \"Main\",\r\n        \"gateValves\": [\r\n          \"V2\",\r\n          \"V3\"\r\n        ],\r\n        \"gatingLogic\": \"OR\"\r\n      },\r\n      {\r\n        \"id\": \"Ar2\",\r\n        \"plcId\": \"Ar2\",\r\n        \"description\": \"MFC #3\",\r\n        \"connected\": true,\r\n        \"chamber\": \"Main\",\r\n        \"gateValves\": [\r\n          \"V2\",\r\n          \"V3\"\r\n        ],\r\n        \"gatingLogic\": \"OR\"\r\n      },\r\n      {\r\n        \"id\": \"N22\",\r\n        \"plcId\": \"N22\",\r\n        \"description\": \"MFC #2\",\r\n        \"connected\": true,\r\n        \"chamber\": \"Main\",\r\n        \"gateValves\": [\r\n          \"V1\",\r\n          \"V4\"\r\n        ],\r\n        \"gatingLogic\": \"OR\"\r\n      }\r\n    ],\r\n    \"Pump\": [\r\n      {\r\n        \"id\": \"TP\",\r\n        \"plcId\": \"TP\",\r\n        \"description\": \"Main pump\",\r\n        \"connected\": true,\r\n        \"chamber\": \"Main\"\r\n      },\r\n      {\r\n        \"id\": \"SP1\",\r\n        \"plcId\": \"SP1\",\r\n        \"description\": \"Backing pump\",\r\n        \"connected\": true,\r\n        \"chamber\": \"Main\"\r\n      },\r\n      {\r\n        \"id\": \"SP2\",\r\n        \"plcId\": \"SP2\",\r\n        \"description\": \"LL pump\",\r\n        \"connected\": true,\r\n        \"chamber\": \"Loadlock\"\r\n      }\r\n    ],\r\n    \"Stage\": [\r\n      {\r\n        \"id\": \"VS\",\r\n        \"plcId\": \"VS\",\r\n        \"description\": \"Substrate\",\r\n        \"connected\": true,\r\n        \"chamber\": null,\r\n        \"isOperational\": true\r\n      },\r\n      {\r\n        \"id\": \"HS\",\r\n        \"plcId\": \"HS\",\r\n        \"description\": \"Arm\",\r\n        \"connected\": true,\r\n        \"chamber\": null,\r\n        \"isOperational\": true\r\n      },\r\n      {\r\n        \"id\": \"rotation\",\r\n        \"plcId\": \"rotation\",\r\n        \"description\": \"Substrate Rotation\",\r\n        \"connected\": true,\r\n        \"chamber\": null,\r\n        \"isOperational\": false\r\n      }\r\n    ],\r\n    \"Sensor\": [\r\n      {\r\n        \"id\": \"pm\",\r\n        \"plcId\": \"pm\",\r\n        \"description\": \"System\",\r\n        \"connected\": true,\r\n        \"chamber\": \"Main\"\r\n      },\r\n      {\r\n        \"id\": \"pl\",\r\n        \"plcId\": \"pl\",\r\n        \"description\": \"Loadlock\",\r\n        \"connected\": true,\r\n        \"chamber\": \"Loadlock\"\r\n      },\r\n      {\r\n        \"id\": \"tmp\",\r\n        \"plcId\": \"tmp\",\r\n        \"description\": \"Temp\",\r\n        \"connected\": true,\r\n        \"chamber\": \"Main\"\r\n      }\r\n    ],\r\n    \"Power\": [\r\n      {\r\n        \"id\": \"PSU_A\",\r\n        \"plcId\": \"PSU_A\",\r\n        \"description\": \"DC supply A\",\r\n        \"connected\": true,\r\n        \"chamber\": null\r\n      },\r\n      {\r\n        \"id\": \"PSU_B\",\r\n        \"plcId\": \"PSU_B\",\r\n        \"description\": \"Pulsed DC supply B\",\r\n        \"connected\": true,\r\n        \"chamber\": null\r\n      },\r\n      {\r\n        \"id\": \"PSU_C\",\r\n        \"plcId\": \"PSU_C\",\r\n        \"description\": \"Pulsed DC supply C\",\r\n        \"connected\": true,\r\n        \"chamber\": null\r\n      },\r\n      {\r\n        \"id\": \"PSU_ION\",\r\n        \"plcId\": \"PSU_ION\",\r\n        \"description\": \"Ion source supply\",\r\n        \"connected\": true,\r\n        \"chamber\": null\r\n      },\r\n      {\r\n        \"id\": \"PSU_RF1\",\r\n        \"plcId\": \"PSU_RF1\",\r\n        \"description\": \"RF supply 1\",\r\n        \"connected\": true,\r\n        \"chamber\": null\r\n      },\r\n      {\r\n        \"id\": \"PSU_RF2\",\r\n        \"plcId\": \"PSU_RF2\",\r\n        \"description\": \"RF supply 2\",\r\n        \"connected\": true,\r\n        \"chamber\": null\r\n      }\r\n    ],\r\n    \"Drive\": [\r\n      {\r\n        \"id\": \"Shutter\",\r\n        \"plcId\": \"Shutter\",\r\n        \"description\": \"Shutter\",\r\n        \"connected\": true,\r\n        \"chamber\": null\r\n      },\r\n      {\r\n        \"id\": \"Holder\",\r\n        \"plcId\": \"Holder\",\r\n        \"description\": \"Holder\",\r\n        \"connected\": true,\r\n        \"chamber\": null\r\n      }\r\n    ],\r\n    \"Controller\": [\r\n      {\r\n        \"id\": \"TC1\",\r\n        \"plcId\": \"TC1\",\r\n        \"description\": \"Throttle controller\",\r\n        \"connected\": true,\r\n        \"chamber\": \"Main\"\r\n      }\r\n    ]\r\n  },\r\n  \"sources\": {\r\n    \"flanges\": [\r\n      {\r\n        \"material\": \"Si\",\r\n        \"powerSupplyId\": \"PSU_A\",\r\n        \"powerType\": null,\r\n        \"magnetronInstanceId\": \"c8a2bcc8-63a0-47a0-8585-7a10db82b846\",\r\n        \"magnetronId\": \"MAG2\",\r\n        \"name\": \"Si\",\r\n        \"effective\": \"Si\"\r\n      },\r\n      {\r\n        \"material\": \"Graphite\",\r\n        \"powerSupplyId\": \"PSU_B\",\r\n        \"powerType\": null,\r\n        \"magnetronInstanceId\": \"706a7ec9-af4c-43c0-bed3-64b3a05b78b9\",\r\n        \"magnetronId\": \"MAG3\",\r\n        \"name\": \"C\",\r\n        \"effective\": \"C\"\r\n      },\r\n      {\r\n        \"material\": \"Ion\",\r\n        \"powerSupplyId\": \"PSU_ION\",\r\n        \"powerType\": \"Ion source\",\r\n        \"magnetronInstanceId\": null,\r\n        \"magnetronId\": \"MAG4\",\r\n        \"name\": null,\r\n        \"effective\": \"Ion\"\r\n      },\r\n      {\r\n        \"material\": \"Ru\",\r\n        \"powerSupplyId\": \"PSU_C\",\r\n        \"powerType\": null,\r\n        \"magnetronInstanceId\": \"2e9d34de-fbd0-4932-b12c-9d1ee2510a64\",\r\n        \"magnetronId\": \"MAG5\",\r\n        \"name\": \"Ru\",\r\n        \"effective\": \"Ru\"\r\n      },\r\n      {\r\n        \"material\": \"Co\",\r\n        \"powerSupplyId\": \"PSU_RF2\",\r\n        \"powerType\": null,\r\n        \"magnetronInstanceId\": \"bf640cbc-b249-4155-bd2c-99e7502ca219\",\r\n        \"magnetronId\": \"MAG6\",\r\n        \"name\": \"Co\",\r\n        \"effective\": \"Co\"\r\n      }\r\n    ],\r\n    \"powerSources\": []\r\n  }\r\n}",
+    "json": {
+      "devices": {
+        "Valve": [
+          {
+            "id": "V1",
+            "plcId": "V1",
+            "description": "N2 inlet",
+            "connected": true,
+            "chamber": null
+          },
+          {
+            "id": "V2",
+            "plcId": "V2",
+            "description": "Ar inlet",
+            "connected": true,
+            "chamber": null
+          },
+          {
+            "id": "V3",
+            "plcId": "V3",
+            "description": "Ar inlet",
+            "connected": true,
+            "chamber": null
+          },
+          {
+            "id": "V4",
+            "plcId": "V4",
+            "description": "N2 inlet",
+            "connected": true,
+            "chamber": null
+          },
+          {
+            "id": "V5",
+            "plcId": "V5",
+            "description": "Inlet",
+            "connected": true,
+            "chamber": null
+          },
+          {
+            "id": "V6",
+            "plcId": "V6",
+            "description": "Bypass",
+            "connected": true,
+            "chamber": null
+          },
+          {
+            "id": "VI",
+            "plcId": "VI",
+            "description": "Ion",
+            "connected": true,
+            "chamber": null
+          },
+          {
+            "id": "M1",
+            "plcId": "M1",
+            "description": "Magnetron 1",
+            "connected": true,
+            "chamber": null
+          },
+          {
+            "id": "M2",
+            "plcId": "M2",
+            "description": "Magnetron 2",
+            "connected": true,
+            "chamber": null
+          },
+          {
+            "id": "M3",
+            "plcId": "M3",
+            "description": "Magnetron 3",
+            "connected": true,
+            "chamber": null
+          },
+          {
+            "id": "PP",
+            "plcId": "PP",
+            "description": "Pre-pump",
+            "connected": true,
+            "chamber": null
+          },
+          {
+            "id": "FL",
+            "plcId": "FL",
+            "description": "Fore line",
+            "connected": true,
+            "chamber": null
+          },
+          {
+            "id": "A1",
+            "plcId": "A1",
+            "description": "Air 1",
+            "connected": true,
+            "chamber": "Main"
+          },
+          {
+            "id": "A2",
+            "plcId": "A2",
+            "description": "Air 2",
+            "connected": true,
+            "chamber": "Loadlock"
+          },
+          {
+            "id": "GVM",
+            "plcId": "GVM",
+            "description": "Gate Main",
+            "connected": true,
+            "chamber": null
+          },
+          {
+            "id": "GVL",
+            "plcId": "GVL",
+            "description": "Gate LL",
+            "connected": true,
+            "chamber": null
+          }
+        ],
+        "MFC": [
+          {
+            "id": "N21",
+            "plcId": "N21",
+            "description": "MFC #1",
+            "connected": true,
+            "chamber": "Main",
+            "gateValves": [
+              "V1",
+              "V4"
+            ],
+            "gatingLogic": "OR"
+          },
+          {
+            "id": "Ar1",
+            "plcId": "Ar1",
+            "description": "MFC #2",
+            "connected": true,
+            "chamber": "Main",
+            "gateValves": [
+              "V2",
+              "V3"
+            ],
+            "gatingLogic": "OR"
+          },
+          {
+            "id": "Ar2",
+            "plcId": "Ar2",
+            "description": "MFC #3",
+            "connected": true,
+            "chamber": "Main",
+            "gateValves": [
+              "V2",
+              "V3"
+            ],
+            "gatingLogic": "OR"
+          },
+          {
+            "id": "N22",
+            "plcId": "N22",
+            "description": "MFC #2",
+            "connected": true,
+            "chamber": "Main",
+            "gateValves": [
+              "V1",
+              "V4"
+            ],
+            "gatingLogic": "OR"
+          }
+        ],
+        "Pump": [
+          {
+            "id": "TP",
+            "plcId": "TP",
+            "description": "Main pump",
+            "connected": true,
+            "chamber": "Main"
+          },
+          {
+            "id": "SP1",
+            "plcId": "SP1",
+            "description": "Backing pump",
+            "connected": true,
+            "chamber": "Main"
+          },
+          {
+            "id": "SP2",
+            "plcId": "SP2",
+            "description": "LL pump",
+            "connected": true,
+            "chamber": "Loadlock"
+          }
+        ],
+        "Stage": [
+          {
+            "id": "VS",
+            "plcId": "VS",
+            "description": "Substrate",
+            "connected": true,
+            "chamber": null,
+            "isOperational": true
+          },
+          {
+            "id": "HS",
+            "plcId": "HS",
+            "description": "Arm",
+            "connected": true,
+            "chamber": null,
+            "isOperational": true
+          },
+          {
+            "id": "rotation",
+            "plcId": "rotation",
+            "description": "Substrate Rotation",
+            "connected": true,
+            "chamber": null,
+            "isOperational": false
+          }
+        ],
+        "Sensor": [
+          {
+            "id": "pm",
+            "plcId": "pm",
+            "description": "System",
+            "connected": true,
+            "chamber": "Main"
+          },
+          {
+            "id": "pl",
+            "plcId": "pl",
+            "description": "Loadlock",
+            "connected": true,
+            "chamber": "Loadlock"
+          },
+          {
+            "id": "tmp",
+            "plcId": "tmp",
+            "description": "Temp",
+            "connected": true,
+            "chamber": "Main"
+          }
+        ],
+        "Power": [
+          {
+            "id": "PSU_A",
+            "plcId": "PSU_A",
+            "description": "DC supply A",
+            "connected": true,
+            "chamber": null
+          },
+          {
+            "id": "PSU_B",
+            "plcId": "PSU_B",
+            "description": "Pulsed DC supply B",
+            "connected": true,
+            "chamber": null
+          },
+          {
+            "id": "PSU_C",
+            "plcId": "PSU_C",
+            "description": "Pulsed DC supply C",
+            "connected": true,
+            "chamber": null
+          },
+          {
+            "id": "PSU_ION",
+            "plcId": "PSU_ION",
+            "description": "Ion source supply",
+            "connected": true,
+            "chamber": null
+          },
+          {
+            "id": "PSU_RF1",
+            "plcId": "PSU_RF1",
+            "description": "RF supply 1",
+            "connected": true,
+            "chamber": null
+          },
+          {
+            "id": "PSU_RF2",
+            "plcId": "PSU_RF2",
+            "description": "RF supply 2",
+            "connected": true,
+            "chamber": null
+          }
+        ],
+        "Drive": [
+          {
+            "id": "Shutter",
+            "plcId": "Shutter",
+            "description": "Shutter",
+            "connected": true,
+            "chamber": null
+          },
+          {
+            "id": "Holder",
+            "plcId": "Holder",
+            "description": "Holder",
+            "connected": true,
+            "chamber": null
+          }
+        ],
+        "Controller": [
+          {
+            "id": "TC1",
+            "plcId": "TC1",
+            "description": "Throttle controller",
+            "connected": true,
+            "chamber": "Main"
+          }
+        ]
+      },
+      "sources": {
+        "flanges": [
+          {
+            "material": "Si",
+            "powerSupplyId": "PSU_A",
+            "powerType": null,
+            "magnetronInstanceId": "c8a2bcc8-63a0-47a0-8585-7a10db82b846",
+            "magnetronId": "MAG2",
+            "name": "Si",
+            "effective": "Si"
+          },
+          {
+            "material": "Graphite",
+            "powerSupplyId": "PSU_B",
+            "powerType": null,
+            "magnetronInstanceId": "706a7ec9-af4c-43c0-bed3-64b3a05b78b9",
+            "magnetronId": "MAG3",
+            "name": "C",
+            "effective": "C"
+          },
+          {
+            "material": "Ion",
+            "powerSupplyId": "PSU_ION",
+            "powerType": "Ion source",
+            "magnetronInstanceId": null,
+            "magnetronId": "MAG4",
+            "name": null,
+            "effective": "Ion"
+          },
+          {
+            "material": "Ru",
+            "powerSupplyId": "PSU_C",
+            "powerType": null,
+            "magnetronInstanceId": "2e9d34de-fbd0-4932-b12c-9d1ee2510a64",
+            "magnetronId": "MAG5",
+            "name": "Ru",
+            "effective": "Ru"
+          },
+          {
+            "material": "Co",
+            "powerSupplyId": "PSU_RF2",
+            "powerType": null,
+            "magnetronInstanceId": "bf640cbc-b249-4155-bd2c-99e7502ca219",
+            "magnetronId": "MAG6",
+            "name": "Co",
+            "effective": "Co"
+          }
+        ],
+        "powerSources": []
+      }
+    }
+  },
+  "recorded_utc": "2026-11-13T00:00:00+00:00",
+  "stack": {
+    "profile": "ADS",
+    "appVersion": "1.7.1",
+    "controlMode": "Remote"
+  }
+}

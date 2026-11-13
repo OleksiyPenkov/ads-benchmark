@@ -1,0 +1,216 @@
+{
+  "key": "read",
+  "tool": "describe_dsl",
+  "request": {
+    "arguments": {}
+  },
+  "response": {
+    "isError": false,
+    "text": "{\r\n  \"reference\": \"APS recipe DSL \\u2014 one command per line, \\u0027#\\u0027 comments.\\r\\nCore commands:\\r\\n  valve \\u003Cid\\u003E open|close            MFC \\u003Cid\\u003E \\u003Csccm\\u003E          pump \\u003Cid\\u003E on|off\\r\\n  delay \\u003Cn\\u003E[s|m|h]                 stage \\u003Cid\\u003E \\u003Cpos\\u003E\\r\\n  pwait [\\u003Csensor\\u003E] \\u003Ctarget\\u003E \\u003CtimeoutSec\\u003E # arity is WORKER-DERIVED. Where pwait binds a throttle\\r\\n                                         # controller the canonical form is\\r\\n                                         # 2 args; a leading \\u003Csensor\\u003E validates but is IGNORED and\\r\\n                                         # is never waited on \\u2014 convergence always reads the bound\\r\\n                                         # controller. Multi-chamber workers require the sensor.\\r\\n                                         # Target ALWAYS carries a unit suffix.\\r\\n                                         # Completes only when the reading has HELD within \\u00B110 % of\\r\\n                                         # the target for 6 consecutive 0.5 s samples (3 s); a\\r\\n                                         # transient passing through the band does not count.\\r\\n                                         # Target 0 = open the throttle and return at once; a target\\r\\n                                         # at/below the gauge floor (0.01 mTorr) opens the throttle\\r\\n                                         # and waits for the gauge to bottom out.\\r\\n  swait \\u003Csensor\\u003E \\u003Ctarget\\u003E \\u003CtimeoutSec\\u003E   # passive wait for any sensor \\u2014 use this for pl, NOT pwait\\r\\n  deposit \\u003Csource\\u003E \\u003Cseconds\\u003E \\u003Cretract\\u003E   # source by effective name (Sources.xml name, else material);\\r\\n                                         # \\u003Cretract\\u003E = where the SHUTTER parks afterwards (Home = closed);\\r\\n                                         # the holder stays over \\u003Csource\\u003E \\u2014 move it with \\u0060holder\\u0060\\r\\n  holder \\u003Cpos\\u003E                     shutter \\u003Cpos\\u003E   # ONE position each, by source name (Home = shutter\\r\\n                                                  # closed / holder parked). shutter takes NO\\r\\n                                                  # open/close word and no separate source arg.\\r\\n  set \\u003Cpsu\\u003E \\u003CParam\\u003E \\u003Cvalue\\u003E        # \\u003CParam\\u003E must be a name the PSU\\u0027s driver accepts (exact\\r\\n                                   # spelling; lists differ per model, and some models also\\r\\n                                   # take short aliases). validate_recipe\\r\\n                                   # rejects any other name \\u2014 do not guess.\\r\\nPressure units: Torr with suffixes T/mT/uT/nT/kT (e.g. 50mT, 3.5uT). Numbers with suffixes are single tokens.\\r\\nPSU rule: setting a power level does NOT energize the output \\u2014 always \\u0060set \\u003Cpsu\\u003E \\u003CSetpoint\\u003E \\u003Cvalue\\u003E\\u0060 AND \\u0060power \\u003Cpsu\\u003E on\\u0060.\\r\\nWarmup/ramp times are SECONDS. Aborting a recipe runs the failure protocol.\\r\\nStructured .rcpx recipes carry a \\u003CRecipe\\u003E XML wrapper with parameters; the executable script is the\\r\\nparameter var-block plus the script body.\\r\\nControl mode: upload_recipe, start_recipe, abort_recipe, resolve_pause and device_command run ONLY while\\r\\nControl is in Online-Remote (system_status.controlMode == \\u0022Remote\\u0022); only an operator can switch it, at\\r\\nthe console under Service \\u2192 Control mode\\u2026; a host cannot, so if it is Local or Offline do not poll for a\\r\\nchange \\u2014 report it and stop.\",\r\n  \"commands\": [\r\n    \"var\",\r\n    \"loop\",\r\n    \"endloop\",\r\n    \"function\",\r\n    \"endfunction\",\r\n    \"if\",\r\n    \"else\",\r\n    \"endif\",\r\n    \"label\",\r\n    \"goto\",\r\n    \"begin\",\r\n    \"end\",\r\n    \"delay\",\r\n    \"wait\",\r\n    \"pwait\",\r\n    \"swait\",\r\n    \"check\",\r\n    \"rotation\",\r\n    \"call\",\r\n    \"state\",\r\n    \"valve\",\r\n    \"mfc\",\r\n    \"pump\",\r\n    \"stage\",\r\n    \"power\",\r\n    \"ramp\",\r\n    \"bias\",\r\n    \"biasArb\",\r\n    \"set\",\r\n    \"warmup\",\r\n    \"holder\",\r\n    \"shutter\",\r\n    \"deposit\",\r\n    \"scan\",\r\n    \"scanR\",\r\n    \"rotate\",\r\n    \"message\",\r\n    \"start\",\r\n    \"finish\",\r\n    \"isolate\",\r\n    \"transfer\",\r\n    \"home\",\r\n    \"abort\"\r\n  ],\r\n  \"operations\": [\r\n    {\r\n      \"name\": \"valve\",\r\n      \"boundDevice\": null,\r\n      \"vars\": [\r\n        \"Valve\",\r\n        \"b\"\r\n      ]\r\n    },\r\n    {\r\n      \"name\": \"mfc\",\r\n      \"boundDevice\": null,\r\n      \"vars\": [\r\n        \"MFC\",\r\n        \"f\"\r\n      ]\r\n    },\r\n    {\r\n      \"name\": \"pwait\",\r\n      \"boundDevice\": \"TC1\",\r\n      \"vars\": [\r\n        \"Controller\",\r\n        \"s\",\r\n        \"f\",\r\n        \"f\"\r\n      ]\r\n    },\r\n    {\r\n      \"name\": \"set\",\r\n      \"boundDevice\": null,\r\n      \"vars\": [\r\n        \"Power\",\r\n        \"s\",\r\n        \"f\"\r\n      ]\r\n    },\r\n    {\r\n      \"name\": \"warmup\",\r\n      \"boundDevice\": null,\r\n      \"vars\": [\r\n        \"Power\",\r\n        \"f\",\r\n        \"f\"\r\n      ]\r\n    },\r\n    {\r\n      \"name\": \"holder\",\r\n      \"boundDevice\": \"Holder\",\r\n      \"vars\": [\r\n        \"Drive\",\r\n        \"s\"\r\n      ]\r\n    },\r\n    {\r\n      \"name\": \"shutter\",\r\n      \"boundDevice\": \"Shutter\",\r\n      \"vars\": [\r\n        \"Drive\",\r\n        \"s\"\r\n      ]\r\n    },\r\n    {\r\n      \"name\": \"deposit\",\r\n      \"boundDevice\": \"Holder\",\r\n      \"vars\": [\r\n        \"Drive\",\r\n        \"s\",\r\n        \"f\",\r\n        \"s\"\r\n      ]\r\n    },\r\n    {\r\n      \"name\": \"power\",\r\n      \"boundDevice\": null,\r\n      \"vars\": [\r\n        \"Power\",\r\n        \"b\"\r\n      ]\r\n    },\r\n    {\r\n      \"name\": \"ramp\",\r\n      \"boundDevice\": null,\r\n      \"vars\": [\r\n        \"Power\",\r\n        \"f\"\r\n      ]\r\n    }\r\n  ],\r\n  \"devicesByKind\": {\r\n    \"Valve\": [\r\n      \"V1\",\r\n      \"V2\",\r\n      \"V3\",\r\n      \"V4\",\r\n      \"V5\",\r\n      \"V6\",\r\n      \"VI\",\r\n      \"M1\",\r\n      \"M2\",\r\n      \"M3\",\r\n      \"PP\",\r\n      \"FL\",\r\n      \"A1\",\r\n      \"A2\",\r\n      \"GVM\",\r\n      \"GVL\"\r\n    ],\r\n    \"MFC\": [\r\n      \"N21\",\r\n      \"Ar1\",\r\n      \"Ar2\",\r\n      \"N22\"\r\n    ],\r\n    \"Pump\": [\r\n      \"TP\",\r\n      \"SP1\",\r\n      \"SP2\"\r\n    ],\r\n    \"Stage\": [\r\n      \"VS\",\r\n      \"HS\",\r\n      \"rotation\"\r\n    ],\r\n    \"Sensor\": [\r\n      \"pm\",\r\n      \"pl\",\r\n      \"tmp\"\r\n    ],\r\n    \"Power\": [\r\n      \"PSU_A\",\r\n      \"PSU_B\",\r\n      \"PSU_C\",\r\n      \"PSU_ION\",\r\n      \"PSU_RF1\",\r\n      \"PSU_RF2\"\r\n    ],\r\n    \"Drive\": [\r\n      \"Shutter\",\r\n      \"Holder\"\r\n    ],\r\n    \"Controller\": [\r\n      \"TC1\"\r\n    ]\r\n  },\r\n  \"installedSources\": [\r\n    \"Si\",\r\n    \"C\",\r\n    \"Ion\",\r\n    \"Ru\",\r\n    \"Co\"\r\n  ]\r\n}",
+    "json": {
+      "reference": "APS recipe DSL — one command per line, '#' comments.\r\nCore commands:\r\n  valve <id> open|close            MFC <id> <sccm>          pump <id> on|off\r\n  delay <n>[s|m|h]                 stage <id> <pos>\r\n  pwait [<sensor>] <target> <timeoutSec> # arity is WORKER-DERIVED. Where pwait binds a throttle\r\n                                         # controller the canonical form is\r\n                                         # 2 args; a leading <sensor> validates but is IGNORED and\r\n                                         # is never waited on — convergence always reads the bound\r\n                                         # controller. Multi-chamber workers require the sensor.\r\n                                         # Target ALWAYS carries a unit suffix.\r\n                                         # Completes only when the reading has HELD within ±10 % of\r\n                                         # the target for 6 consecutive 0.5 s samples (3 s); a\r\n                                         # transient passing through the band does not count.\r\n                                         # Target 0 = open the throttle and return at once; a target\r\n                                         # at/below the gauge floor (0.01 mTorr) opens the throttle\r\n                                         # and waits for the gauge to bottom out.\r\n  swait <sensor> <target> <timeoutSec>   # passive wait for any sensor — use this for pl, NOT pwait\r\n  deposit <source> <seconds> <retract>   # source by effective name (Sources.xml name, else material);\r\n                                         # <retract> = where the SHUTTER parks afterwards (Home = closed);\r\n                                         # the holder stays over <source> — move it with `holder`\r\n  holder <pos>                     shutter <pos>   # ONE position each, by source name (Home = shutter\r\n                                                  # closed / holder parked). shutter takes NO\r\n                                                  # open/close word and no separate source arg.\r\n  set <psu> <Param> <value>        # <Param> must be a name the PSU's driver accepts (exact\r\n                                   # spelling; lists differ per model, and some models also\r\n                                   # take short aliases). validate_recipe\r\n                                   # rejects any other name — do not guess.\r\nPressure units: Torr with suffixes T/mT/uT/nT/kT (e.g. 50mT, 3.5uT). Numbers with suffixes are single tokens.\r\nPSU rule: setting a power level does NOT energize the output — always `set <psu> <Setpoint> <value>` AND `power <psu> on`.\r\nWarmup/ramp times are SECONDS. Aborting a recipe runs the failure protocol.\r\nStructured .rcpx recipes carry a <Recipe> XML wrapper with parameters; the executable script is the\r\nparameter var-block plus the script body.\r\nControl mode: upload_recipe, start_recipe, abort_recipe, resolve_pause and device_command run ONLY while\r\nControl is in Online-Remote (system_status.controlMode == \"Remote\"); only an operator can switch it, at\r\nthe console under Service → Control mode…; a host cannot, so if it is Local or Offline do not poll for a\r\nchange — report it and stop.",
+      "commands": [
+        "var",
+        "loop",
+        "endloop",
+        "function",
+        "endfunction",
+        "if",
+        "else",
+        "endif",
+        "label",
+        "goto",
+        "begin",
+        "end",
+        "delay",
+        "wait",
+        "pwait",
+        "swait",
+        "check",
+        "rotation",
+        "call",
+        "state",
+        "valve",
+        "mfc",
+        "pump",
+        "stage",
+        "power",
+        "ramp",
+        "bias",
+        "biasArb",
+        "set",
+        "warmup",
+        "holder",
+        "shutter",
+        "deposit",
+        "scan",
+        "scanR",
+        "rotate",
+        "message",
+        "start",
+        "finish",
+        "isolate",
+        "transfer",
+        "home",
+        "abort"
+      ],
+      "operations": [
+        {
+          "name": "valve",
+          "boundDevice": null,
+          "vars": [
+            "Valve",
+            "b"
+          ]
+        },
+        {
+          "name": "mfc",
+          "boundDevice": null,
+          "vars": [
+            "MFC",
+            "f"
+          ]
+        },
+        {
+          "name": "pwait",
+          "boundDevice": "TC1",
+          "vars": [
+            "Controller",
+            "s",
+            "f",
+            "f"
+          ]
+        },
+        {
+          "name": "set",
+          "boundDevice": null,
+          "vars": [
+            "Power",
+            "s",
+            "f"
+          ]
+        },
+        {
+          "name": "warmup",
+          "boundDevice": null,
+          "vars": [
+            "Power",
+            "f",
+            "f"
+          ]
+        },
+        {
+          "name": "holder",
+          "boundDevice": "Holder",
+          "vars": [
+            "Drive",
+            "s"
+          ]
+        },
+        {
+          "name": "shutter",
+          "boundDevice": "Shutter",
+          "vars": [
+            "Drive",
+            "s"
+          ]
+        },
+        {
+          "name": "deposit",
+          "boundDevice": "Holder",
+          "vars": [
+            "Drive",
+            "s",
+            "f",
+            "s"
+          ]
+        },
+        {
+          "name": "power",
+          "boundDevice": null,
+          "vars": [
+            "Power",
+            "b"
+          ]
+        },
+        {
+          "name": "ramp",
+          "boundDevice": null,
+          "vars": [
+            "Power",
+            "f"
+          ]
+        }
+      ],
+      "devicesByKind": {
+        "Valve": [
+          "V1",
+          "V2",
+          "V3",
+          "V4",
+          "V5",
+          "V6",
+          "VI",
+          "M1",
+          "M2",
+          "M3",
+          "PP",
+          "FL",
+          "A1",
+          "A2",
+          "GVM",
+          "GVL"
+        ],
+        "MFC": [
+          "N21",
+          "Ar1",
+          "Ar2",
+          "N22"
+        ],
+        "Pump": [
+          "TP",
+          "SP1",
+          "SP2"
+        ],
+        "Stage": [
+          "VS",
+          "HS",
+          "rotation"
+        ],
+        "Sensor": [
+          "pm",
+          "pl",
+          "tmp"
+        ],
+        "Power": [
+          "PSU_A",
+          "PSU_B",
+          "PSU_C",
+          "PSU_ION",
+          "PSU_RF1",
+          "PSU_RF2"
+        ],
+        "Drive": [
+          "Shutter",
+          "Holder"
+        ],
+        "Controller": [
+          "TC1"
+        ]
+      },
+      "installedSources": [
+        "Si",
+        "C",
+        "Ion",
+        "Ru",
+        "Co"
+      ]
+    }
+  },
+  "recorded_utc": "2026-11-13T00:00:00+00:00",
+  "stack": {
+    "profile": "ADS",
+    "appVersion": "1.7.1",
+    "controlMode": "Remote"
+  }
+}
