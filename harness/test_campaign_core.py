@@ -83,5 +83,21 @@ class CampaignBoundaryTests(unittest.TestCase):
         self.assertEqual(native, host)
         self.assertEqual(native["c1"]["arguments"], {"name": "ARM-A-test"})
 
+    def test_agy_worker_helpers_and_metadata_stripping(self):
+        worker = importlib.import_module("campaign_worker")
+        self.assertTrue(worker.is_agy_selector("agy/gemini-4-carbon"))
+        self.assertTrue(worker.is_agy_selector("antigravity-acp/gemini-4-argon"))
+        self.assertFalse(worker.is_agy_selector("deepseek/deepseek-flash"))
+        self.assertEqual(worker.agy_model_id("agy/gemini-4-carbon", "high"), "gemini-4-carbon-high")
+        self.assertEqual(worker.agy_model_id("agy/gemini-4-argon-medium", "high"), "gemini-4-argon-medium")
+        self.assertEqual(worker.agy_model_id("agy/gemini-pro-orchestrator", "high"), "gemini-pro-orchestrator")
+        cleaned = worker.args_without_intent({"i": "x", "toolSummary": "ping", "waitForPreviousTools": True, "count": 5})
+        self.assertEqual(cleaned, {"count": 5})
+        cost = worker.agy_cost_usd("agy/gemini-4-carbon", {"inputTokens": 1000, "outputTokens": 500, "cachedReadTokens": 2000})
+        self.assertAlmostEqual(cost["total"], 0.004 + 0.01 + 0.0004, places=9)
+        self.assertGreaterEqual(worker.AGY_ACP_STARTUP_TIMEOUT_SECONDS, 120)
+        self.assertTrue(worker.is_agy_stream_interrupted("⚠ The stream was interrupted. Please continue.\n⚠ API error (attempt 1): EOF"))
+        self.assertFalse(worker.is_agy_stream_interrupted("Profile Sputter on the emulator."))
+
 if __name__ == "__main__":
     unittest.main()

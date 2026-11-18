@@ -7,6 +7,8 @@ import hashlib
 import json
 import math
 import os
+import secrets
+import shutil
 import signal
 import subprocess
 import sys
@@ -24,10 +26,23 @@ from manifest import HARNESS, load_manifest, load_suite, skill_snapshot_path, ta
 # Campaign, MCP server, tool prefix, timeouts and limits come from the frozen
 # campaign.json (manifest.py); the ELN origin hard-coded them here.
 OMP = Path(os.environ.get("ADS_BENCH_OMP_BIN") or (Path(os.environ.get("ProgramFiles") or (Path.home() / "Programs")) / "OMP" / "omp.exe"))
+AGY = Path(os.environ.get("ADS_BENCH_AGY_BIN") or (Path(os.environ.get("LOCALAPPDATA") or (Path.home() / "AppData" / "Local")) / "agy" / "bin" / "agy.exe"))
 GUARD = HARNESS / "campaign_guard.ts"
 TEARDOWN_TIMEOUT = 15
 FRAME_LIMIT = 1048576
 LOGICAL_LIMIT = 67108864
+AGY_MCP_SERVER_NAME = "aps"
+AGY_MAX_RECIPE_WAIT_SECONDS = 60
+AGY_ACP_STARTUP_TIMEOUT_SECONDS = 120.0
+AGY_PASSTHROUGH_MODELS = frozenset(("gemini-pro-orchestrator", "gemini-pro-orchestrator-argon"))
+AGY_EFFORT_SUFFIXES = ("-low", "-medium", "-high", "-xhigh")
+# API-equivalent USD per 1M tokens (uncached input, output, cached read).
+AGY_TOKEN_RATES_USD = {
+    "gemini-3.8-flash": (0.75, 3.75, 0.075),
+    "gemini-4-carbon": (4.0, 20.0, 0.2),
+    "gemini-4-argon": (4.0, 20.0, 0.2),
+    "gemini-4-hydrogen": (4.0, 20.0, 0.2),
+}
 REQUIRED_INPUTS = frozenset(("inputs/suite.json", "inputs/system_prompt.md", "inputs/tools.json",
                              "inputs/runner-config.yml"))
 # Categories campaign_guard.ts writes after BENCH_CAMPAIGN_DENIED; anything else is journalled as "unrecognized".
@@ -86,6 +101,47 @@ def now():
 
 def trial_id(task, model):
     return task["id"] + "_" + model["selector"].replace("/", "__")
+
+
+def is_agy_selector(selector: str) -> bool:
+    return selector.startswith(("agy/", "antigravity-acp/"))
+
+
+def is_agy_stream_interrupted(text: str) -> bool:
+    return "The stream was interrupted." in text and "API error" in text
+
+
+def agy_model_id(selector: str, thinking: str) -> str:
+    """Map benchmark selector + thinking level to the Antigravity ACP model ID."""
+    base = selector.partition("/")[2]
+    if base in AGY_PASSTHROUGH_MODELS or base.endswith(AGY_EFFORT_SUFFIXES):
+        return base
+    return f"{base}-{thinking}"
+
+
+def agy_cost_usd(selector: str, usage: dict) -> dict:
+    """Compute API-equivalent token cost record for an Antigravity ACP prompt turn."""
+    base = selector.partition("/")[2]
+    rate_key = next((k for k in AGY_TOKEN_RATES_USD if base == k or base.startswith(k + "-")), "gemini-4-carbon")
+    in_rate, out_rate, cache_rate = AGY_TOKEN_RATES_USD[rate_key]
+
+    def tok(name: str) -> int:
+        v = usage.get(name, 0) if isinstance(usage, dict) else 0
+        return v if type(v) is int and v >= 0 else 0
+
+    inp = tok("inputTokens")
+    out = tok("outputTokens")
+    cached = tok("cachedReadTokens")
+    c_in = in_rate * inp / 1_000_000
+    c_out = out_rate * out / 1_000_000
+    c_cache = cache_rate * cached / 1_000_000
+    return {
+        "input": c_in,
+        "output": c_out,
+        "cacheRead": c_cache,
+        "cacheWrite": 0.0,
+        "total": c_in + c_out + c_cache,
+    }
 
 
 def build_system_prompt(base: str, primary_skill_md: str, secondary_skill_md: str | None = None,
@@ -322,7 +378,8 @@ def args_without_intent(arguments):
         arguments = parse_json(arguments)
     if not isinstance(arguments, dict):
         raise PermissionError("tool_arguments_not_object")
-    return {key: value for key, value in arguments.items() if key != "i"}
+    return {key: value for key, value in arguments.items()
+            if key not in ("i", "toolSummary", "waitForPreviousTools")}
 
 
 class Trial:
@@ -578,6 +635,337 @@ async def gate_bridge(session, expected_profile: str | None = None):
     return machine
 
 
+def _prepare_agy_gemini_dir() -> Path:
+    """Create an isolated Gemini customization directory without global plugins or skills."""
+    iso = default_secrets_dir() / "agy-gemini"
+    acp_dir = iso / "antigravity-acp"
+    cfg_dir = iso / "config"
+    acp_dir.mkdir(parents=True, exist_ok=True)
+    cfg_dir.mkdir(parents=True, exist_ok=True)
+    home_gemini = Path.home() / ".gemini"
+    for name in ("jetski_state.pbtxt", "installation_id"):
+        for candidate in (home_gemini / "antigravity-acp" / name, home_gemini / "antigravity-cli" / name):
+            if candidate.is_file():
+                shutil.copy2(candidate, acp_dir / name)
+                break
+    (cfg_dir / "config.json").write_text("{}", encoding="utf-8")
+    (cfg_dir / "skills.json").write_text('{"entries":[]}', encoding="utf-8")
+    (cfg_dir / "mcp_config.json").write_text('{"mcpServers":{}}', encoding="utf-8")
+    return iso
+
+
+class _AcpClient:
+    """Async JSON-RPC stdio client for agy.exe acp."""
+
+    def __init__(self, process, manifest, trial, on_abort):
+        self.process = process
+        self.manifest = manifest
+        self.trial = trial
+        self.on_abort = on_abort
+        self._next_id = 0
+        self._pending: dict[int, asyncio.Future] = {}
+        self.thought_chunks: list[str] = []
+        self.text_chunks: list[str] = []
+        self._expected_prefix = f"mcp_{AGY_MCP_SERVER_NAME}_"
+
+    def _allowed_agy_tool(self, name: str | None) -> bool:
+        if not isinstance(name, str) or not name.startswith(self._expected_prefix):
+            return False
+        wire_name = self.manifest.tool_prefix + name[len(self._expected_prefix):]
+        return wire_name in self.trial.guard.names
+
+    async def send(self, payload: dict) -> None:
+        raw = (json_text(payload) + "\n").encode("utf-8")
+        if len(raw) > FRAME_LIMIT:
+            raise TrialFailure("rpc_inbound_frame_limit")
+        self.process.stdin.write(raw)
+        await self.process.stdin.drain()
+
+    async def request(self, method: str, params: dict, timeout: float = 60.0) -> dict:
+        self._next_id += 1
+        req_id = self._next_id
+        fut: asyncio.Future = asyncio.get_running_loop().create_future()
+        self._pending[req_id] = fut
+        try:
+            await self.send({"jsonrpc": "2.0", "id": req_id, "method": method, "params": params})
+            return await asyncio.wait_for(fut, timeout=timeout)
+        finally:
+            self._pending.pop(req_id, None)
+
+    def fail_all(self, error: BaseException) -> None:
+        self.on_abort(error)
+        for fut in list(self._pending.values()):
+            if not fut.done():
+                fut.set_exception(error)
+
+    async def read_loop(self) -> None:
+        while True:
+            line = await self.process.stdout.readline()
+            if not line:
+                self.fail_all(TrialFailure("acp_unexpected_eof"))
+                return
+            if len(line) > FRAME_LIMIT or not line.endswith(b"\n"):
+                self.fail_all(TrialFailure("rpc_physical_frame_limit"))
+                return
+            text = line.decode("utf-8", "replace").strip()
+            if not text.startswith("{"):
+                continue
+            try:
+                msg = parse_json(text)
+            except ValueError:
+                continue
+            if not isinstance(msg, dict):
+                continue
+            if "id" in msg and "method" not in msg:
+                fut = self._pending.get(msg["id"])
+                if fut is not None and not fut.done():
+                    if "error" in msg and msg["error"] is not None:
+                        fut.set_exception(TrialFailure("acp_request_failed"))
+                    else:
+                        fut.set_result(msg.get("result") or {})
+            elif msg.get("method") == "session/update":
+                params = msg.get("params") or {}
+                update = params.get("update") or {}
+                kind = update.get("sessionUpdate")
+                content = update.get("content") or {}
+                if kind == "agent_thought_chunk" and content.get("type") == "text":
+                    self.thought_chunks.append(content.get("text") or "")
+                elif kind == "agent_message_chunk" and content.get("type") == "text":
+                    self.text_chunks.append(content.get("text") or "")
+                elif kind == "tool_call":
+                    tool_name = update.get("name")
+                    if not self._allowed_agy_tool(tool_name):
+                        try:
+                            self.trial.deny("non_host_tool_execution_denied", str(tool_name), update.get("toolCallId"))
+                        except TrialFailure as exc:
+                            self.fail_all(exc)
+                            return
+            elif msg.get("method") == "session/request_permission":
+                params = msg.get("params") or {}
+                tc = params.get("toolCall") or {}
+                tool_name = tc.get("name") or tc.get("title")
+                opts = params.get("options") or []
+                if self._allowed_agy_tool(tool_name) and opts:
+                    allow_opt = next((o["optionId"] for o in opts if "allow" in str(o.get("optionId", "")).lower()), opts[0].get("optionId"))
+                    outcome = {"outcome": "selected", "optionId": allow_opt}
+                else:
+                    outcome = {"outcome": "cancelled"}
+                await self.send({"jsonrpc": "2.0", "id": msg["id"], "result": {"outcome": outcome}})
+
+
+async def _run_agy_trial(campaign, manifest, declarations, task, model, journal, trial):
+    from aiohttp import web
+
+    if not AGY.is_file():
+        raise TrialFailure("agy_binary_missing")
+    iso_dir = _prepare_agy_gemini_dir()
+    wire_declarations = task_declarations(declarations, task, manifest.tool_prefix)
+    prefix = manifest.tool_prefix
+    backend_to_wire = {d["name"][len(prefix):]: d["name"] for d in wire_declarations}
+    token = secrets.token_hex(24)
+    abort_holder: list[BaseException] = []
+    call_seq = 0
+
+    def record_abort(exc: BaseException) -> None:
+        if not abort_holder:
+            abort_holder.append(exc)
+
+    acp_holder: list[_AcpClient] = []
+
+    async def handle_mcp(request: web.Request) -> web.StreamResponse:
+        nonlocal call_seq
+        if request.headers.get("Authorization") != f"Bearer {token}":
+            return web.Response(status=401)
+        try:
+            body = parse_json(await request.text())
+        except ValueError:
+            return web.json_response({"jsonrpc": "2.0", "id": None, "error": {"code": -32700, "message": "Invalid JSON"}})
+        method = body.get("method")
+        rid = body.get("id")
+        if method == "initialize":
+            return web.json_response({
+                "jsonrpc": "2.0", "id": rid,
+                "result": {"protocolVersion": "2024-11-05", "capabilities": {"tools": {}},
+                           "serverInfo": {"name": AGY_MCP_SERVER_NAME, "version": "1.0.0"}},
+            })
+        if method == "notifications/initialized":
+            return web.Response(status=202)
+        if method == "tools/list":
+            tools_payload = [
+                {"name": d["name"][len(prefix):], "description": d["description"], "inputSchema": d["parameters"]}
+                for d in wire_declarations
+            ]
+            return web.json_response({"jsonrpc": "2.0", "id": rid, "result": {"tools": tools_payload}})
+        if method == "tools/call":
+            params = body.get("params") or {}
+            backend_name = params.get("name")
+            raw_args = params.get("arguments") or {}
+            call_seq += 1
+            call_id = f"agy-call-{call_seq}"
+            wire_name = backend_to_wire.get(backend_name)
+            try:
+                if wire_name is None:
+                    trial.deny("host_tool_name_denied", str(backend_name), call_id)
+                clean_args = args_without_intent(raw_args)
+                confirmed = trial.guard.prepare([{"id": call_id, "name": wire_name, "arguments": clean_args}], trial.called)
+            except TrialFailure as exc:
+                record_abort(exc)
+                if acp_holder:
+                    acp_holder[0].fail_all(exc)
+                return web.json_response({"jsonrpc": "2.0", "id": rid, "result": {"content": [{"type": "text", "text": str(exc)}], "isError": True}})
+            except (PermissionError, ValueError, TypeError):
+                try:
+                    trial.deny("host_tool_arguments_denied", wire_name, call_id)
+                except TrialFailure as exc:
+                    record_abort(exc)
+                    if acp_holder:
+                        acp_holder[0].fail_all(exc)
+                return web.json_response({"jsonrpc": "2.0", "id": rid, "result": {"content": [{"type": "text", "text": "denied"}], "isError": True}})
+
+            prepared = confirmed[call_id]
+            trial.reserved.add(call_id)
+            trial.called.add(call_id)
+            trial.tool_count += 1
+            journal.emit({"type": "tool_batch_validated", "call_ids": [call_id]})
+            journal.emit({"type": "tool_call", "host_request_id": call_id, "call_id": call_id,
+                          "name": backend_name, "wire_name": wire_name,
+                          "arguments": prepared["arguments"], "host_arguments": raw_args})
+            call_args = dict(prepared["arguments"])
+            # Prevent agy's HTTP MCP client from hitting per-request timeouts on long status waits.
+            if backend_name == "recipe_status" and isinstance(call_args.get("waitSeconds"), (int, float)) and call_args["waitSeconds"] > AGY_MAX_RECIPE_WAIT_SECONDS:
+                call_args["waitSeconds"] = AGY_MAX_RECIPE_WAIT_SECONDS
+            if trial.local_tools is not None and backend_name in trial.local_tools.names:
+                raw = await trial.local_tools.call(backend_name, call_args)
+            else:
+                res = await trial.session.call_tool(backend_name, call_args)
+                raw = res.model_dump(mode="json", by_alias=True, exclude_none=True)
+                raw.setdefault("isError", bool(res.isError))
+            journal.emit({"type": "tool_result", "host_request_id": call_id, "call_id": call_id,
+                          "name": backend_name, "wire_name": wire_name, "result": raw})
+            return web.json_response({"jsonrpc": "2.0", "id": rid, "result": {
+                "content": [{"type": "text", "text": json_text(raw)}], "isError": bool(raw["isError"])}})
+        return web.json_response({"jsonrpc": "2.0", "id": rid, "result": {}})
+
+    app = web.Application()
+    app.router.add_post("/mcp", handle_mcp)
+    runner = web.AppRunner(app)
+    await runner.setup()
+    site = web.TCPSite(runner, "127.0.0.1", 0)
+    await site.start()
+    port = site._server.sockets[0].getsockname()[1]
+
+    agy_process, stderr_task, reader_task, session_id = None, None, None, None
+    try:
+        sys_prompt = (campaign / "inputs/system_prompt.md").read_text(encoding="utf-8")
+        sys_prompt += (
+            f"\n\nUse ONLY the mcp_{AGY_MCP_SERVER_NAME}_* tools exposed by the {AGY_MCP_SERVER_NAME} MCP server "
+            "for this task. Never call read_file, write_file, edit_file, run_command, or any other tool."
+        )
+        agy_process = await asyncio.create_subprocess_exec(
+            str(AGY), "acp", "--stdio", "--dangerously-skip-permissions", "--include-default-customizations=false",
+            f"--gemini-dir={iso_dir}", "--app_data_dir=antigravity-acp",
+            cwd=str(campaign), stdin=asyncio.subprocess.PIPE, stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE, limit=FRAME_LIMIT + 1, start_new_session=os.name != "nt",
+        )
+        stderr_task = asyncio.create_task(safe_stderr(agy_process.stderr))
+        acp = _AcpClient(agy_process, manifest, trial, record_abort)
+        acp_holder.append(acp)
+        reader_task = asyncio.create_task(acp.read_loop())
+
+        try:
+            await acp.request("initialize", {
+                "protocolVersion": 1,
+                "clientCapabilities": {"fs": {"readTextFile": False, "writeTextFile": False}, "terminal": False},
+                "clientInfo": {"name": "ads-benchmark", "version": "1.0"},
+            }, timeout=AGY_ACP_STARTUP_TIMEOUT_SECONDS)
+            new_sess = await acp.request("session/new", {
+                "cwd": str(campaign),
+                "mcpServers": [{"type": "http", "name": AGY_MCP_SERVER_NAME,
+                                "url": f"http://127.0.0.1:{port}/mcp",
+                                "headers": [{"name": "Authorization", "value": f"Bearer {token}"}]}],
+                "_meta": {"antigravity": {"systemPrompt": {"append": sys_prompt},
+                                          "eagerMcpServers": [AGY_MCP_SERVER_NAME], "enabledTools": []}},
+            }, timeout=AGY_ACP_STARTUP_TIMEOUT_SECONDS)
+            session_id = new_sess.get("sessionId")
+            if not isinstance(session_id, str) or not session_id:
+                raise TrialFailure("acp_missing_session_id")
+            target_model = agy_model_id(model["selector"], model["thinking"])
+            await acp.request("session/set_model", {"sessionId": session_id, "modelId": target_model}, timeout=AGY_ACP_STARTUP_TIMEOUT_SECONDS)
+            journal.emit({"type": "native_startup_verified", "selector": model["selector"],
+                          "thinking": model["thinking"], "host_tools": [d["name"] for d in wire_declarations]})
+
+            provider, _, model_name = model["selector"].partition("/")
+            prompt_text = task["ask"]
+            prompt_timeout = float(task_timeout(manifest, task))
+            turn_idx = 0
+            while True:
+                acp.thought_chunks.clear()
+                acp.text_chunks.clear()
+                res = await acp.request(
+                    "session/prompt",
+                    {"sessionId": session_id, "prompt": [{"type": "text", "text": prompt_text}]},
+                    timeout=prompt_timeout,
+                )
+                if abort_holder:
+                    raise abort_holder[0]
+                acp_stop = res.get("stopReason")
+                answer_text = "".join(acp.text_chunks)
+                thought_text = "".join(acp.thought_chunks)
+                usage = res.get("usage") or {}
+                cost_obj = agy_cost_usd(model["selector"], usage)
+                is_limit = acp_stop in ("max_tokens", "max_turn_requests")
+                mapped_stop = "stop" if acp_stop == "end_turn" else "length" if is_limit else "error"
+                blocks = []
+                if thought_text:
+                    blocks.append({"type": "thinking", "thinking": thought_text})
+                blocks.append({"type": "text", "text": answer_text})
+                msg_id = f"agy-turn-{turn_idx}"
+                message = {
+                    "role": "assistant", "content": blocks, "api": "antigravity-acp",
+                    "provider": provider, "model": model_name,
+                    "usage": {**usage, "cost": cost_obj}, "stopReason": mapped_stop,
+                    "timestamp": int(time.time() * 1000),
+                }
+                frame = {"messageId": msg_id, "message": message}
+                journal.emit({"type": "message_end", "messageId": msg_id, "message": native_message(message)})
+                trial.record_usage(frame, message)
+                turn_idx += 1
+                if mapped_stop == "length" and trial.continuations < 3:
+                    trial.continuations += 1
+                    prompt_text = "The previous turn reached an output or step limit without finishing. Continue from where you left off."
+                    journal.emit({"type": "continuation", "index": trial.continuations,
+                                  "prompt_id": f"trial-continuation-{trial.continuations}", "message": prompt_text})
+                    continue
+                if is_agy_stream_interrupted(answer_text):
+                    raise TrialFailure("acp_stream_interrupted")
+                if mapped_stop != "stop" or not answer_text.strip():
+                    raise TrialFailure("native_assistant_not_completed")
+                trial.answer = answer_text
+                trial.last_stop = "stop"
+                break
+            journal.emit({"type": "native_session_verified", "isSettled": True, "selector": model["selector"]})
+        except TimeoutError:
+            raise TrialFailure("acp_timeout") from None
+    finally:
+        if session_id and agy_process is not None and agy_process.returncode is None:
+            try:
+                await asyncio.wait_for(acp_holder[0].request("session/delete", {"sessionId": session_id}, timeout=2.0), timeout=2.0)
+            except Exception:
+                pass
+        if reader_task is not None:
+            reader_task.cancel()
+            await asyncio.gather(reader_task, return_exceptions=True)
+        if agy_process is not None:
+            await kill_tree(agy_process)
+        if stderr_task is not None:
+            try:
+                await asyncio.wait_for(stderr_task, timeout=2)
+            except (TimeoutError, Exception):
+                stderr_task.cancel()
+                await asyncio.gather(stderr_task, return_exceptions=True)
+        await runner.cleanup()
+
+
 async def child_trial(campaign, task, model, fingerprint, journal_path):
     from mcp import ClientSession
     from mcp.client.stdio import stdio_client
@@ -610,67 +998,71 @@ async def child_trial(campaign, task, model, fingerprint, journal_path):
                     machine = await gate_bridge(session, (parse_json((Path(campaign) / "campaign.json").read_text(encoding="utf-8")).get("machine") or {}).get("profile"))
                     journal.emit({"type": "bridge_gate_passed", "key": task["key"], "profile": machine["profile"]})
                     trial.session = session
-                    env = os.environ.copy()
-                    env.update({"BENCH_CAMPAIGN_MODEL": model["selector"], "BENCH_CAMPAIGN_FINGERPRINT": fingerprint,
-                                "BENCH_CAMPAIGN_THINKING": model["thinking"], "BENCH_CAMPAIGN_DIR": str(campaign),
-                                "BENCH_CAMPAIGN_TASK": task["id"], "PI_NO_TITLE": "1"})
-                    omp_process = await asyncio.create_subprocess_exec(
-                        str(OMP), "--mode", "rpc", "--no-ui", "--no-session", "--no-tools", "--no-lsp",
-                        "--no-pty", "--no-skills", "--no-rules", "--trusted-extension", str(GUARD),
-                        "--config", str(campaign / "inputs/runner-config.yml"),
-                        "--model", model["selector"], "--thinking", model["thinking"],
-                        cwd=str(campaign), env=env, stdin=asyncio.subprocess.PIPE,
-                        stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE,
-                        limit=FRAME_LIMIT + 1, start_new_session=os.name != "nt",
-                    )
-                    stderr_task = asyncio.create_task(safe_stderr(omp_process.stderr, journal))
-                    rpc = Rpc(omp_process)
-                    trial.rpc = rpc
-                    ready = await rpc.receive()
-                    if ready.get("type") != "ready" or 2 not in ready.get("supportedProtocolVersions", []):
-                        raise TrialFailure("rpc_lossless_protocol_unavailable")
-                    await rpc.command("negotiate_protocol", trial.handle, protocolVersion=2)
-                    await rpc.command("set_event_filter", trial.handle, events=EVENTS, messageUpdates="delta")
-                    await rpc.command("set_auto_retry", trial.handle, enabled=False)
-                    await rpc.command("set_auto_compaction", trial.handle, enabled=False)
-                    await rpc.command("set_cache_warming", trial.handle, mode="off")
-                    wire_declarations = task_declarations(declarations, task, manifest.tool_prefix)
-                    registered = await rpc.command("set_host_tools", trial.handle, tools=wire_declarations)
-                    if (not isinstance(registered, dict)
-                            or registered.get("toolNames") != [d["name"] for d in wire_declarations]):
-                        raise TrialFailure("host_tools_not_acknowledged")
-                    state = await rpc.command("get_state", trial.handle)
-                    if (state.get("model", {}).get("provider") + "/" + state.get("model", {}).get("id")
-                            != model["selector"] or state.get("thinkingLevel") != model["thinking"]
-                            or state.get("autoCompactionEnabled") is not False):
-                        raise TrialFailure("native_startup_state_mismatch")
-                    journal.emit({"type": "native_startup_verified", "selector": model["selector"],
-                                  "thinking": model["thinking"], "host_tools": registered["toolNames"]})
-                    prompt_msg = task["ask"]
-                    while True:
-                        await rpc.send({"id": trial.prompt_id, "type": "prompt", "message": prompt_msg})
-                        while not (trial.prompt_completed and trial.settled):
-                            await trial.handle(await rpc.receive())
-                        if trial.last_stop == "error" and not trial.answer and trial.continuations < 3:
-                            trial.continuations += 1
-                            trial.prompt_id = "trial-continuation-%d" % trial.continuations
-                            trial.prompt_completed = trial.settled = False
-                            prompt_msg = "The previous turn was interrupted by a transient stream error. Please continue from where you left off."
-                            journal.emit({"type": "continuation", "index": trial.continuations,
-                                          "prompt_id": trial.prompt_id, "message": prompt_msg})
-                        else:
-                            break
-                    state = await rpc.command("get_state", trial.handle)
-                    if (state.get("isSettled") is not True or state.get("isStreaming") is not False
-                            or state.get("isCompacting") is not False or state.get("hasPendingAsyncWork") is not False
-                            or state.get("queuedMessageCount") != 0 or trial.prepared or trial.denied
-                            or not trial.answer or trial.last_stop != "stop"):
-                        raise TrialFailure("native_session_not_settled")
-                    if (state.get("model", {}).get("provider") + "/" + state.get("model", {}).get("id")
-                            != model["selector"] or state.get("thinkingLevel") != model["thinking"]):
-                        raise TrialFailure("native_final_identity_mismatch")
-                    journal.emit({"type": "native_session_verified", "isSettled": True, "selector": model["selector"]})
-                    status, category = "completed", None
+                    if is_agy_selector(model["selector"]):
+                        await _run_agy_trial(campaign, manifest, declarations, task, model, journal, trial)
+                        status, category = "completed", None
+                    else:
+                        env = os.environ.copy()
+                        env.update({"BENCH_CAMPAIGN_MODEL": model["selector"], "BENCH_CAMPAIGN_FINGERPRINT": fingerprint,
+                                    "BENCH_CAMPAIGN_THINKING": model["thinking"], "BENCH_CAMPAIGN_DIR": str(campaign),
+                                    "BENCH_CAMPAIGN_TASK": task["id"], "PI_NO_TITLE": "1"})
+                        omp_process = await asyncio.create_subprocess_exec(
+                            str(OMP), "--mode", "rpc", "--no-ui", "--no-session", "--no-tools", "--no-lsp",
+                            "--no-pty", "--no-skills", "--no-rules", "--trusted-extension", str(GUARD),
+                            "--config", str(campaign / "inputs/runner-config.yml"),
+                            "--model", model["selector"], "--thinking", model["thinking"],
+                            cwd=str(campaign), env=env, stdin=asyncio.subprocess.PIPE,
+                            stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE,
+                            limit=FRAME_LIMIT + 1, start_new_session=os.name != "nt",
+                        )
+                        stderr_task = asyncio.create_task(safe_stderr(omp_process.stderr, journal))
+                        rpc = Rpc(omp_process)
+                        trial.rpc = rpc
+                        ready = await rpc.receive()
+                        if ready.get("type") != "ready" or 2 not in ready.get("supportedProtocolVersions", []):
+                            raise TrialFailure("rpc_lossless_protocol_unavailable")
+                        await rpc.command("negotiate_protocol", trial.handle, protocolVersion=2)
+                        await rpc.command("set_event_filter", trial.handle, events=EVENTS, messageUpdates="delta")
+                        await rpc.command("set_auto_retry", trial.handle, enabled=False)
+                        await rpc.command("set_auto_compaction", trial.handle, enabled=False)
+                        await rpc.command("set_cache_warming", trial.handle, mode="off")
+                        wire_declarations = task_declarations(declarations, task, manifest.tool_prefix)
+                        registered = await rpc.command("set_host_tools", trial.handle, tools=wire_declarations)
+                        if (not isinstance(registered, dict)
+                                or registered.get("toolNames") != [d["name"] for d in wire_declarations]):
+                            raise TrialFailure("host_tools_not_acknowledged")
+                        state = await rpc.command("get_state", trial.handle)
+                        if (state.get("model", {}).get("provider") + "/" + state.get("model", {}).get("id")
+                                != model["selector"] or state.get("thinkingLevel") != model["thinking"]
+                                or state.get("autoCompactionEnabled") is not False):
+                            raise TrialFailure("native_startup_state_mismatch")
+                        journal.emit({"type": "native_startup_verified", "selector": model["selector"],
+                                      "thinking": model["thinking"], "host_tools": registered["toolNames"]})
+                        prompt_msg = task["ask"]
+                        while True:
+                            await rpc.send({"id": trial.prompt_id, "type": "prompt", "message": prompt_msg})
+                            while not (trial.prompt_completed and trial.settled):
+                                await trial.handle(await rpc.receive())
+                            if trial.last_stop == "error" and not trial.answer and trial.continuations < 3:
+                                trial.continuations += 1
+                                trial.prompt_id = "trial-continuation-%d" % trial.continuations
+                                trial.prompt_completed = trial.settled = False
+                                prompt_msg = "The previous turn was interrupted by a transient stream error. Please continue from where you left off."
+                                journal.emit({"type": "continuation", "index": trial.continuations,
+                                              "prompt_id": trial.prompt_id, "message": prompt_msg})
+                            else:
+                                break
+                        state = await rpc.command("get_state", trial.handle)
+                        if (state.get("isSettled") is not True or state.get("isStreaming") is not False
+                                or state.get("isCompacting") is not False or state.get("hasPendingAsyncWork") is not False
+                                or state.get("queuedMessageCount") != 0 or trial.prepared or trial.denied
+                                or not trial.answer or trial.last_stop != "stop"):
+                            raise TrialFailure("native_session_not_settled")
+                        if (state.get("model", {}).get("provider") + "/" + state.get("model", {}).get("id")
+                                != model["selector"] or state.get("thinkingLevel") != model["thinking"]):
+                            raise TrialFailure("native_final_identity_mismatch")
+                        journal.emit({"type": "native_session_verified", "isSettled": True, "selector": model["selector"]})
+                        status, category = "completed", None
     except BaseException as exc:
         status = "cancelled" if isinstance(exc, asyncio.CancelledError) else "failed"
         category = failure_category(exc)
@@ -713,7 +1105,7 @@ async def run_trial(*, campaign: Path, task: dict, model: dict, fingerprint: str
     journal = Journal(journal_path, "xb")
     journal.emit({"type": "trial_start", "trial_id": identifier, "task": task, "ask": task["ask"],
                   "selector": model["selector"], "thinking": model["thinking"], "fingerprint": fingerprint,
-                  "transport": "OMP RPC v2 + installed MCP stdio ClientSession",
+                  "transport": ("AGY ACP stdio + loopback MCP ClientSession" if is_agy_selector(model["selector"]) else "OMP RPC v2 + installed MCP stdio ClientSession"),
                   "hard_timeout_seconds": hard_timeout, "max_output_tokens": manifest.max_output_tokens,
                   "codex_output_cap": None, "stderr_policy": "raw diagnostics discarded; structured guard policy only"})
     journal.close()
