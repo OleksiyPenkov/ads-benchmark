@@ -30,6 +30,7 @@ from bridge import EndpointError, bridge_params, check_endpoint, default_secrets
 
 PROFILE = os.environ.get("ADS_BENCH_PROFILE", "ADS")
 EMULATOR_PROFILES = frozenset(("Sputter", "ADS", "Cluster"))
+CLUSTER_CHAMBERS = frozenset(("TM", "LL", "C1", "C2", "C3", "C4"))
 CONTROL_IMAGE = "APS.ControlCommunity.exe"
 EMULATOR_IMAGE = "APS.EmulatorCommunity.exe"
 STACK_IMAGES = (CONTROL_IMAGE, EMULATOR_IMAGE)
@@ -269,7 +270,14 @@ async def wait_ready(probe: Callable[[], Awaitable[dict]], deadline_s: float = R
 
     for attempt in range(2):
         try:
-            return await bounded()
+            res = await bounded()
+            while True:
+                st = res.get("status") if isinstance(res, dict) else None
+                rel = _relevant_chambers(st) if isinstance(st, dict) else []
+                if not rel or not any(c.get("state") == "Startup" for c in rel) or clock() >= deadline:
+                    return res
+                await sleep(0.5)
+                res = await bounded()
         except StackError as exc:
             if exc.code != "stack_not_ready" or attempt:
                 raise
@@ -282,10 +290,21 @@ async def wait_ready(probe: Callable[[], Awaitable[dict]], deadline_s: float = R
     raise StackError("stack_not_ready")
 
 
-def _chambers_idle(status: dict) -> bool:
+def _relevant_chambers(status: dict) -> list[dict]:
     chambers = status.get("chambers")
-    return (isinstance(chambers, list) and bool(chambers)
-            and all(isinstance(c, dict) and c.get("state") == "Idle" for c in chambers)
+    if not isinstance(chambers, list):
+        return []
+    dicts = [c for c in chambers if isinstance(c, dict)]
+    ids = {c.get("id") for c in dicts}
+    if CLUSTER_CHAMBERS.issubset(ids):
+        return [c for c in dicts if c.get("id") != "Main"]
+    return dicts
+
+
+def _chambers_idle(status: dict) -> bool:
+    relevant = _relevant_chambers(status)
+    return (bool(relevant)
+            and all(c.get("state") == "Idle" for c in relevant)
             and status.get("isRecipeRunning") is False)
 
 

@@ -70,6 +70,16 @@ def canonical(value):
     return json.dumps(value, sort_keys=True, ensure_ascii=False, separators=(",", ":"), allow_nan=False)
 
 
+def _normalize_js_numbers(value):
+    if isinstance(value, dict):
+        return {k: _normalize_js_numbers(v) for k, v in value.items()}
+    if isinstance(value, list):
+        return [_normalize_js_numbers(v) for v in value]
+    if type(value) is float and math.isfinite(value) and value.is_integer():
+        return int(value)
+    return value
+
+
 def now():
     return datetime.now(timezone.utc).isoformat()
 
@@ -395,7 +405,7 @@ class Trial:
                         try:
                             original = parse_json(block["partialArgs"])
                             parsed = parse_json(arguments) if isinstance(arguments, str) else arguments
-                            if canonical(original) != canonical(parsed):
+                            if canonical(_normalize_js_numbers(original)) != canonical(_normalize_js_numbers(parsed)):
                                 self.deny("native_raw_arguments_mismatch", block.get("name"), block.get("id"))
                         except (ValueError, TypeError):
                             self.deny("native_raw_arguments_invalid", block.get("name"), block.get("id"))
@@ -441,7 +451,7 @@ class Trial:
             except (PermissionError, ValueError, TypeError):
                 self.deny("host_tool_arguments_denied", name, call_id)
             prepared = self.prepared[call_id]
-            if canonical(confirmed[call_id]) != canonical(prepared):
+            if canonical(_normalize_js_numbers(confirmed[call_id])) != canonical(_normalize_js_numbers(prepared)):
                 self.deny("host_call_differs_from_native_batch", name, call_id)
             self.host_requests.add(request_id)
             self.called.add(call_id)
