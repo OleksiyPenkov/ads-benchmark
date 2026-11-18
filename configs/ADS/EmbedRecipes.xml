@@ -163,6 +163,8 @@
     <l>power PSU_C off</l>
     <l>power PSU_RF1 off</l>
     <l>power PSU_RF2 off</l>
+    <l>shutter Home</l>
+    <l>holder Home</l>
     <l>pwait pm 0 1</l>
     <l>MFC N21 0</l>
     <l>MFC Ar1 0</l>

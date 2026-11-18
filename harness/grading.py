@@ -176,7 +176,7 @@ def validate_row(row, capstones: dict[str, str]) -> dict:
     if (not isinstance(evidence, list) or not evidence
             or not all(isinstance(ref, str) and LINE_REF.search(ref) for ref in evidence)):
         raise ValueError(f"grader row {trial}: evidence must be a non-empty list of journal line references (L<n>)")
-    if task == "AC2":
+    if task in AUDIT_CAPSTONES:
         found = row["defects_found"]
         if (not isinstance(found, list) or not all(type(d) is int for d in found) or len(set(found)) != len(found)):
             raise ValueError(f"grader row {trial}: defects_found must be a list of distinct defect ids")

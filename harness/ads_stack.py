@@ -14,6 +14,7 @@ import hashlib
 import io
 import json
 import os
+import re
 import shutil
 import stat
 import subprocess
@@ -28,6 +29,7 @@ from typing import Awaitable, Callable, Protocol
 from bridge import EndpointError, bridge_params, check_endpoint, default_secrets_dir
 
 PROFILE = os.environ.get("ADS_BENCH_PROFILE", "ADS")
+EMULATOR_PROFILES = frozenset(("Sputter", "ADS", "Cluster"))
 CONTROL_IMAGE = "APS.ControlCommunity.exe"
 EMULATOR_IMAGE = "APS.EmulatorCommunity.exe"
 STACK_IMAGES = (CONTROL_IMAGE, EMULATOR_IMAGE)
@@ -159,13 +161,19 @@ def profile_hashes(paths: StackPaths) -> dict[str, str]:
 def check_root_config(paths: StackPaths) -> None:
     """Control reads its profile from RootConfig.xml; refuse unless it selects ConfigDir\\ADS."""
     try:
-        root = ET.parse(paths.root_config).getroot()
+        text = paths.root_config.read_text(encoding="utf-8")
+        root = ET.fromstring(text)
     except (OSError, ET.ParseError):
         raise StackError("root_config_not_emulator") from None
     config_dir, prefix = (root.findtext("ConfigDir") or "").strip(), (root.findtext("Prefix") or "").strip()
     expected = os.path.normcase(os.path.normpath(str(paths.profile_dir.parent)))
-    if not config_dir or os.path.normcase(os.path.normpath(config_dir)) != expected or prefix != paths.profile:
+    if not config_dir or os.path.normcase(os.path.normpath(config_dir)) != expected:
         raise StackError("root_config_not_emulator")
+    if prefix != paths.profile:
+        if prefix not in EMULATOR_PROFILES or paths.profile not in EMULATOR_PROFILES:
+            raise StackError("root_config_not_emulator")
+        updated = re.sub(r"<Prefix>\s*[^<]*\s*</Prefix>", f"<Prefix>{paths.profile}</Prefix>", text, count=1)
+        paths.root_config.write_text(updated, encoding="utf-8", newline="\n")
 
 
 def stack_processes(runner: ProcessRunner) -> dict[int, Identity]:

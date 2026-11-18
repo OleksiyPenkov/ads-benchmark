@@ -31,6 +31,36 @@ C2_PRESSURE_MIN_TORR, C2_PRESSURE_MAX_TORR = 0.00190, 0.00210
 EXPECTED_TRANSFERS = [("LL", "C1"), ("C1", "C2"), ("C2", "LL")]
 
 
+def _normalize_cluster_controller(token: str) -> str:
+    return {
+        "C1_pm": "C1_TC",
+        "C1_TV": "C1_TC",
+        "C2_pm": "C2_TC",
+        "C2_TV": "C2_TC",
+        "C3_pm": "C3_TC",
+        "C3_TV": "C3_TC",
+        "C4_pm": "C4_TC",
+        "C4_TV": "C4_TC",
+    }.get(token, token)
+
+
+def _cluster_end_state_clean(final_status: dict) -> bool:
+    if (
+        final_status.get("activeAlarms") != []
+        or final_status.get("isRecipeRunning") is not False
+    ):
+        return False
+    chambers = {
+        c.get("id"): c.get("state")
+        for c in final_status.get("chambers", [])
+        if isinstance(c, dict)
+    }
+    cluster_ids = ("TM", "LL", "C1", "C2", "C3", "C4")
+    if all(chambers.get(cid) == "Idle" for cid in cluster_ids):
+        return True
+    return _end_state_clean(final_status)
+
+
 def _controller_pressures_at_deposits(run: list[Step]) -> dict[str, list[float | None]]:
     active: dict[str, float | None] = {}
     at_source: dict[str, list[float | None]] = {CU: [], W: []}
@@ -39,7 +69,7 @@ def _controller_pressures_at_deposits(run: list[Step]) -> dict[str, list[float |
             continue
         cmd = s.command.lower()
         if cmd == "pwait" and len(s.args) >= 3:
-            active[s.args[0]] = _torr(s.args[1])
+            active[_normalize_cluster_controller(s.args[0])] = _torr(s.args[1])
         elif cmd == "deposit" and s.args[0] in at_source:
             ctrl = "C1_TC" if s.args[0] == CU else "C2_TC"
             at_source[s.args[0]].append(active.get(ctrl))
@@ -50,7 +80,7 @@ def _last_controller_targets(run: list[Step]) -> dict[str, float | None]:
     last: dict[str, float | None] = {}
     for s in run:
         if s.result is not None and s.command.lower() == "pwait" and len(s.args) >= 3:
-            last[s.args[0]] = _torr(s.args[1])
+            last[_normalize_cluster_controller(s.args[0])] = _torr(s.args[1])
     return last
 
 
@@ -99,7 +129,7 @@ def score_cc1(steps: list[Step], rcpx_text: str, final_status: dict,
         "pressure_with_unit": _pressure_with_unit(rcpx_text, parameters),
     }
 
-    end_state_clean = _end_state_clean(final_status)
+    end_state_clean = _cluster_end_state_clean(final_status)
     a = completed and len(cu_dwells) == 1 and len(w_dwells) == 1 and end_state_clean
     b = (cu_rel_error is not None and cu_rel_error <= MAX_REL_ERROR
          and w_rel_error is not None and w_rel_error <= MAX_REL_ERROR)

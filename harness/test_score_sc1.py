@@ -52,3 +52,15 @@ def test_sc1_fails_on_3arg_deposit_or_pwait_or_wrong_power():
     assert score(parse_process_log(_sputter_log()), _rcpx("deposit Mo $tMo 1"), CLEAN_STATUS)["checks"]["sputter_2arg_deposit"] is False
     assert score(parse_process_log(_sputter_log(extra=["pwait 0.003 120"])), _rcpx(), CLEAN_STATUS)["checks"]["no_pwait"] is False
     assert score(parse_process_log(_sputter_log(extra=["set PSU2 Power 100"])), _rcpx(), CLEAN_STATUS)["checks"]["sio2_supply_power"] is False
+
+
+def test_sc1_ignores_prior_run_pwait():
+    prior = _Log()
+    prior.recipe("started", "Prior_ADS_Run")
+    prior.step("pwait TC1 0.002 300", "0.002")
+    prior.step("deposit Ru 30.0", "ok (30.0s)")
+    prior.recipe("complete", "Prior_ADS_Run")
+    combined = prior.text() + "\n" + _sputter_log()
+    res = score(parse_process_log(combined), _rcpx(), CLEAN_STATUS)
+    assert res["checks"]["no_pwait"] is True
+    assert res["pass"] is True

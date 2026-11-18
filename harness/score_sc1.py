@@ -85,7 +85,7 @@ def score_sc1(steps: list[Step], rcpx_text: str, final_status: dict,
                                   {"Frequency": PULSE_FREQUENCY, "DutyCycle": PULSE_DUTY}),
         "sio2_supply_power": _supply_holds(conditions, SIO2, SIO2_SUPPLY, {"Power": SIO2_POWER}),
         "sputter_2arg_deposit": _sputter_2arg_deposit(rcpx_text),
-        "no_pwait": not any(s.command.lower() == "pwait" for s in steps),
+        "no_pwait": not any(s.command.lower() == "pwait" for s in run),
     }
 
     end_state_clean = _end_state_clean(final_status)
