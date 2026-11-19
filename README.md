@@ -95,6 +95,24 @@ python training/build_dataset.py
 python training/train_sft_dpo.py --smoke --model-family qwen3.8-moe
 ```
 
+### Standalone Strata `output_hc` Fine-Tuning (Any Dataset, 16 GB VRAM)
+
+`training/strata_hc_trainer.py` also trains the 6.56M-parameter 4-stream HyperConnection output head (`output_hc_{down,norm,up}`, `12.54 MiB`) on CPU from any `Qwen 3.8 MoE` [Strata](https://github.com/strata-llm/strata) pack (`Q2_0`, `IQ3_XXS`, `IQ3_S`, `UD-IQ4_XS`) using pre-head activations dumped by stock `strata.exe`. It accepts arbitrary SFT (`{"messages": [...]}`) and DPO (`{"prompt": ..., "chosen": ..., "rejected": ...}` or `messages_context`) JSONL files with optional inline OpenAI `tools` schemas and automatic train/validation splitting (see `training/examples/sft_sample.jsonl` and `training/examples/dpo_sample.jsonl`):
+
+```powershell
+python training/strata_hc_trainer.py `
+  --strata-config "$env:LOCALAPPDATA\Strata\install\strata-iq3_s.json" `
+  --sft-train training/examples/sft_sample.jsonl `
+  --dpo-train training/examples/dpo_sample.jsonl `
+  --extract --train --export-pack --alpha 0.5 --threads 16 --log-every 1 --val-every 5
+```
+
+Export writes a sibling pack hardlinking `experts.bin` (0 GB extra disk) and backs up the original header slice in `output_hc_base.bin`; roll back anytime with:
+
+```powershell
+python training/strata_hc_trainer.py --strata-config "$env:LOCALAPPDATA\Strata\install\strata-iq3_s.json" --restore-base
+```
+
 ---
 
 ## Citation & License
